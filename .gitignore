@@ -2,6 +2,8 @@
 Thumbs.db
 #Vim Swapfiles
 *.swp
+#No generated files
+ssmp/GeneratedFiles/*
 #More VS crap
 vc10/ipch/*
 vc10/*05424
