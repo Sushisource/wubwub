@@ -4,7 +4,8 @@
 #include <QtGui/QMainWindow>
 #include "ui_libdialog.h"
 #include "ssmp.h"
-#include <Qdir>
+#include <QDir>
+#include <QDirIterator>
 #include <taglib\tag.h>
 #include <taglib\fileref.h>
 #include <id3v2tag.h>
@@ -24,7 +25,7 @@ private:
 	ssmp * myparent;
 
 	bool isAudioFile(QFileInfo f);
-	void addDir2Lib(QDir dir, bool top);
+	void addDir2Lib(QDir dir);
 	
 
 private slots:

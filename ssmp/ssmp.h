@@ -4,9 +4,9 @@
 #include <QtGui/QMainWindow>
 #include <qsettings.h>
 #include "ui_ssmp.h"
-#include <QtSql>
 #include <functional>
 #include <numeric>
+#include "dbi.h"
 
 class ssmp : public QMainWindow
 {
@@ -18,11 +18,10 @@ public:
 
 	QSettings* settings;
 	std::vector<std::string> supportedFileFormats;
+	DBI* dbi;
 
 private:	
-	Ui::ssmpClass ui;
-	QSqlDatabase db;
-	void initDB();
+	Ui::ssmpClass ui;		
 	
 private slots:
 	bool openLibDialog();
