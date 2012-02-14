@@ -25,7 +25,8 @@ void DBI::initDB()
 	q.exec("CREATE TABLE song(sid integer primary key autoincrement, name text, tracknum int, "
 		"album int, artist int, length int, path text, numplays int, genre text, year text, "
 		"FOREIGN KEY(artist) REFERENCES artist(arid),"
-		"FOREIGN KEY(album) REFERENCES album(alid))");	
+		"FOREIGN KEY(album) REFERENCES album(alid), "
+		"UNIQUE(name,tracknum,artist))");	
 }
 
 int DBI::addSong(DBItem sng)

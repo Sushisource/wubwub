@@ -39,19 +39,18 @@ void libraryDialog::addDir2Lib(QDir dir)
 		QFileInfo f = di.fileInfo();
 		if(isAudioFile(f))//Add this song to the database
 		{
-			wchar_t wname[200]; //TODO: Better way than static?
+			wchar_t wname[250]; //TODO: Dynamic. Need to figure out wchar length from QStr length
 			wname[fpath.toWCharArray(wname)] = 0;
 			TagLib::FileName fname(wname);
+			//We'll store tag information in these:
 			QMap<QString, QString> stmap;
 			QMap<QString, int> itmap;
-
-			TagLib::FileRef file = TagLib::FileRef(fname);
-			if(file.isNull())
-				continue; //TODO: Error out here
+			
+			TagLib::File* file = NULL;
 			//MP3 Means we can check for additional info in ID3v2 tags
 			if(f.suffix() == "mp3")
 			{				
-				TagLib::MPEG::File* fr = new TagLib::MPEG::File(fname);				
+				TagLib::MPEG::File* fr = new TagLib::MPEG::File(fname, true, TagLib::AudioProperties::ReadStyle::Fast);				
 				if(fr->ID3v2Tag())
 				{					
 					//Somehow this means album artist / band. http://www.id3.org/id3v2.4.0-frames
@@ -59,17 +58,25 @@ void libraryDialog::addDir2Lib(QDir dir)
 					if(!l.isEmpty())
 						stmap["albumartist"] = l.front()->toString().toCString();
 				}
-				delete fr;
+				file = dynamic_cast<TagLib::File*>(fr);
 			}
+			if(file == NULL)
+			{
+				qDebug() << "ERR: " + fpath;
+				continue; //TODO: Error out here
+			}
+			//Try to get audio properties
+			TagLib::AudioProperties* ap = file->audioProperties();			
 			
-			TagLib::Tag* genTag = file.tag();			
+			TagLib::Tag* genTag = file->tag();			
 			stmap["name"] = genTag->title().toCString();
 			stmap["genre"] = genTag->genre().toCString();
 			itmap["year"] = genTag->year();
 			itmap["tracknum"] = genTag->track();
 			stmap["album"] = genTag->album().toCString();						
 			stmap["artist"] = genTag->artist().toCString();			
-			itmap["length"] = file.audioProperties()->length();
+			if(ap != NULL)
+				itmap["length"] = ap->length();
 			stmap["path"] = fpath;	
 			//Add collected info to db
 			DBItem s;
@@ -77,11 +84,12 @@ void libraryDialog::addDir2Lib(QDir dir)
 			s.intVals = itmap;
 
 			myparent->dbi->addSong(s);
+			delete file;
 		}
 		else if(f.isDir())
 			ui.curDirLbl->setText(fpath);
 		//if(top) //If we're the top level of recursion update prog bar
-		//	ui.progressBar->setValue(di./siz * 100);
+		//	ui.progressBar->setValue(di./siz * 100);		
 		qApp->processEvents();
 	}
 }
