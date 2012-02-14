@@ -39,7 +39,9 @@ void libraryDialog::addDir2Lib(QDir dir)
 		QFileInfo f = di.fileInfo();
 		if(isAudioFile(f))//Add this song to the database
 		{
-			TagLib::FileName fname = fpath.toStdString().c_str();
+			wchar_t wname[200]; //TODO: Better way than static?
+			wname[fpath.toWCharArray(wname)] = 0;
+			TagLib::FileName fname(wname);
 			QMap<QString, QString> stmap;
 			QMap<QString, int> itmap;
 
