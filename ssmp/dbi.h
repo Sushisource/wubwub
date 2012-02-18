@@ -3,7 +3,9 @@
 
 #include <QObject>
 #include <QtSql>
-#include <qsqlrelationaltablemodel.h>
+#include <qrunnable.h>
+#include <qthread.h>
+#include "TagExtractor.h"
 
 struct DBItem 
 {
@@ -15,17 +17,26 @@ class DBI : public QObject
 {
 	Q_OBJECT
 
-public:	
+public:		
 	DBI(QObject* parent = 0, QString name = "music.db");
 	~DBI();
 
+	void initDB();
+	void addDirs2Lib(QList<QString> dirs);
+
+public slots:
 	int addSong(DBItem song);
 	int addAlbum(DBItem album);
-	int addArtist(QString artist);
-	void initDB();
+	int addArtist(QString artist);	
+	void processDirs();
+
+signals:
+	void atDir(const QString &s);
 
 private:
 	QSqlDatabase db;
+	QThread* thread;
+	QList<QString> dirlist;
 	
 };
 

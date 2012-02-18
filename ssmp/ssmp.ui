@@ -151,15 +151,15 @@
    </property>
    <widget class="QMenu" name="menuOptions">
     <property name="title">
-     <string>Options</string>
+     <string>&lt;&gt;</string>
     </property>
-    <addaction name="libSettingsAction"/>
+    <addaction name="optionsAction"/>
    </widget>
    <addaction name="menuOptions"/>
   </widget>
-  <action name="libSettingsAction">
+  <action name="optionsAction">
    <property name="text">
-    <string>&amp;Library Setings</string>
+    <string>Options</string>
    </property>
   </action>
  </widget>

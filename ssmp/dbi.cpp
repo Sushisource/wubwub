@@ -6,7 +6,7 @@ DBI::DBI(QObject* parent, QString name) : QObject(parent)
 	db.setHostName("localhost");
 	db.setDatabaseName(name);
 	//TODO: Fix possible 'missing expected db file' w/ try catch
-	db.open();
+	db.open();	
 }
 
 //TODO: This SQL should probably be in a resource file
@@ -27,6 +27,46 @@ void DBI::initDB()
 		"FOREIGN KEY(artist) REFERENCES artist(arid),"
 		"FOREIGN KEY(album) REFERENCES album(alid), "
 		"UNIQUE(name,tracknum,artist))");	
+}
+
+void DBI::processDirs()
+{
+	foreach(QString dirstr, dirlist)
+	{
+		QDir dir(dirstr);
+		dir.setFilter(QDir::Files | QDir::Dirs | QDir::NoSymLinks | QDir::NoDotAndDotDot);
+		QDirIterator di(dir, QDirIterator::Subdirectories);	
+
+		while(di.hasNext())
+		{
+			di.next();		
+			QString fpath = di.filePath();	
+			QFileInfo f = di.fileInfo();
+			if(TagExtractor::isAudioFile(f))//Add this song to the database
+			{
+				//We'll store tag information in these:
+				QMap<QString, QString> stmap;
+				QMap<QString, int> itmap;
+				//Extract tags
+				TagExtractor::extractTag(fpath, &stmap, &itmap);
+				//Add collected info to db
+				DBItem s;
+				s.strVals = stmap;
+				s.intVals = itmap;
+				addSong(s);
+			}
+			// Update ui
+			else if(f.isDir())
+				emit atDir(fpath);				
+		}
+	}
+	dirlist.empty();
+}
+
+//Sets up which dirs the run method will be adding
+void DBI::addDirs2Lib(QList<QString> dirs)
+{	
+	dirlist.append(dirs);	
 }
 
 int DBI::addSong(DBItem sng)
