@@ -9,6 +9,7 @@
 #include <numeric>
 #include "dbi.h"
 #include "optionswindow.h"
+#include "albumW.h"
 
 Q_DECLARE_METATYPE(QList<QString>);
 
@@ -23,13 +24,13 @@ public:
 	QSettings* settings;	
 	DBI* dbi;
 
-public slots:
-	void alerter();
-
 private:	
 	Ui::ssmpClass ui;		
 	optionsWindow* optWin;
 	QThread* dbthread;
+
+	void addAlbumToRecent(Alb a);
+	void addAlbsToRecent(QList<Alb>);
 	
 private slots:
 	bool openOptions();

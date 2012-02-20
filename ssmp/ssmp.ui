@@ -51,6 +51,12 @@
         </sizepolicy>
        </property>
        <layout class="QVBoxLayout" name="verticalLayout_2">
+        <property name="topMargin">
+         <number>0</number>
+        </property>
+        <property name="bottomMargin">
+         <number>0</number>
+        </property>
         <item>
          <widget class="QLineEdit" name="search">
           <property name="text">
@@ -65,7 +71,7 @@
             <property name="currentIndex">
              <number>0</number>
             </property>
-            <widget class="QWidget" name="tab">
+            <widget class="QWidget" name="nowplayingTab">
              <property name="autoFillBackground">
               <bool>false</bool>
              </property>
@@ -84,6 +90,12 @@
                </widget>
               </item>
              </layout>
+            </widget>
+            <widget class="QWidget" name="recentTab">
+             <attribute name="title">
+              <string>Recently Added</string>
+             </attribute>
+             <layout class="QVBoxLayout" name="recentLayout"/>
             </widget>
            </widget>
           </item>

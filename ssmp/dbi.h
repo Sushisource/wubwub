@@ -13,6 +13,12 @@ struct DBItem
 	QMap<QString,QString> strVals;	
 };
 
+struct Alb
+{
+	QString name, artist, imguri, year;
+	QList<QString> tracks;
+};
+
 class DBI : public QObject
 {
 	Q_OBJECT
@@ -23,6 +29,7 @@ public:
 
 	void initDB();
 	void addDirs2Lib(QList<QString> dirs);
+	QList<Alb> getNRecentAlbums(int n);
 
 public slots:
 	int addSong(DBItem song);
@@ -37,7 +44,9 @@ private:
 	QSqlDatabase db;
 	QThread* thread;
 	QList<QString> dirlist;
-	
+
+	QString getArtistNameFromID(QString arid);	
+	QList<QString> getTracksFromAlbum(QString alid);
 };
 
 #endif // DBI_H

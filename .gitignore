@@ -12,6 +12,10 @@ vc10/*.vcxproj
 vc10/*.vcxproj.filters
 *.cd
 *.sdf
+*.opensdf
+*,sln
+*.db
+*.rc
 *.vcxproj
 *.vcxproj.filters
 #Ignore files build by Visual Studio

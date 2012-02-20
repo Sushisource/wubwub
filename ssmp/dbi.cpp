@@ -6,10 +6,28 @@ DBI::DBI(QObject* parent, QString name) : QObject(parent)
 	db.setHostName("localhost");
 	db.setDatabaseName(name);
 	//TODO: Fix possible 'missing expected db file' w/ try catch
-	db.open();	
+	db.open();
 }
 
-//TODO: This SQL should probably be in a resource file
+QList<Alb> DBI::getNRecentAlbums(int n)
+{
+	QList<Alb> retme;
+	QSqlQueryModel qm;
+	qm.setQuery("SELECT * FROM album ORDER BY dateadded DESC LIMIT " + QString::number(n));
+	for(int i = qm.rowCount()-1; i >= 0; i--)
+	{
+		Alb a;
+		a.name = qm.record(i).value("name").toString();
+		a.artist = getArtistNameFromID(qm.record(i).value("artist").toString());
+		a.imguri = "";
+		a.year = qm.record(i).value("year").toString();
+		a.tracks = getTracksFromAlbum(qm.record(i).value(0).toString());
+		retme.append(a);
+	}
+	return retme;
+}
+
+//TODO: This SQL should probably be in a resource file... for everything
 void DBI::initDB()
 {
 	QSqlQuery q;
@@ -61,6 +79,25 @@ void DBI::processDirs()
 		}
 	}
 	dirlist.empty();
+}
+
+QList<QString> DBI::getTracksFromAlbum(QString alid)
+{
+	QSqlQueryModel qm;
+	QList<QString> tracks;
+	qm.setQuery("SELECT name, length FROM song WHERE album=" + alid);
+	for(int i = 0; i < qm.rowCount(); i++)
+	{
+		tracks.append(qm.record(i).value(0).toString() + "\t" + qm.record(i).value(1).toString());
+	}
+	return tracks;
+}
+
+QString DBI::getArtistNameFromID(QString arid)
+{
+	QSqlQueryModel qm;
+	qm.setQuery("SELECT name FROM artist WHERE arid=" + arid);
+	return qm.record(0).value("name").toString();
 }
 
 //Sets up which dirs the run method will be adding
