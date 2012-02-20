@@ -1,5 +1,6 @@
 #ignore thumbnails created by windows
 Thumbs.db
+ssmp/ssmp_config.ini #don't need to up config
 #Vim Swapfiles
 *.swp
 #No generated files
