@@ -13,7 +13,7 @@ QList<Alb> DBI::getNRecentAlbums(int n)
 {
 	QList<Alb> retme;
 	QSqlQueryModel qm;
-	qm.setQuery("SELECT * FROM album ORDER BY dateadded DESC LIMIT " + QString::number(n));
+	qm.setQuery("SELECT * FROM album ORDER BY alid DESC LIMIT " + QString::number(n));
 	for(int i = qm.rowCount()-1; i >= 0; i--)
 	{
 		Alb a;
@@ -37,7 +37,7 @@ QString DBI::getOrFindAlbumArt(Alb a)
 		return qm.record(0).value(0).toString();
 	if(a.tracks.length() > 0) //TODO: Handle this better
 	{
-		qm.setQuery("SELECT path FROM song WHERE name='" + a.tracks[0] + "' AND album=" + a.alid);
+		qm.setQuery("SELECT path FROM song WHERE name='" + sanitize(a.tracks[0]) + "' AND album=" + a.alid);
 		QString path = qm.record(0).value(0).toString();
 		QDir d = QDir(path.left(path.lastIndexOf("/")));
 		QStringList filters;
@@ -242,6 +242,7 @@ int DBI::addAlbum(DBItem a)
 		arkey = addArtist(a.strVals.value("artist","unknown"));
 	}	
 	q.bindValue(":artist",arkey);
+	emit recentChange();
 	return (q.exec()) ? q.lastInsertId().toInt() : -1;
 }
 

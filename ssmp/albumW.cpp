@@ -8,8 +8,9 @@ albumW::albumW(void)
 albumW::albumW(QString artist, QString album, QString year, QList<QString> tracks, QString img = "")
 {
 	//TODO: Fix for too-long track/album names etc
-    ui.setupUi(this);	
-    ui.nameLbl->setText(artist + " - " + album + " [" + year + "]");
+    ui.setupUi(this);
+	QString yearstr = (year == "0") ? "" : " ["+year+"]";
+    ui.nameLbl->setText(artist + " - " + album + yearstr);
 	int i = 1;
 	QString trackz = "";
 	foreach(QString t, tracks)
@@ -22,7 +23,7 @@ albumW::albumW(QString artist, QString album, QString year, QList<QString> track
 	if(img != "")
 	{
 		cover = new QGraphicsScene;
-		cover->addPixmap(QPixmap(img).scaledToWidth(ui.albumView->width(),Qt::SmoothTransformation));
+		cover->addPixmap(QPixmap(img).scaledToWidth(ui.albumView->maximumWidth(),Qt::SmoothTransformation));
 		ui.albumView->setScene(cover);		
 	}
 }

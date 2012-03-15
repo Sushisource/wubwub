@@ -21,7 +21,7 @@ ssmp::ssmp(QWidget *parent, Qt::WFlags flags) : QMainWindow(parent, flags)
 	//Link up stuff	
 	//Dbi updates
 	connect(dbi, SIGNAL(atDir(QString)), optWin, SLOT(changeStatus(QString)));
-	connect(dbi, SIGNAL(atDir(QString)), this, SLOT(updateRecentView()));
+	connect(dbi, SIGNAL(recentChange()), this, SLOT(updateRecentView()));
 	//Open options windows
 	connect(ui.optionsAction, SIGNAL(triggered()), this, SLOT(openOptions()));	
 	//Save button on options window
@@ -47,12 +47,12 @@ void ssmp::addAlbsToRecent(QList<Alb> albs)
 	foreach(Alb al, albs)
 	{	
 		//Dont add if it's already in there
-		if(recents.count() > 0 && al.artist+al.name == recents.front())
+		if(recents.count() > 0 && recents.contains(al.artist+al.name))
 			continue;
 		//add
 		addAlbumToRecent(al);		
 		//Remove bottom item if more than five in view
-		if(ui.recentLayout->count() > 4)
+		if(ui.recentLayout->count() > 5)
 		{
 			QLayoutItem* child = ui.recentLayout->takeAt(4);		
 			delete child->widget();

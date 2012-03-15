@@ -39,6 +39,7 @@ public slots:
 
 signals:
 	void atDir(const QString &s);
+	void recentChange();
 
 private:
 	QSqlDatabase db;

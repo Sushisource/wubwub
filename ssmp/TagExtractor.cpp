@@ -16,6 +16,8 @@ void TagExtractor::extractID3v2Tag(TagLib::ID3v2::Tag* tag, QMap<QString, QStrin
 	TagLib::ID3v2::FrameList l = tag->frameList("TPE2");
 	if(!l.isEmpty())
 		tagmap->insert("albumartist",l.front()->toString().toCString());
+	else //Fallback on artist name
+		tagmap->insert("albumartist",tag->artist().toCString());
 }
 
 bool TagExtractor::extractTag(QString fpath, QMap<QString, QString>* stmap, QMap<QString, int>* itmap)
