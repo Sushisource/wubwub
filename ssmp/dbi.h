@@ -15,7 +15,7 @@ struct DBItem
 
 struct Alb
 {
-	QString name, artist, imguri, year;
+	QString name, artist, imguri, year, alid;
 	QList<QString> tracks;
 };
 
@@ -46,7 +46,9 @@ private:
 	QList<QString> dirlist;
 
 	QString getArtistNameFromID(QString arid);	
+	QString getOrFindAlbumArt(Alb a);
 	QList<QString> getTracksFromAlbum(QString alid);
+	QString sanitize(QString);
 };
 
 #endif // DBI_H

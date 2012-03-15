@@ -18,25 +18,47 @@ ssmp::ssmp(QWidget *parent, Qt::WFlags flags) : QMainWindow(parent, flags)
 		settings->setValue("dbinitted",true);
 	}
 
-	//Link up stuff
-	connect(optWin,SIGNAL(startSongParsing()),dbi,SLOT(processDirs()));
+	//Link up stuff	
+	//Dbi updates
 	connect(dbi, SIGNAL(atDir(QString)), optWin, SLOT(changeStatus(QString)));
-	connect(ui.optionsAction,SIGNAL(triggered()),this,SLOT(openOptions()));
+	connect(dbi, SIGNAL(atDir(QString)), this, SLOT(updateRecentView()));
+	//Open options windows
+	connect(ui.optionsAction, SIGNAL(triggered()), this, SLOT(openOptions()));	
+	//Save button on options window
+	connect(optWin, SIGNAL(startSongParsing()), dbi, SLOT(processDirs()));
 
 	//Run db thread
 	dbthread = new QThread;
 	dbthread->start();
-	dbi->moveToThread(dbthread);
+	dbi->moveToThread(dbthread);	
 
-	//Setup recent view	
-	addAlbsToRecent(dbi->getNRecentAlbums(5));
+	//Setup recent initial view	
+	updateRecentView(5);
+}
+
+void ssmp::updateRecentView(int num)
+{
+	addAlbsToRecent(dbi->getNRecentAlbums(num));
 }
 
 void ssmp::addAlbsToRecent(QList<Alb> albs)
-{
+{	
+	//Add the albums
 	foreach(Alb al, albs)
 	{	
-		addAlbumToRecent(al);
+		//Dont add if it's already in there
+		if(recents.count() > 0 && al.artist+al.name == recents.front())
+			continue;
+		//add
+		addAlbumToRecent(al);		
+		//Remove bottom item if more than five in view
+		if(ui.recentLayout->count() > 4)
+		{
+			QLayoutItem* child = ui.recentLayout->takeAt(4);		
+			delete child->widget();
+			delete child;		
+			recents.pop_back();
+		}
 	}
 }
 
@@ -45,6 +67,7 @@ void ssmp::addAlbumToRecent(Alb a)
 	albumW* ap = new albumW(a.artist,a.name,a.year,a.tracks,a.imguri);
 	ui.recentLayout->insertWidget(0, ap);
 	ui.recentLayout->setAlignment(Qt::AlignTop);
+	recents.push_front(a.artist + a.name);
 }
 
 bool ssmp::openOptions()

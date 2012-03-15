@@ -23,5 +23,6 @@ public:
 	TagExtractor(void);
 	~TagExtractor(void);
 	static const std::vector<std::string> supportedFileFormats;
+	static bool loadTagIntoMaps(TagLib::File*, QMap<QString, QString>*, QMap<QString, int>*);
 };
 #endif

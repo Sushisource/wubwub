@@ -4,7 +4,7 @@
 optionsWindow::optionsWindow(ssmp * parent, Qt::WFlags flags)
 	: QMainWindow(parent, flags)
 {
-	myparent = parent;	
+	myparent = parent;
 	ui.setupUi(this);	
 	connect(ui.addFolderBtn, SIGNAL(clicked()), this, SLOT(getDir()));	
 	connect(ui.saveBtn, SIGNAL(clicked()),this, SLOT(save()));

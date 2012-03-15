@@ -69,7 +69,7 @@
           <item>
            <widget class="QTabWidget" name="tabWidget">
             <property name="currentIndex">
-             <number>0</number>
+             <number>1</number>
             </property>
             <widget class="QWidget" name="nowplayingTab">
              <property name="autoFillBackground">
@@ -183,8 +183,6 @@
    <header location="global">phonon/seekslider.h</header>
   </customwidget>
  </customwidgets>
- <resources>
-  <include location="ssmp.qrc"/>
- </resources>
+ <resources/>
  <connections/>
 </ui>

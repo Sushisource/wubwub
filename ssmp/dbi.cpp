@@ -18,13 +18,48 @@ QList<Alb> DBI::getNRecentAlbums(int n)
 	{
 		Alb a;
 		a.name = qm.record(i).value("name").toString();
+		a.alid = qm.record(i).value("alid").toString();
 		a.artist = getArtistNameFromID(qm.record(i).value("artist").toString());
-		a.imguri = "";
+		a.tracks = getTracksFromAlbum(qm.record(i).value(0).toString());		
+		a.imguri = getOrFindAlbumArt(a);
 		a.year = qm.record(i).value("year").toString();
-		a.tracks = getTracksFromAlbum(qm.record(i).value(0).toString());
 		retme.append(a);
 	}
 	return retme;
+}
+
+//Finds if the album has a stored imguri, finds one and sets it if not
+QString DBI::getOrFindAlbumArt(Alb a)
+{
+	QSqlQueryModel qm;
+	qm.setQuery("SELECT imguri FROM album WHERE alid=" + a.alid);
+	if(qm.record(0).value(0).toString() != "")
+		return qm.record(0).value(0).toString();
+	if(a.tracks.length() > 0) //TODO: Handle this better
+	{
+		qm.setQuery("SELECT path FROM song WHERE name='" + a.tracks[0] + "' AND album=" + a.alid);
+		QString path = qm.record(0).value(0).toString();
+		QDir d = QDir(path.left(path.lastIndexOf("/")));
+		QStringList filters;
+		filters << "*.jpg" << "*.png" << "*.jpeg" << "*.bmp";
+		d.setNameFilters(filters);
+		QStringList imgs = d.entryList(QDir::Hidden | QDir::Files);
+		QString ret = "";
+		foreach(QString s, imgs)
+		{
+			if(s.contains("folder",Qt::CaseInsensitive))
+				ret = d.filePath(s);
+			if(s.contains("cover",Qt::CaseInsensitive))
+				ret = d.filePath(s);
+		}
+		//Add uri
+		QSqlQuery qi;
+		qi.prepare("UPDATE album SET imguri='"+ret+"' WHERE alid="+a.alid);
+		qi.exec();
+		return ret;
+	}
+	else
+		return NULL;	
 }
 
 //TODO: This SQL should probably be in a resource file... for everything
@@ -38,13 +73,38 @@ void DBI::initDB()
 	q.exec("CREATE TABLE artist(arid integer primary key autoincrement, name text, "
 		"UNIQUE(name) ON CONFLICT IGNORE)");
 	q.exec("CREATE TABLE album(alid integer primary key autoincrement, name text, genre text, "
-		"dateadded text, numsongs int, artist int, year text, UNIQUE(artist, name) ON CONFLICT REPLACE, "
+		"dateadded text, numsongs int, artist int, year text, imguri text, UNIQUE(artist, name) ON CONFLICT REPLACE, "
 		"FOREIGN KEY(artist) REFERENCES artist(arid))");
 	q.exec("CREATE TABLE song(sid integer primary key autoincrement, name text, tracknum int, "
 		"album int, artist int, length int, path text, numplays int, genre text, year text, "
 		"FOREIGN KEY(artist) REFERENCES artist(arid),"
 		"FOREIGN KEY(album) REFERENCES album(alid), "
-		"UNIQUE(name,tracknum,artist))");	
+		"UNIQUE(name,tracknum,artist))");
+}
+
+QList<QString> DBI::getTracksFromAlbum(QString alid)
+{
+	QSqlQueryModel qm;
+	QList<QString> tracks;
+	qm.setQuery("SELECT name FROM song WHERE album=" + alid);
+	for(int i = 0; i < qm.rowCount(); i++)
+	{
+		tracks.append(qm.record(i).value(0).toString());
+	}
+	return tracks;
+}
+
+QString DBI::getArtistNameFromID(QString arid)
+{
+	QSqlQueryModel qm;
+	qm.setQuery("SELECT name FROM artist WHERE arid=" + arid);
+	return qm.record(0).value("name").toString();
+}
+
+//Sets up which dirs the run method will be adding
+void DBI::addDirs2Lib(QList<QString> dirs)
+{	
+	dirlist.append(dirs);	
 }
 
 void DBI::processDirs()
@@ -55,6 +115,7 @@ void DBI::processDirs()
 		dir.setFilter(QDir::Files | QDir::Dirs | QDir::NoSymLinks | QDir::NoDotAndDotDot);
 		QDirIterator di(dir, QDirIterator::Subdirectories);	
 
+		QString last = NULL;
 		while(di.hasNext())
 		{
 			di.next();		
@@ -75,35 +136,11 @@ void DBI::processDirs()
 			}
 			// Update ui
 			else if(f.isDir())
-				emit atDir(fpath);				
+				emit atDir(fpath);
+
 		}
 	}
 	dirlist.empty();
-}
-
-QList<QString> DBI::getTracksFromAlbum(QString alid)
-{
-	QSqlQueryModel qm;
-	QList<QString> tracks;
-	qm.setQuery("SELECT name, length FROM song WHERE album=" + alid);
-	for(int i = 0; i < qm.rowCount(); i++)
-	{
-		tracks.append(qm.record(i).value(0).toString() + "\t" + qm.record(i).value(1).toString());
-	}
-	return tracks;
-}
-
-QString DBI::getArtistNameFromID(QString arid)
-{
-	QSqlQueryModel qm;
-	qm.setQuery("SELECT name FROM artist WHERE arid=" + arid);
-	return qm.record(0).value("name").toString();
-}
-
-//Sets up which dirs the run method will be adding
-void DBI::addDirs2Lib(QList<QString> dirs)
-{	
-	dirlist.append(dirs);	
 }
 
 int DBI::addSong(DBItem sng)
@@ -139,7 +176,7 @@ int DBI::addSong(DBItem sng)
 	//Now figure out album's ID
 	QSqlQueryModel qm;
 	QString qs = "SELECT * FROM album WHERE name like '";
-	qs.append(sng.strVals.value("album","unknown"));
+	qs.append(sanitize(sng.strVals.value("album","unknown")));
 	qs.append("'");
 	qm.setQuery(qs);
 	if(qm.rowCount() > 0) //If album present, get id
@@ -157,7 +194,7 @@ int DBI::addSong(DBItem sng)
 
 	//Now figure out artist's ID
 	qs = "SELECT * FROM artist WHERE name like '";
-	qs.append(sng.strVals.value("artist", "unknown"));
+	qs.append(sanitize(sng.strVals.value("artist", "unknown")));
 	qs.append("'");
 	qm.setQuery(qs);
 	if(qm.rowCount() > 0) //If artist present, get id
@@ -195,7 +232,7 @@ int DBI::addAlbum(DBItem a)
 	//Now figure out artist's ID
 	QSqlQueryModel qm;
 	QString qs = "SELECT * FROM artist WHERE name like '";
-	qs.append(a.strVals.value("artist", "unknown"));
+	qs.append(sanitize(a.strVals.value("artist", "unknown")));
 	qs.append("'");
 	qm.setQuery(qs);
 	if(qm.rowCount() > 0) //If artist present, get id
@@ -214,6 +251,12 @@ int DBI::addArtist(QString a)
 	q.prepare("INSERT INTO artist (name) VALUES (:name)");
 	q.bindValue(":name", a);
 	return (q.exec()) ? q.lastInsertId().toInt() : -1;
+}
+
+//TODO: This probably needs to fix more than just single quotes
+QString DBI::sanitize(QString s)
+{
+	return s.replace("'","''");
 }
 
 DBI::~DBI()

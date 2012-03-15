@@ -23,30 +23,39 @@ bool TagExtractor::extractTag(QString fpath, QMap<QString, QString>* stmap, QMap
 	wchar_t wname[250]; //TODO: Dynamic. Need to figure out wchar length from QStr length
 	wname[fpath.toWCharArray(wname)] = 0;
 	TagLib::FileName fname(wname);
-				
-	TagLib::File* file = NULL;
+
+	bool suc = false;
+					 
 	//MP3 or FLAC Means we can check for additional info in ID3v2 tags
 	if(fpath.endsWith("mp3"))
 	{				
-		TagLib::MPEG::File* fr = new TagLib::MPEG::File(fname, true, TagLib::AudioProperties::ReadStyle::Fast);				
-		if(fr->ID3v2Tag())
-			TagExtractor::extractID3v2Tag(fr->ID3v2Tag(), stmap);
-		file = dynamic_cast<TagLib::File*>(fr);
+		TagLib::MPEG::File fr(fname, true, TagLib::AudioProperties::Fast);				
+		if(fr.ID3v2Tag())
+			extractID3v2Tag(fr.ID3v2Tag(), stmap);
+		suc = loadTagIntoMaps(&fr, stmap, itmap);		
 	}
 	else if(fpath.endsWith("flac"))
 	{
-		TagLib::FLAC::File* fr = new TagLib::FLAC::File(fname,true,TagLib::AudioProperties::ReadStyle::Fast);
-		if(fr->ID3v2Tag())
-			TagExtractor::extractID3v2Tag(fr->ID3v2Tag(), stmap);
-		file = dynamic_cast<TagLib::File*>(fr);
+		TagLib::FLAC::File fr(fname,true,TagLib::AudioProperties::Fast);
+		if(fr.ID3v2Tag())
+			extractID3v2Tag(fr.ID3v2Tag(), stmap);
+		suc = loadTagIntoMaps(&fr, stmap, itmap);		
 	}
 	else
-		file = TagLib::FileRef::create(fname);
-	if(file == NULL)
 	{
-		qDebug() << "ERR: " + fpath;
-		return false;
+		TagLib::File* file = TagLib::FileRef::create(fname);
+		suc = loadTagIntoMaps(file, stmap, itmap);		
 	}
+
+	if(suc)
+		stmap->insert("path", fpath);	
+	return suc;
+}
+
+bool TagExtractor::loadTagIntoMaps(TagLib::File* file, QMap<QString, QString>* stmap, QMap<QString, int>* itmap)
+{
+	if(file == NULL)	
+		return false;	
 	//Try to get audio properties
 	TagLib::AudioProperties* ap = file->audioProperties();
 
@@ -58,11 +67,10 @@ bool TagExtractor::extractTag(QString fpath, QMap<QString, QString>* stmap, QMap
 	stmap->insert("album", genTag->album().toCString());
 	stmap->insert("artist", genTag->artist().toCString());
 	if(ap != NULL)
-		itmap->insert("length", ap->length());
-	stmap->insert("path", fpath);	
-	delete file;	
+		itmap->insert("length", ap->length());	
 	return true;
 }
+
 
 bool TagExtractor::isAudioFile(QFileInfo f)
 {

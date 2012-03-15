@@ -13,7 +13,7 @@ vc10/*.vcxproj.filters
 *.cd
 *.sdf
 *.opensdf
-*,sln
+*.sln
 *.db
 *.rc
 *.vcxproj

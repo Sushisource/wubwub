@@ -12,6 +12,6 @@ public:
 
 private:
 	Ui::album ui;
-	QGraphicsScene* cover;
+	QGraphicsScene* cover;	
 };
 

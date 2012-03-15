@@ -28,11 +28,13 @@ private:
 	Ui::ssmpClass ui;		
 	optionsWindow* optWin;
 	QThread* dbthread;
-
-	void addAlbumToRecent(Alb a);
-	void addAlbsToRecent(QList<Alb>);
+	QList<QString> recents;
+	
+	void addAlbumToRecent(Alb);
+	void addAlbsToRecent(QList<Alb>);	
 	
 private slots:
+	void updateRecentView(int n = 1);
 	bool openOptions();
 };
 
