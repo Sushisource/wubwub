@@ -27,8 +27,11 @@ public:
 	DBI(QObject* parent = 0, QString name = "music.db");
 	~DBI();
 
+	enum searchFlag {All, ArtOnly, AlbOnly, SonOnly};
+
 	void initDB();
 	void addDirs2Lib(QList<QString> dirs);
+	QMap<QString, QString> search(QString query, searchFlag s = DBI::All);
 	QList<Alb> getNRecentAlbums(int n);
 
 public slots:
@@ -44,7 +47,7 @@ signals:
 private:
 	QSqlDatabase db;
 	QThread* thread;
-	QList<QString> dirlist;
+	QList<QString> dirlist;	
 
 	QString getArtistNameFromID(QString arid);	
 	QString getOrFindAlbumArt(Alb a);

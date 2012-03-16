@@ -9,6 +9,26 @@ DBI::DBI(QObject* parent, QString name) : QObject(parent)
 	db.open();
 }
 
+QMap<QString, QString> DBI::search(QString query, searchFlag s)
+{
+	QSqlQueryModel qm;
+	query = sanitize(query);
+	QString quer = "select name, 'album' as tbn from album where name like '%"+query+"%'";
+	quer += " UNION";
+	quer += " select name, 'artist' as tbn from artist where name like '%"+query+"%'";
+	quer += " UNION";
+	quer += " select name, 'song' as tbn from song where name like '%"+query+"%'";
+	quer += " ORDER BY name COLLATE NOCASE ASC";
+	qm.setQuery(quer);	
+	QMap<QString, QString> ret;
+	for(int i = 0; i < qm.rowCount(); i++)
+	{
+		QString type = qm.record(i).field(1).value().toString();
+		ret.insertMulti(type, qm.record(i).field(0).value().toString());
+	}
+	return ret;
+}
+
 QList<Alb> DBI::getNRecentAlbums(int n)
 {
 	QList<Alb> retme;
@@ -136,8 +156,10 @@ void DBI::processDirs()
 			}
 			// Update ui
 			else if(f.isDir())
+			{
 				emit atDir(fpath);
-
+				emit recentChange();
+			}
 		}
 	}
 	dirlist.empty();
@@ -241,8 +263,7 @@ int DBI::addAlbum(DBItem a)
 	{
 		arkey = addArtist(a.strVals.value("artist","unknown"));
 	}	
-	q.bindValue(":artist",arkey);
-	emit recentChange();
+	q.bindValue(":artist",arkey);	
 	return (q.exec()) ? q.lastInsertId().toInt() : -1;
 }
 

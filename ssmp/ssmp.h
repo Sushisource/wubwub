@@ -4,6 +4,8 @@
 #include <QtGui/QMainWindow>
 #include <qsettings.h>
 #include <qthreadpool.h>
+#include <qtreewidget.h>
+#include <QKeyEvent>
 #include "ui_ssmp.h"
 #include <functional>
 #include <numeric>
@@ -21,7 +23,8 @@ public:
 	ssmp(QWidget *parent = 0, Qt::WFlags flags = 0);
 	~ssmp();
 
-	QSettings* settings;	
+	QSettings* settings;
+	QMap<int, QWidget*> tabs;
 	DBI* dbi;
 
 private:	
@@ -29,11 +32,19 @@ private:
 	optionsWindow* optWin;
 	QThread* dbthread;
 	QList<QString> recents;
+	QTreeWidget* popup;
+	QTimer* searchTimer;
+	QColor disabledColor;
+	QList<QString> searchtypes;
 	
+	inline void addPopupItem(QString name, QString type);
 	void addAlbumToRecent(Alb);
-	void addAlbsToRecent(QList<Alb>);	
+	void addAlbsToRecent(QList<Alb>);
+	void openSearchWindow(QString name, QMap<QString,QString> results);	
 	
 private slots:
+	void autoSuggest();
+	bool eventFilter(QObject* object, QEvent* e);
 	void updateRecentView(int n = 1);
 	bool openOptions();
 };
