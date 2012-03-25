@@ -1,5 +1,4 @@
-#include "optionswindow.h"
-#include "ssmp.h" //TODO: Fuck you circular dependencies
+#include "ssmp.h"
 
 optionsWindow::optionsWindow(ssmp * parent, Qt::WFlags flags)
 	: QMainWindow(parent, flags)

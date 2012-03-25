@@ -6,14 +6,14 @@
 #include <qthreadpool.h>
 #include <qtreewidget.h>
 #include <QKeyEvent>
-#include "ui_ssmp.h"
 #include <functional>
 #include <numeric>
+#include "ui_ssmp.h"
 #include "dbi.h"
+#include "recentalbumsview.h"
 #include "optionswindow.h"
-#include "albumW.h"
 
-Q_DECLARE_METATYPE(QList<QString>);
+Q_DECLARE_METATYPE(QList<QString>)
 
 class ssmp : public QMainWindow
 {
@@ -30,12 +30,12 @@ public:
 private:	
 	Ui::ssmpClass ui;		
 	optionsWindow* optWin;
-	QThread* dbthread;
-	QList<QString> recents;
+	QThread* dbthread;	
 	QTreeWidget* popup;
 	QTimer* searchTimer;
 	QColor disabledColor;
 	QList<QString> searchtypes;
+	RecentAlbumsView* recentAlbs;
 	
 	inline void addPopupItem(QString name, QString type);
 	void addAlbumToRecent(Alb);
@@ -45,7 +45,6 @@ private:
 private slots:
 	void autoSuggest();
 	bool eventFilter(QObject* object, QEvent* e);
-	void updateRecentView(int n = 1);
 	bool openOptions();
 };
 
