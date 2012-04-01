@@ -12,6 +12,7 @@
 #include "dbi.h"
 #include "recentalbumsview.h"
 #include "optionswindow.h"
+#include "nowplaying.h"
 
 Q_DECLARE_METATYPE(QList<QString>)
 
@@ -43,7 +44,8 @@ private:
 	void openSearchWindow(QString name, QMap<QString,QString> results);	
 	
 private slots:
-	void autoSuggest();
+    void autoSuggest();
+    void updateNowPlaying(QMap<QString, int> nplist);
 	bool eventFilter(QObject* object, QEvent* e);
 	bool openOptions();
 };

@@ -1,7 +1,7 @@
 TEMPLATE = app
 TARGET = ssmp
 DESTDIR = ../mingwout
-QT += core gui sql phonon opengl
+QT += core gui sql phonon opengl svg
 DEFINES += QT_LARGEFILE_SUPPORT QT_SQL_LIB QT_OPENGL_LIB QT_PHONON_LIB
 INCLUDEPATH += E:/libs/taglib \
         E:/libs/taglib/taglib \
@@ -14,8 +14,8 @@ win32 {
 }
 
 DEPENDPATH += .
-MOC_DIR += ./GeneratedFiles/debug
-UI_DIR += ./GeneratedFiles
-RCC_DIR += ./GeneratedFiles
+MOC_DIR += GeneratedFiles/debug
+UI_DIR += GeneratedFiles
+RCC_DIR += GeneratedFiles
 QMAKE_CXXFLAGS += -std=c++0x -U__STRICT_ANSI__
 include(ssmp.pri)

@@ -1,5 +1,8 @@
 #include "ssmp.h"
 
+//Setup some constants
+const QFont RecentAlbumsView::albFont = QFont("Arial", 11);
+
 RecentAlbumsView::RecentAlbumsView(ssmp* parent, int listsize)
 	: QGraphicsView(parent)
 {
@@ -21,19 +24,20 @@ void RecentAlbumsView::resizeEvent(QResizeEvent* e)
         return;
     int padding = 5;
     float siz  = (this->geometry().height() - padding*(1+recents.count())) / recents.count();
+    int buttonsiz = plusbuttons[0]->boundingRect().width();
     float scale = siz / 200.0;
     for(int i = 0; i < recents.count(); i++)
     {
         int ypos = i*(siz + padding) + padding;
-        backgrounds[i]->setRect(0,ypos,this->width(),siz);
+        int albumxpos = this->width()-scale*200;
+        backgrounds[i]->setRect(0,ypos,albumxpos,siz);
         descriptions[i]->setPos(0,ypos);
-        covers[i]->setPos(this->width()-scale*200,ypos);
+        plusbuttons[i]->setPos(albumxpos-(buttonsiz + 5),ypos);
+        covers[i]->setPos(albumxpos,ypos);
         covers[i]->setScale(scale);
     }
 }
 
-//Just our constant font for album descriptions
-const QFont RecentAlbumsView::albFont = QFont("Courier New", 10);
 void RecentAlbumsView::addAlbsToRecent(QList<Alb> albs)
 {
     int alnum = 500;
@@ -45,17 +49,19 @@ void RecentAlbumsView::addAlbsToRecent(QList<Alb> albs)
             continue;
         //add description
         QGraphicsTextItem* textDesc = new QGraphicsTextItem();
-        QString desc = al.name + " - " + al.artist + "[" + al.year + "]\n";
+        QString desc = "<b>" + al.name + " - " + al.artist;
+        desc += (al.year != "0") ? " [" + al.year + "]" : "";
+        desc += "</b><br/>";
         QString trackz = "";
         int i = 1;
         foreach(QString t, al.tracks)
         {
-            trackz += QString::number(i) + ". " + t + "\n";
+            trackz += QString::number(i) + ". " + t + "<br/>";
             ++i;
         }
         trackz.remove(trackz.length()-1,1); //Remove final newline
         desc += trackz;
-        textDesc->setPlainText(desc);
+        textDesc->setHtml(desc);
         textDesc->setFont(albFont);
         textDesc->setZValue(alnum+1);
         //First add a backing rectangle
@@ -92,6 +98,13 @@ void RecentAlbumsView::addAlbsToRecent(QList<Alb> albs)
         scene->addItem(cover);
         covers.push_front(cover);
 
+        //add buttons
+        QGraphicsSvgItem* plus = new QGraphicsSvgItem("../ssmp/Resources/plus_alt.svg");
+        plus->setZValue(alnum+1);
+        plus->setOpacity(0.8);
+        scene->addItem(plus);
+        plusbuttons.push_front(plus);
+
         recents.push_front(al.artist + al.name);
         //Remove bottom item if more than five in view
 		//TODO: Parameterize # in view
@@ -99,9 +112,13 @@ void RecentAlbumsView::addAlbsToRecent(QList<Alb> albs)
         {
             scene->removeItem(descriptions.back());
             scene->removeItem(covers.back());
+            scene->removeItem(plusbuttons.back());
+            scene->removeItem(backgrounds.back());
             recents.pop_back();
             descriptions.pop_back();
             covers.pop_back();
+            plusbuttons.pop_back();
+            backgrounds.pop_back();
         }
         alnum -= 2;
     }

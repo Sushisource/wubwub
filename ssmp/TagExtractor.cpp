@@ -1,4 +1,5 @@
 #include "TagExtractor.h"
+
 std::vector<std::string> initFF()
 {
 	std::vector<std::string> v;

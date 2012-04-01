@@ -109,6 +109,10 @@ void ssmp::autoSuggest()
     popup->show();
 }
 
+void ssmp::updateNowPlaying(QMap<QString, int> nplist)
+{
+}
+
 bool ssmp::eventFilter(QObject* object, QEvent* e)
 {
     if (object == ui.search) 

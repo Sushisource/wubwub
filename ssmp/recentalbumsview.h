@@ -4,7 +4,8 @@
 #include <QGraphicsView>
 #include <QGraphicsEffect>
 #include <QGraphicsPixmapItem>
-class ssmp; //Fucking circular depends
+#include <QGraphicsSvgItem>
+class ssmp; //TODO: Fucking circular depends
 
 class RecentAlbumsView : public QGraphicsView
 {
@@ -22,6 +23,7 @@ private:
     QList<QGraphicsTextItem*> descriptions;
     QList<QGraphicsPixmapItem*> covers;
     QList<QGraphicsRectItem*> backgrounds;
+    QList<QGraphicsSvgItem*> plusbuttons;
     static const QFont albFont;
     void addAlbsToRecent(QList<Alb> albs);
     void resizeEvent(QResizeEvent * e);
