@@ -179,6 +179,7 @@ bool ssmp::openOptions()
 ssmp::~ssmp()
 {	
     delete dbi;
+    dbthread->exit();
     delete dbthread;
     delete popup;
 }

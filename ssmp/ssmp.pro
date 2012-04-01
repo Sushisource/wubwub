@@ -3,13 +3,13 @@ TARGET = ssmp
 DESTDIR = ../mingwout
 QT += core gui sql phonon opengl
 DEFINES += QT_LARGEFILE_SUPPORT QT_SQL_LIB QT_OPENGL_LIB QT_PHONON_LIB
-INCLUDEPATH += C:/Code/taglib \
-        C:/Code/taglib/taglib \
-        C:/Code/taglib/taglib/toolkit \
+INCLUDEPATH += E:/libs/taglib \
+        E:/libs/taglib/taglib \
+        E:/libs/taglib/taglib/toolkit \
         .
 
 win32 {
-    win32-g++:LIBS += -L'C:/Code/taglib/taglib-build-desktop-Qt_4_8_0__4_8_0__Release/release' \
+    win32-g++:LIBS += -L'E:/libs/taglib/Release/release' \
         -l:libTagLib1.a
 }
 

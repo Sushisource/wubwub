@@ -1,12 +1,9 @@
-HEADERS += ./albumview.h \
-    ./recentalbumsview.h \
-    ./resource.h \
+HEADERS += ./recentalbumsview.h \
     ./TagExtractor.h \
     ./ssmp.h \
     ./dbi.h \
     ./optionswindow.h
-SOURCES += ./albumview.cpp \
-    ./dbi.cpp \
+SOURCES += ./dbi.cpp \
     ./optionswindow.cpp \
     ./main.cpp \
     ./recentalbumsview.cpp \

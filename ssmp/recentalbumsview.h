@@ -2,7 +2,8 @@
 #define RECENTALBUMSVIEW_H
 
 #include <QGraphicsView>
-#include "albumview.h"
+#include <QGraphicsEffect>
+#include <QGraphicsPixmapItem>
 class ssmp; //Fucking circular depends
 
 class RecentAlbumsView : public QGraphicsView
@@ -18,9 +19,12 @@ private:
 	ssmp* parent;
 	QGraphicsScene* scene;	
 	QList<QString> recents;
-	QList<AlbumView*> recentps;
-	void addAlbsToRecent(QList<Alb> albs);
-	void resizeEvent(QResizeEvent * e);
+    QList<QGraphicsTextItem*> descriptions;
+    QList<QGraphicsPixmapItem*> covers;
+    QList<QGraphicsRectItem*> backgrounds;
+    static const QFont albFont;
+    void addAlbsToRecent(QList<Alb> albs);
+    void resizeEvent(QResizeEvent * e);
 	
 };
 
