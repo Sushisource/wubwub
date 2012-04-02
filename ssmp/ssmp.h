@@ -10,8 +10,8 @@
 #include <numeric>
 #include "ui_ssmp.h"
 #include "dbi.h"
-#include "recentalbumsview.h"
 #include "optionswindow.h"
+#include "recentalbumsview.h"
 #include "nowplaying.h"
 
 Q_DECLARE_METATYPE(QList<QString>)
@@ -36,7 +36,7 @@ private:
 	QTimer* searchTimer;
 	QColor disabledColor;
 	QList<QString> searchtypes;
-	RecentAlbumsView* recentAlbs;
+    RecentAlbumsView* recentAlbs;
 	
 	inline void addPopupItem(QString name, QString type);
 	void addAlbumToRecent(Alb);
@@ -45,7 +45,6 @@ private:
 	
 private slots:
     void autoSuggest();
-    void updateNowPlaying(QMap<QString, int> nplist);
 	bool eventFilter(QObject* object, QEvent* e);
 	bool openOptions();
 };

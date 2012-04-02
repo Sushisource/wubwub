@@ -5,19 +5,26 @@
 #include <QGraphicsEffect>
 #include <QGraphicsPixmapItem>
 #include <QGraphicsSvgItem>
+#include "dbi.h"
 class ssmp; //TODO: Fucking circular depends
+struct Alb;
 
 class RecentAlbumsView : public QGraphicsView
 {
+	Q_OBJECT
+
 public:
-	RecentAlbumsView(ssmp* parent, int listsize = 5);
+    RecentAlbumsView(QWidget *parent, int listsize = 5);
 	~RecentAlbumsView();
 
 public slots:
 	void update(int howmany = 5);
 
+signals:
+    void addAlbsToNowPlaying(QList<int> alids);
+
 private:
-	ssmp* parent;
+    DBI* db;
 	QGraphicsScene* scene;	
 	QList<QString> recents;
     QList<QGraphicsTextItem*> descriptions;
@@ -27,7 +34,7 @@ private:
     static const QFont albFont;
     void addAlbsToRecent(QList<Alb> albs);
     void resizeEvent(QResizeEvent * e);
-	
+    void mouseReleaseEvent(QMouseEvent *event);
 };
 
 #endif // RECENTALBUMSVIEW_H

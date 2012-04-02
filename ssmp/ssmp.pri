@@ -1,6 +1,6 @@
-HEADERS += recentalbumsview.h \
-    TagExtractor.h \
+HEADERS += TagExtractor.h \
     ssmp.h \
+    recentalbumsview.h \
     dbi.h \
     optionswindow.h \
     nowplaying.h

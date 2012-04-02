@@ -222,20 +222,14 @@ QPushButton {
 	font-size: 10px;
 }</string>
   </property>
-  <widget class="QWidget" name="centralWidget">
-   <layout class="QHBoxLayout" name="horizontalLayout_2">
+  <widget class="QWidget" name="everything">
+   <layout class="QVBoxLayout" name="verticalLayout_3">
     <item>
      <widget class="QSplitter" name="splitter">
       <property name="orientation">
        <enum>Qt::Horizontal</enum>
       </property>
-      <property name="handleWidth">
-       <number>3</number>
-      </property>
-      <property name="childrenCollapsible">
-       <bool>false</bool>
-      </property>
-      <widget class="QListView" name="nowplayingLst">
+      <widget class="NowPlaying" name="nowplayingLst">
        <property name="enabled">
         <bool>true</bool>
        </property>
@@ -257,8 +251,14 @@ QPushButton {
          <height>16777215</height>
         </size>
        </property>
+       <property name="verticalScrollBarPolicy">
+        <enum>Qt::ScrollBarAlwaysOff</enum>
+       </property>
+       <property name="horizontalScrollBarPolicy">
+        <enum>Qt::ScrollBarAlwaysOff</enum>
+       </property>
       </widget>
-      <widget class="QWidget" name="widget" native="true">
+      <widget class="QWidget" name="centralWidget" native="true">
        <property name="sizePolicy">
         <sizepolicy hsizetype="Expanding" vsizetype="Preferred">
          <horstretch>100</horstretch>
@@ -412,6 +412,11 @@ QPushButton {
    <class>Phonon::SeekSlider</class>
    <extends>QWidget</extends>
    <header location="global">phonon/seekslider.h</header>
+  </customwidget>
+  <customwidget>
+   <class>NowPlaying</class>
+   <extends>QListWidget</extends>
+   <header>nowplaying.h</header>
   </customwidget>
  </customwidgets>
  <resources/>

@@ -5,6 +5,8 @@ ssmp::ssmp(QWidget *parent, Qt::WFlags flags) : QMainWindow(parent, flags)
     ui.setupUi(this);
     disabledColor = this->palette().color(QPalette::Disabled, QPalette::WindowText);
     searchtypes = QList<QString>() << "artist" << "album" << "song";
+    //Update global palette access
+    QApplication::setPalette(this->palette());
 
     settings = new QSettings("ssmp_config.ini",QSettings::IniFormat);
     //Instantiate options menu
@@ -28,7 +30,7 @@ ssmp::ssmp(QWidget *parent, Qt::WFlags flags) : QMainWindow(parent, flags)
 
 
     //Connect to database	
-    dbi = new DBI(0, "music.db");	
+    dbi = &DBI::getInstance();
 
     //If db not initialized, initialize it
     if(settings->value("dbinitted").toBool() == false)
@@ -56,6 +58,8 @@ ssmp::ssmp(QWidget *parent, Qt::WFlags flags) : QMainWindow(parent, flags)
     searchTimer->setInterval(300);
     connect(searchTimer, SIGNAL(timeout()), SLOT(autoSuggest()));
     connect(ui.search, SIGNAL(textEdited(QString)), searchTimer, SLOT(start()));
+    //Connections for the recent view
+    connect(recentAlbs, SIGNAL(addAlbsToNowPlaying(QList<int>)), ui.nowplayingLst, SLOT(addAlbums(QList<int>)));
 
     //Run db thread
     dbthread = new QThread;
@@ -63,7 +67,7 @@ ssmp::ssmp(QWidget *parent, Qt::WFlags flags) : QMainWindow(parent, flags)
     dbi->moveToThread(dbthread);    
 
 	//Update the recent view
-	recentAlbs->update();
+    recentAlbs->update();
 }
 
 void ssmp::autoSuggest()
@@ -107,10 +111,6 @@ void ssmp::autoSuggest()
     popup->move(ui.search->mapToGlobal(QPoint(0, ui.search->height())));
     popup->setFocus();
     popup->show();
-}
-
-void ssmp::updateNowPlaying(QMap<QString, int> nplist)
-{
 }
 
 bool ssmp::eventFilter(QObject* object, QEvent* e)
@@ -183,7 +183,7 @@ bool ssmp::openOptions()
 ssmp::~ssmp()
 {	
     delete dbi;
-    dbthread->exit();
+    dbthread->terminate();
     delete dbthread;
     delete popup;
 }

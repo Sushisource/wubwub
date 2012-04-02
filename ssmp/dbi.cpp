@@ -1,10 +1,10 @@
 #include "dbi.h"
 
-DBI::DBI(QObject* parent, QString name) : QObject(parent)
+DBI::DBI() : QObject(NULL)
 {	
 	db = QSqlDatabase::addDatabase("QSQLITE");
 	db.setHostName("localhost");
-	db.setDatabaseName(name);
+    db.setDatabaseName("music.db");
 	//TODO: Fix possible 'missing expected db file' w/ try catch
 	db.open();
 }
@@ -29,6 +29,26 @@ QMap<QString, QString> DBI::search(QString query, searchFlag s)
 	return ret;
 }
 
+QList<QString> DBI::extractTracks(QList<QPair<int, QString>> pl)
+{
+    QList<QString> ret;
+    for(int i = 0; i < pl.count(); i++)
+    {
+        ret.append(pl[i].second);
+    }
+    return ret;
+}
+
+QList<int> DBI::extractIds(QList<QPair<int, QString>> pl)
+{
+    QList<int> ret;
+    for(int i = 0; i < pl.count(); i++)
+    {
+        ret.append(pl[i].first);
+    }
+    return ret;
+}
+
 QList<Alb> DBI::getNRecentAlbums(int n)
 {
 	QList<Alb> retme;
@@ -40,7 +60,7 @@ QList<Alb> DBI::getNRecentAlbums(int n)
 		a.name = qm.record(i).value("name").toString();
 		a.alid = qm.record(i).value("alid").toString();
 		a.artist = getArtistNameFromID(qm.record(i).value("artist").toString());
-		a.tracks = getTracksFromAlbum(qm.record(i).value(0).toString());		
+        a.tracks = extractTracks(getTracksFromAlbum(qm.record(i).value(0).toInt()));
 		a.imguri = getOrFindAlbumArt(a);
 		a.year = qm.record(i).value("year").toString();
 		retme.append(a);
@@ -102,23 +122,34 @@ void DBI::initDB()
 		"UNIQUE(name,tracknum,artist))");
 }
 
-QList<QString> DBI::getTracksFromAlbum(QString alid)
+QList<QPair<int, QString>> DBI::getTracksFromAlbum(int alid)
 {
 	QSqlQueryModel qm;
-	QList<QString> tracks;
-	qm.setQuery("SELECT name FROM song WHERE album=" + alid);
-	for(int i = 0; i < qm.rowCount(); i++)
+    QList<QPair<int,QString>> tracks;
+    QString quer = "SELECT sid, name FROM song WHERE album=" + QString().setNum(alid);
+    qm.setQuery(quer);
+    for(int i = 0; i < qm.rowCount(); i++)
 	{
-		tracks.append(qm.record(i).value(0).toString());
-	}
-	return tracks;
+        QPair<int,QString> p;
+        p.first = qm.record(i).value(0).toInt();
+        p.second = qm.record(i).value(1).toString();
+        tracks.append(p);
+    }
+    return tracks;
+}
+
+QString DBI::getSongNameFromId(int sid)
+{
+    QSqlQueryModel qm;
+    qm.setQuery("SELECT name FROM song WHERE sid=" + QString::number(sid));
+    return qm.record(0).value(0).toString();
 }
 
 QString DBI::getArtistNameFromID(QString arid)
 {
 	QSqlQueryModel qm;
 	qm.setQuery("SELECT name FROM artist WHERE arid=" + arid);
-	return qm.record(0).value("name").toString();
+    return qm.record(0).value(0).toString();
 }
 
 //Sets up which dirs the run method will be adding
@@ -280,6 +311,7 @@ QString DBI::sanitize(QString s)
 {
 	return s.replace("'","''");
 }
+
 
 DBI::~DBI()
 {

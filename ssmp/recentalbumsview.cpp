@@ -3,11 +3,11 @@
 //Setup some constants
 const QFont RecentAlbumsView::albFont = QFont("Arial", 11);
 
-RecentAlbumsView::RecentAlbumsView(ssmp* parent, int listsize)
+RecentAlbumsView::RecentAlbumsView(QWidget* parent, int listsize)
 	: QGraphicsView(parent)
 {
 	scene = new QGraphicsScene(this);
-	this->parent = parent;
+    db = &DBI::getInstance();
 	this->setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
 	this->setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
     this->setScene(scene);
@@ -15,7 +15,7 @@ RecentAlbumsView::RecentAlbumsView(ssmp* parent, int listsize)
 
 void RecentAlbumsView::update(int howmany)
 {
-	addAlbsToRecent(parent->dbi->getNRecentAlbums(howmany));	
+    addAlbsToRecent(db->getNRecentAlbums(howmany));
 }
 
 void RecentAlbumsView::resizeEvent(QResizeEvent* e)
@@ -33,8 +33,27 @@ void RecentAlbumsView::resizeEvent(QResizeEvent* e)
         backgrounds[i]->setRect(0,ypos,albumxpos,siz);
         descriptions[i]->setPos(0,ypos);
         plusbuttons[i]->setPos(albumxpos-(buttonsiz + 5),ypos);
-        covers[i]->setPos(albumxpos,ypos);
-        covers[i]->setScale(scale);
+        //Don't try to resize covers we couldn't load
+        if(covers[i] != NULL)
+        {
+            covers[i]->setScale(scale);
+            covers[i]->setPos(albumxpos,ypos);
+        }
+    }
+}
+
+void RecentAlbumsView::mouseReleaseEvent(QMouseEvent *event)
+{
+    QPointF sc = this->mapToScene(event->pos());
+    QGraphicsItem* item = scene->itemAt(sc);
+    if(item->type() == QGraphicsSvgItem::Type)
+    {
+        int aldex = plusbuttons.indexOf(dynamic_cast<QGraphicsSvgItem*>(item));
+        int alid = recents[aldex].toInt();
+
+        QList<int> em = QList<int>();
+        em.append(alid);
+        emit addAlbsToNowPlaying(em);
     }
 }
 
@@ -45,7 +64,7 @@ void RecentAlbumsView::addAlbsToRecent(QList<Alb> albs)
     foreach(Alb al, albs)
     {	
         //Dont add if it's already in there
-        if(recents.count() > 0 && recents.contains(al.artist+al.name))
+        if(recents.count() > 0 && recents.contains(al.alid))
             continue;
         //add description
         QGraphicsTextItem* textDesc = new QGraphicsTextItem();
@@ -68,10 +87,10 @@ void RecentAlbumsView::addAlbsToRecent(QList<Alb> albs)
         QGraphicsRectItem* back = new QGraphicsRectItem();
         back->setPen(Qt::NoPen);
         back->setZValue(alnum);
-        back->setBrush(parent->palette().window());
+        back->setBrush(QApplication::palette().window());
         QGraphicsDropShadowEffect* shadow = new QGraphicsDropShadowEffect();
         shadow->setBlurRadius(7);
-        shadow->setColor(parent->palette().window().color());
+        shadow->setColor(QApplication::palette().window().color());
         shadow->setOffset(0,-7);
         back->setGraphicsEffect(shadow);
         scene->addItem(back);
@@ -105,7 +124,7 @@ void RecentAlbumsView::addAlbsToRecent(QList<Alb> albs)
         scene->addItem(plus);
         plusbuttons.push_front(plus);
 
-        recents.push_front(al.artist + al.name);
+        recents.push_front(al.alid);
         //Remove bottom item if more than five in view
 		//TODO: Parameterize # in view
         if(recents.count() > 5)
@@ -114,11 +133,15 @@ void RecentAlbumsView::addAlbsToRecent(QList<Alb> albs)
             scene->removeItem(covers.back());
             scene->removeItem(plusbuttons.back());
             scene->removeItem(backgrounds.back());
-            recents.pop_back();
+            delete descriptions.back();
+            delete covers.back();
+            delete plusbuttons.back();
+            delete backgrounds.back();
             descriptions.pop_back();
             covers.pop_back();
             plusbuttons.pop_back();
             backgrounds.pop_back();
+            recents.pop_back();
         }
         alnum -= 2;
     }
@@ -126,5 +149,5 @@ void RecentAlbumsView::addAlbsToRecent(QList<Alb> albs)
 
 RecentAlbumsView::~RecentAlbumsView()
 {
-
+    delete scene;
 }

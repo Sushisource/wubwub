@@ -3,6 +3,7 @@
 
 #include <QObject>
 #include <QtSql>
+#include <QPair>
 #include <qrunnable.h>
 #include <qthread.h>
 #include "TagExtractor.h"
@@ -19,20 +20,29 @@ struct Alb
 	QList<QString> tracks;
 };
 
+//Database interface. Is a singleton which runs on it's own thread.
 class DBI : public QObject
 {
 	Q_OBJECT
 
 public:		
-	DBI(QObject* parent = 0, QString name = "music.db");
-	~DBI();
-
-	enum searchFlag {All, ArtOnly, AlbOnly, SonOnly};
+    ~DBI();
+    enum searchFlag {All, ArtOnly, AlbOnly, SonOnly};
 
 	void initDB();
 	void addDirs2Lib(QList<QString> dirs);
 	QMap<QString, QString> search(QString query, searchFlag s = DBI::All);
-	QList<Alb> getNRecentAlbums(int n);
+    QList<QPair<int, QString>> getTracksFromAlbum(int alid);
+    QString getSongNameFromId(int sid);
+    QList<Alb> getNRecentAlbums(int n);
+
+    static DBI& getInstance()
+    {
+        static DBI i;
+        return i;
+    }
+    static QList<QString> extractTracks(QList<QPair<int, QString>> ql);
+    static QList<int> extractIds(QList<QPair<int, QString>> ql);
 
 public slots:
 	int addSong(DBItem song);
@@ -51,8 +61,11 @@ private:
 
 	QString getArtistNameFromID(QString arid);	
 	QString getOrFindAlbumArt(Alb a);
-	QList<QString> getTracksFromAlbum(QString alid);
-	QString sanitize(QString);
+    QString sanitize(QString);
+
+    DBI();
+    DBI(DBI const&); //Don't impl
+    void operator=(DBI const&); //Don't impl
 };
 
 #endif // DBI_H
