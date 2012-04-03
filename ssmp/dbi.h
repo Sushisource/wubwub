@@ -29,8 +29,8 @@ public:
     ~DBI();
     enum searchFlag {All, ArtOnly, AlbOnly, SonOnly};
 
-	void initDB();
-	void addDirs2Lib(QList<QString> dirs);
+    void initDB();
+    void addDirs2Lib(QList<QString> dirs);
 	QMap<QString, QString> search(QString query, searchFlag s = DBI::All);
     QList<QPair<int, QString>> getTracksFromAlbum(int alid);
     QString getSongNameFromId(int sid);

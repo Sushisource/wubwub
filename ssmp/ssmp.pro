@@ -17,5 +17,6 @@ DEPENDPATH += .
 MOC_DIR += GeneratedFiles/debug
 UI_DIR += GeneratedFiles
 RCC_DIR += GeneratedFiles
+RC_FILE = ssmp.rc
 QMAKE_CXXFLAGS += -std=c++0x -U__STRICT_ANSI__
 include(ssmp.pri)
