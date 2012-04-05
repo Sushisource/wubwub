@@ -30,11 +30,14 @@ private:
     QList<QGraphicsTextItem*> descriptions;
     QList<QGraphicsPixmapItem*> covers;
     QList<QGraphicsRectItem*> backgrounds;
+    QGraphicsRectItem* bottomfade;
     QList<QGraphicsSvgItem*> plusbuttons;
+    int rnum;
     static const QFont albFont;
     void addAlbsToRecent(QList<Alb> albs);
     void resizeEvent(QResizeEvent * e);
     void mouseReleaseEvent(QMouseEvent *event);
+    void wheelEvent(QWheelEvent *event);
 };
 
 #endif // RECENTALBUMSVIEW_H

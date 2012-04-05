@@ -11,6 +11,16 @@ RecentAlbumsView::RecentAlbumsView(QWidget* parent, int listsize)
 	this->setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
 	this->setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
     this->setScene(scene);
+    bottomfade = new QGraphicsRectItem();
+    bottomfade->setPen(Qt::NoPen);
+    bottomfade->setZValue(1000);
+    bottomfade->setBrush(QApplication::palette().window());
+    QGraphicsDropShadowEffect* shadow = new QGraphicsDropShadowEffect();
+    shadow->setBlurRadius(7);
+    shadow->setColor(QApplication::palette().window().color());
+    shadow->setOffset(0,-7);
+    bottomfade->setGraphicsEffect(shadow);
+    scene->addItem(bottomfade);
 }
 
 void RecentAlbumsView::update(int howmany)
@@ -20,16 +30,16 @@ void RecentAlbumsView::update(int howmany)
 
 void RecentAlbumsView::resizeEvent(QResizeEvent* e)
 {
-    if(recents.count() < 1) //If there's nothing to resize, don't bother.
+    if(rnum < 1) //If there's nothing to resize, don't bother.
         return;
     int padding = 5;
-    float siz  = (this->geometry().height() - padding*(1+recents.count())) / recents.count();
+    float siz  = (this->geometry().height() - padding*(1+rnum)) / rnum;
     int buttonsiz = plusbuttons[0]->boundingRect().width();
     float scale = siz / 200.0;
-    for(int i = 0; i < recents.count(); i++)
+    int albumxpos = this->width()-scale*200;
+    for(int i = 0; i < rnum; i++)
     {
         int ypos = i*(siz + padding) + padding;
-        int albumxpos = this->width()-scale*200;
         backgrounds[i]->setRect(0,ypos,albumxpos,siz);
         descriptions[i]->setPos(0,ypos);
         plusbuttons[i]->setPos(albumxpos-(buttonsiz + 5),ypos);
@@ -40,6 +50,8 @@ void RecentAlbumsView::resizeEvent(QResizeEvent* e)
             covers[i]->setPos(albumxpos,ypos);
         }
     }
+    //Update the bottom fade
+    bottomfade->setRect(0,this->geometry().height(),albumxpos,10);
 }
 
 void RecentAlbumsView::mouseReleaseEvent(QMouseEvent *event)
@@ -57,9 +69,14 @@ void RecentAlbumsView::mouseReleaseEvent(QMouseEvent *event)
     }
 }
 
+void RecentAlbumsView::wheelEvent(QWheelEvent *event)
+{
+    //SCREW YOU WHEEL EVENTS!!! HAHAHAHA!!!@!!111
+}
+
 void RecentAlbumsView::addAlbsToRecent(QList<Alb> albs)
 {
-    int alnum = 500;
+    int znum = 0;
     //Add the albums
     foreach(Alb al, albs)
     {	
@@ -82,11 +99,11 @@ void RecentAlbumsView::addAlbsToRecent(QList<Alb> albs)
         desc += trackz;
         textDesc->setHtml(desc);
         textDesc->setFont(albFont);
-        textDesc->setZValue(alnum+1);
+        textDesc->setZValue(znum+1);
         //First add a backing rectangle
         QGraphicsRectItem* back = new QGraphicsRectItem();
         back->setPen(Qt::NoPen);
-        back->setZValue(alnum);
+        back->setZValue(znum);
         back->setBrush(QApplication::palette().window());
         QGraphicsDropShadowEffect* shadow = new QGraphicsDropShadowEffect();
         shadow->setBlurRadius(7);
@@ -112,14 +129,14 @@ void RecentAlbumsView::addAlbsToRecent(QList<Alb> albs)
 
             cover->setTransformationMode(Qt::SmoothTransformation);
             cover->setGraphicsEffect(shadow);
-            cover->setZValue(alnum+1);
+            cover->setZValue(znum+1);
         }
         scene->addItem(cover);
         covers.push_front(cover);
 
         //add buttons
         QGraphicsSvgItem* plus = new QGraphicsSvgItem("../ssmp/Resources/plus_alt.svg");
-        plus->setZValue(alnum+1);
+        plus->setZValue(znum+1);
         plus->setOpacity(0.8);
         scene->addItem(plus);
         plusbuttons.push_front(plus);
@@ -143,8 +160,9 @@ void RecentAlbumsView::addAlbsToRecent(QList<Alb> albs)
             backgrounds.pop_back();
             recents.pop_back();
         }
-        alnum -= 2;
+        znum -= 2;
     }
+    rnum = recents.count();
 }
 
 RecentAlbumsView::~RecentAlbumsView()

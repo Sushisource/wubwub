@@ -3,14 +3,16 @@ HEADERS += TagExtractor.h \
     recentalbumsview.h \
     dbi.h \
     optionswindow.h \
-    nowplaying.h
+    playlist.h \
+    playbackmgr.h
 SOURCES += dbi.cpp \
     optionswindow.cpp \
     main.cpp \
     recentalbumsview.cpp \
     ssmp.cpp \
     TagExtractor.cpp \
-    nowplaying.cpp
+    playlist.cpp \
+    playbackmgr.cpp
 FORMS += ssmp.ui \
     options.ui \
 

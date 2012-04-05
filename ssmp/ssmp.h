@@ -12,7 +12,8 @@
 #include "dbi.h"
 #include "optionswindow.h"
 #include "recentalbumsview.h"
-#include "nowplaying.h"
+#include "playlist.h"
+#include "playbackmgr.h"
 
 Q_DECLARE_METATYPE(QList<QString>)
 
@@ -26,9 +27,9 @@ public:
 
 	QSettings* settings;
 	QMap<int, QWidget*> tabs;
-	DBI* dbi;
+    DBI* dbi;
 
-private:	
+private:
 	Ui::ssmpClass ui;		
 	optionsWindow* optWin;
 	QThread* dbthread;	
@@ -37,15 +38,17 @@ private:
 	QColor disabledColor;
 	QList<QString> searchtypes;
     RecentAlbumsView* recentAlbs;
-	
+    PlaybackMgr* playback;
+
 	inline void addPopupItem(QString name, QString type);
-	void addAlbumToRecent(Alb);
+    void initPopup();
+    void addAlbumToRecent(Alb);
 	void addAlbsToRecent(QList<Alb>);
 	void openSearchWindow(QString name, QMap<QString,QString> results);	
 	
 private slots:
     void autoSuggest();
-	bool eventFilter(QObject* object, QEvent* e);
+    bool eventFilter(QObject* object, QEvent* e);
 	bool openOptions();
 };
 

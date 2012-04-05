@@ -28,11 +28,15 @@ class DBI : public QObject
 public:		
     ~DBI();
     enum searchFlag {All, ArtOnly, AlbOnly, SonOnly};
+    //Song table's columns. ORMs are for bitches
+    QList<QString> songCols;
 
     void initDB();
     void addDirs2Lib(QList<QString> dirs);
 	QMap<QString, QString> search(QString query, searchFlag s = DBI::All);
-    QList<QPair<int, QString>> getTracksFromAlbum(int alid);
+    QList<int> getTrackIdsFromAlbum(int alid);
+    QList<QString> getTrackColFromAlbum(int alid, int col);
+    QString getTrackColFromSong(int sid, int col);
     QString getSongNameFromId(int sid);
     QList<Alb> getNRecentAlbums(int n);
 
@@ -41,8 +45,6 @@ public:
         static DBI i;
         return i;
     }
-    static QList<QString> extractTracks(QList<QPair<int, QString>> ql);
-    static QList<int> extractIds(QList<QPair<int, QString>> ql);
 
 public slots:
 	int addSong(DBItem song);
@@ -55,7 +57,7 @@ signals:
 	void recentChange();
 
 private:
-	QSqlDatabase db;
+    QSqlDatabase db;
 	QThread* thread;
 	QList<QString> dirlist;	
 

@@ -12,22 +12,7 @@ ssmp::ssmp(QWidget *parent, Qt::WFlags flags) : QMainWindow(parent, flags)
     //Instantiate options menu
     optWin = new optionsWindow(this);
     //Setup suggest popup
-    popup = new QTreeWidget;
-    popup->setWindowFlags(Qt::Popup);
-    popup->setFocusPolicy(Qt::NoFocus);
-    popup->setFocusProxy(parent);
-    popup->setMouseTracking(true);
-    popup->setColumnCount(2);
-    popup->setUniformRowHeights(true);
-    popup->setRootIsDecorated(false);
-    popup->setEditTriggers(QTreeWidget::NoEditTriggers);
-    popup->setSelectionBehavior(QTreeWidget::SelectRows);
-    popup->setFrameStyle(QFrame::Box | QFrame::Plain);
-    popup->setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
-    popup->setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
-    popup->header()->hide();
-    popup->installEventFilter(this);	
-
+    initPopup();
 
     //Connect to database	
     dbi = &DBI::getInstance();
@@ -42,6 +27,9 @@ ssmp::ssmp(QWidget *parent, Qt::WFlags flags) : QMainWindow(parent, flags)
     //Setup recent initial view
     recentAlbs = new RecentAlbumsView(this);
     ui.recentTab->layout()->addWidget(recentAlbs);
+
+    //and audio manager
+    playback = new PlaybackMgr(this);
 
     //Link up stuff	
     //Dbi updates
@@ -60,14 +48,34 @@ ssmp::ssmp(QWidget *parent, Qt::WFlags flags) : QMainWindow(parent, flags)
     connect(ui.search, SIGNAL(textEdited(QString)), searchTimer, SLOT(start()));
     //Connections for the recent view
     connect(recentAlbs, SIGNAL(addAlbsToNowPlaying(QList<int>)), ui.nowplayingLst, SLOT(addAlbums(QList<int>)));
+    //Now play list
+    connect(ui.nowplayingLst, SIGNAL(songChange(QString)), playback, SLOT(changeSong(QString)));
 
     //Run db thread
     dbthread = new QThread;
     dbthread->start();
-    dbi->moveToThread(dbthread);    
+    dbi->moveToThread(dbthread);
 
 	//Update the recent view
     recentAlbs->update();
+}
+
+void ssmp::initPopup()
+{
+    popup = new QTreeWidget;
+    popup->setWindowFlags(Qt::Popup);
+    popup->setFocusPolicy(Qt::NoFocus);
+    popup->setMouseTracking(true);
+    popup->setColumnCount(2);
+    popup->setUniformRowHeights(true);
+    popup->setRootIsDecorated(false);
+    popup->setEditTriggers(QTreeWidget::NoEditTriggers);
+    popup->setSelectionBehavior(QTreeWidget::SelectRows);
+    popup->setFrameStyle(QFrame::Box | QFrame::Plain);
+    popup->setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
+    popup->setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
+    popup->header()->hide();
+    popup->installEventFilter(this);
 }
 
 void ssmp::autoSuggest()
@@ -182,7 +190,6 @@ bool ssmp::openOptions()
 
 ssmp::~ssmp()
 {	
-    delete dbi;
     dbthread->terminate();
     delete dbthread;
     delete popup;

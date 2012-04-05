@@ -6,7 +6,9 @@ DBI::DBI() : QObject(NULL)
 	db.setHostName("localhost");
     db.setDatabaseName("music.db");
 	//TODO: Fix possible 'missing expected db file' w/ try catch
-	db.open();
+    db.open();
+    //This has to match the DB. ORMs are for bitches.
+    songCols << "sid" << "name" << "tracknum" << "album" << "artist" << "length" << "path" << "numplays" << "genre" << "year";
 }
 
 QMap<QString, QString> DBI::search(QString query, searchFlag s)
@@ -26,26 +28,6 @@ QMap<QString, QString> DBI::search(QString query, searchFlag s)
 		QString type = qm.record(i).field(1).value().toString();
 		ret.insertMulti(type, qm.record(i).field(0).value().toString());
 	}
-	return ret;
-}
-
-QList<QString> DBI::extractTracks(QList<QPair<int, QString>> pl)
-{
-    QList<QString> ret;
-    for(int i = 0; i < pl.count(); i++)
-    {
-        ret.append(pl[i].second);
-    }
-    return ret;
-}
-
-QList<int> DBI::extractIds(QList<QPair<int, QString>> pl)
-{
-    QList<int> ret;
-    for(int i = 0; i < pl.count(); i++)
-    {
-        ret.append(pl[i].first);
-    }
     return ret;
 }
 
@@ -60,7 +42,7 @@ QList<Alb> DBI::getNRecentAlbums(int n)
 		a.name = qm.record(i).value("name").toString();
 		a.alid = qm.record(i).value("alid").toString();
 		a.artist = getArtistNameFromID(qm.record(i).value("artist").toString());
-        a.tracks = extractTracks(getTracksFromAlbum(qm.record(i).value(0).toInt()));
+        a.tracks = getTrackColFromAlbum(qm.record(i).value(0).toInt(), 1);
 		a.imguri = getOrFindAlbumArt(a);
 		a.year = qm.record(i).value("year").toString();
 		retme.append(a);
@@ -122,20 +104,38 @@ void DBI::initDB()
 		"UNIQUE(name,tracknum,artist))");
 }
 
-QList<QPair<int, QString>> DBI::getTracksFromAlbum(int alid)
+QList<int> DBI::getTrackIdsFromAlbum(int alid)
 {
-	QSqlQueryModel qm;
-    QList<QPair<int,QString>> tracks;
+    QSqlQueryModel qm;
+    QList<int> tracks;
     QString quer = "SELECT sid, name FROM song WHERE album=" + QString().setNum(alid);
     qm.setQuery(quer);
     for(int i = 0; i < qm.rowCount(); i++)
-	{
-        QPair<int,QString> p;
-        p.first = qm.record(i).value(0).toInt();
-        p.second = qm.record(i).value(1).toString();
-        tracks.append(p);
+    {
+        tracks.append(qm.record(i).value(0).toInt());
     }
     return tracks;
+}
+
+QList<QString> DBI::getTrackColFromAlbum(int alid, int col)
+{
+	QSqlQueryModel qm;
+    QList<QString> tracks;
+    QString quer = "SELECT "+songCols[col]+" FROM song WHERE album=" + QString().setNum(alid);
+    qm.setQuery(quer);
+    for(int i = 0; i < qm.rowCount(); i++)
+	{
+        tracks.append(qm.record(i).value(0).toString());
+    }
+    return tracks;
+}
+
+QString DBI::getTrackColFromSong(int sid, int col)
+{
+    QSqlQueryModel qm;
+    QString quer = "SELECT "+songCols[col]+" FROM song WHERE sid=" + QString().setNum(sid);
+    qm.setQuery(quer);
+    return qm.record(0).value(0).toString();
 }
 
 QString DBI::getSongNameFromId(int sid)
