@@ -36,12 +36,13 @@ void optionsWindow::save()
 		QString path = i->text();		
 		dirs.append(path);
 	}	
-	myparent->dbi->addDirs2Lib(dirs);	
-	emit startSongParsing();
-	QVariantList dlist;
-	foreach(QString d, dirs)
-		dlist << d;
-	myparent->settings->setValue("libdir", dlist);	
+
+    QVariantList dlist;
+    foreach(QString d, dirs)
+        dlist << d;
+    myparent->settings->setValue("libdir", dlist);
+
+    emit startSongParsing(dirs);
 }
 
 optionsWindow::~optionsWindow()

@@ -71,15 +71,40 @@ bool TagExtractor::loadTagIntoMaps(TagLib::File* file, QMap<QString, QString>* s
     stmap->insert("artist", genTag->artist().toCString());
 	if(ap != NULL)
 		itmap->insert("length", ap->length());	
-	return true;
+    return true;
+}
+
+TagLib::File* TagExtractor::createFile(TagLib::FileName fileName, bool readAudioProperties, TagLib::AudioProperties::ReadStyle audioPropertiesStyle)
+{
+    QString fpath(fileName);
+    if(fpath.endsWith("mp3"))
+    {
+        return new TagLib::MPEG::File(fileName, true, TagLib::AudioProperties::Fast);
+    }
+    else if(fpath.endsWith("flac"))
+    {
+        return new TagLib::FLAC::File(fileName,true,TagLib::AudioProperties::Fast);
+    }
+    else if(fpath.endsWith("ogg"))
+        return new TagLib::Ogg::Vorbis::File(fileName,true,TagLib::AudioProperties::Fast);
+    else
+    {
+        return 0;
+    }
 }
 
 
-bool TagExtractor::isAudioFile(QFileInfo f)
+bool TagExtractor::isVaildAudioFile(QFileInfo f)
 {
     QString type = f.suffix();
-    return std::accumulate(supportedFileFormats.begin(), supportedFileFormats.end(), false,
-                           [type](bool a, std::string b) {return (a || b == type.toStdString());});
+    bool isaudio = std::accumulate(supportedFileFormats.begin(), supportedFileFormats.end(), false,
+                                   [type](bool a, std::string b) {return (a || b == type.toStdString());});
+    if(!isaudio)
+        return false;
+    TagLib::File* tf = TagLib::FileRef::create(f.absoluteFilePath().toStdString().c_str());
+    bool isval = tf->isValid();
+    delete tf;
+    return isaudio && isval;
 }
 
 TagExtractor::TagExtractor(void)

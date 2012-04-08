@@ -32,7 +32,6 @@ public:
     QList<QString> songCols;
 
     void initDB();
-    void addDirs2Lib(QList<QString> dirs);
 	QMap<QString, QString> search(QString query, searchFlag s = DBI::All);
     QList<int> getTrackIdsFromAlbum(int alid);
     QList<QString> getTrackColFromAlbum(int alid, int col);
@@ -50,7 +49,8 @@ public slots:
 	int addSong(DBItem song);
 	int addAlbum(DBItem album);
 	int addArtist(QString artist);	
-	void processDirs();
+    void processDirs(QList<QString> dirlist);
+    void processDir(QString dir);
 
 signals:
 	void atDir(const QString &s);
@@ -58,12 +58,15 @@ signals:
 
 private:
     QSqlDatabase db;
-	QThread* thread;
-	QList<QString> dirlist;	
+    QThread* thread;
+    QFileSystemWatcher* watcher;
 
-	QString getArtistNameFromID(QString arid);	
+    QString getArtistNameFromID(QString arid);
 	QString getOrFindAlbumArt(Alb a);
     QString sanitize(QString);
+    QDateTime getPathLastMod(QString path);
+    void updatePathLastMod(QString path);
+    void subProcess(QString path, QDateTime rootlastmod);
 
     DBI();
     DBI(DBI const&); //Don't impl

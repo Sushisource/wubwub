@@ -2,7 +2,10 @@
 
 ssmp::ssmp(QWidget *parent, Qt::WFlags flags) : QMainWindow(parent, flags)
 {
+    //Register metatypes
+    qRegisterMetaType<QList<QString>>("QList<QString>");
     ui.setupUi(this);
+    ui.menuOptions->setWindowOpacity(.5);
     disabledColor = this->palette().color(QPalette::Disabled, QPalette::WindowText);
     searchtypes = QList<QString>() << "artist" << "album" << "song";
     //Update global palette access
@@ -31,6 +34,11 @@ ssmp::ssmp(QWidget *parent, Qt::WFlags flags) : QMainWindow(parent, flags)
     //and audio manager
     playback = new PlaybackMgr(this);
 
+    //Run db thread
+    dbthread = new QThread;
+    dbthread->start();
+    dbi->moveToThread(dbthread);
+
     //Link up stuff	
     //Dbi updates
     connect(dbi, SIGNAL(atDir(QString)), optWin, SLOT(changeStatus(QString)));
@@ -38,7 +46,7 @@ ssmp::ssmp(QWidget *parent, Qt::WFlags flags) : QMainWindow(parent, flags)
     //Open options windows
     connect(ui.optionsAction, SIGNAL(triggered()), SLOT(openOptions()));	
     //Save button on options window
-    connect(optWin, SIGNAL(startSongParsing()), dbi, SLOT(processDirs()));
+    connect(optWin, SIGNAL(startSongParsing(QList<QString>)), dbi, SLOT(processDirs(QList<QString>)));
     //Search bar. Auto suggest after 500ms of stopped typing
     ui.search->installEventFilter(this);
     searchTimer = new QTimer(this);
@@ -50,11 +58,6 @@ ssmp::ssmp(QWidget *parent, Qt::WFlags flags) : QMainWindow(parent, flags)
     connect(recentAlbs, SIGNAL(addAlbsToNowPlaying(QList<int>)), ui.nowplayingLst, SLOT(addAlbums(QList<int>)));
     //Now play list
     connect(ui.nowplayingLst, SIGNAL(songChange(QString)), playback, SLOT(changeSong(QString)));
-
-    //Run db thread
-    dbthread = new QThread;
-    dbthread->start();
-    dbi->moveToThread(dbthread);
 
 	//Update the recent view
     recentAlbs->update();

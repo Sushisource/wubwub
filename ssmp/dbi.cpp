@@ -9,6 +9,9 @@ DBI::DBI() : QObject(NULL)
     db.open();
     //This has to match the DB. ORMs are for bitches.
     songCols << "sid" << "name" << "tracknum" << "album" << "artist" << "length" << "path" << "numplays" << "genre" << "year";
+    //Setup watcher on root dirs
+    watcher = new QFileSystemWatcher();
+    connect(watcher, SIGNAL(directoryChanged(QString)), SLOT(processDir(QString)));
 }
 
 QMap<QString, QString> DBI::search(QString query, searchFlag s)
@@ -55,8 +58,14 @@ QString DBI::getOrFindAlbumArt(Alb a)
 {
 	QSqlQueryModel qm;
 	qm.setQuery("SELECT imguri FROM album WHERE alid=" + a.alid);
-	if(qm.record(0).value(0).toString() != "")
-		return qm.record(0).value(0).toString();
+    QString curpath = qm.record(0).value(0).toString();
+    if(curpath != "")
+    {
+        //Let's check if this is valid, and return it if it is, otherwise
+        //continue updating
+        if(QFile::exists(curpath))
+            return qm.record(0).value(0).toString();
+    }
 	if(a.tracks.length() > 0) //TODO: Handle this better
 	{
 		qm.setQuery("SELECT path FROM song WHERE name='" + sanitize(a.tracks[0]) + "' AND album=" + a.alid);
@@ -87,11 +96,13 @@ QString DBI::getOrFindAlbumArt(Alb a)
 //TODO: This SQL should probably be in a resource file... for everything
 void DBI::initDB()
 {
-	QSqlQuery q;
+    QSqlQuery q;
+    /* Not sure this needs to be done
 	q.exec("drop table artist");
 	q.exec("drop table album");
 	q.exec("drop table song");
-	q.exec("PRAGMA foreign_keys = ON");
+    q.exec("drop table dirs");*/
+    q.exec("PRAGMA foreign_keys = ON");
 	q.exec("CREATE TABLE artist(arid integer primary key autoincrement, name text, "
 		"UNIQUE(name) ON CONFLICT IGNORE)");
 	q.exec("CREATE TABLE album(alid integer primary key autoincrement, name text, genre text, "
@@ -102,6 +113,7 @@ void DBI::initDB()
 		"FOREIGN KEY(artist) REFERENCES artist(arid),"
 		"FOREIGN KEY(album) REFERENCES album(alid), "
 		"UNIQUE(name,tracknum,artist))");
+    q.exec("CREATE TABLE dirs(dirid integer primary key autoincrement, path text, lastmod text)");
 }
 
 QList<int> DBI::getTrackIdsFromAlbum(int alid)
@@ -152,49 +164,63 @@ QString DBI::getArtistNameFromID(QString arid)
     return qm.record(0).value(0).toString();
 }
 
-//Sets up which dirs the run method will be adding
-void DBI::addDirs2Lib(QList<QString> dirs)
-{	
-	dirlist.append(dirs);	
-}
-
-void DBI::processDirs()
+void DBI::processDirs(QList<QString> dirlist)
 {
-	foreach(QString dirstr, dirlist)
-	{
-		QDir dir(dirstr);
-		dir.setFilter(QDir::Files | QDir::Dirs | QDir::NoSymLinks | QDir::NoDotAndDotDot);
-		QDirIterator di(dir, QDirIterator::Subdirectories);	
-
-		QString last = NULL;
-		while(di.hasNext())
-		{
-			di.next();		
-			QString fpath = di.filePath();	
-			QFileInfo f = di.fileInfo();
-			if(TagExtractor::isAudioFile(f))//Add this song to the database
-			{
-				//We'll store tag information in these:
-				QMap<QString, QString> stmap;
-				QMap<QString, int> itmap;
-				//Extract tags
-				TagExtractor::extractTag(fpath, &stmap, &itmap);
-				//Add collected info to db
-				DBItem s;
-				s.strVals = stmap;
-				s.intVals = itmap;
-				addSong(s);
-			}
-			// Update ui
-			else if(f.isDir())
-			{
-				emit atDir(fpath);
-				emit recentChange();
-			}
-		}
-	}
-	dirlist.empty();
+    foreach(QString dirstr, dirlist)
+    {
+        QDateTime rootlastmod = getPathLastMod(dirstr);
+        subProcess(dirstr, rootlastmod);
+        updatePathLastMod(dirstr);
+        watcher->addPath(dirstr);
+    }
 }
+
+void DBI::processDir(QString dir)
+{
+    QList<QString> l;
+    l.append(dir);
+    processDirs(l);
+}
+
+void DBI::subProcess(QString path, QDateTime rootlastmod)
+{
+    emit atDir(path);
+    qDebug() << path;
+    QDir dir(path);
+    dir.setFilter(QDir::Files | QDir::Dirs | QDir::NoSymLinks | QDir::NoDotAndDotDot);
+    QDirIterator di(dir);
+
+    while(di.hasNext())
+    {
+        di.next();
+        QString fpath = di.filePath();
+        QFileInfo f = di.fileInfo();
+        if(TagExtractor::isVaildAudioFile(f)) //Add this song to the database
+        {
+            //We'll store tag information in these:
+            QMap<QString, QString> stmap;
+            QMap<QString, int> itmap;
+            //Extract tags
+            TagExtractor::extractTag(fpath, &stmap, &itmap);
+            //Add collected info to db
+            DBItem s;
+            s.strVals = stmap;
+            s.intVals = itmap;
+            addSong(s);
+        }
+        // Recur
+        else if(f.isDir() && f.lastModified() >= rootlastmod)
+        {
+            //First check if we even need to look in here
+            if(QFileInfo(fpath).lastModified() <= rootlastmod)
+                return;
+            subProcess(fpath, rootlastmod);
+        }
+    }
+    //Update ui
+    emit recentChange();
+}
+
 
 int DBI::addSong(DBItem sng)
 {
@@ -210,7 +236,7 @@ int DBI::addSong(DBItem sng)
 	colbinds += ":" + QStringList(sng.strVals.keys()).join(", :");
 	colnames += ", " + QStringList(sng.intVals.keys()).join(", ");
 	colbinds += ", :" + QStringList(sng.intVals.keys()).join(", :");
-	QString sql = "INSERT INTO song (" + colnames + ") VALUES (" + colbinds + ")";
+    QString sql = "INSERT OR REPLACE INTO song (" + colnames + ") VALUES (" + colbinds + ")";
 	q.prepare(sql);
 
 	//Extract string values
@@ -232,8 +258,8 @@ int DBI::addSong(DBItem sng)
 	qs.append(sanitize(sng.strVals.value("album","unknown")));
 	qs.append("'");
 	qm.setQuery(qs);
-	if(qm.rowCount() > 0) //If album present, get id
-		alkey = qm.record(0).value("alid").toInt();
+    if(qm.rowCount() > 0)
+        alkey = qm.record(0).value("alid").toInt();
 	else //add album
 	{
 		DBItem a;
@@ -309,9 +335,37 @@ int DBI::addArtist(QString a)
 //TODO: This probably needs to fix more than just single quotes
 QString DBI::sanitize(QString s)
 {
-	return s.replace("'","''");
+    return s.replace("'","''");
 }
 
+QDateTime DBI::getPathLastMod(QString path)
+{
+    QSqlQueryModel qm;
+    QDateTime lastmod;
+    QString quer = "SELECT lastmod FROM dirs WHERE path='" + sanitize(path)+"'";
+    qm.setQuery(quer);
+    if(qm.rowCount() > 0)
+    {
+        QString res = qm.record(0).value(0).toString();
+        lastmod = QDateTime::fromString(res, Qt::ISODate);
+    }
+    return lastmod;
+}
+
+void DBI::updatePathLastMod(QString path)
+{
+    QSqlQuery q;
+    bool insert = false;
+    if(getPathLastMod(path).isNull())
+        insert = true;
+    if(insert)
+        q.prepare("INSERT INTO dirs (path, lastmod) VALUES (:path, :lm)");
+    else
+        q.prepare("UPDATE dirs SET lastmod=:lm WHERE path=:path");
+    q.bindValue(":path", path);
+    q.bindValue(":lm", QDateTime::currentDateTime());
+    q.exec();
+}
 
 DBI::~DBI()
 {

@@ -26,6 +26,7 @@ RecentAlbumsView::RecentAlbumsView(QWidget* parent, int listsize)
 void RecentAlbumsView::update(int howmany)
 {
     addAlbsToRecent(db->getNRecentAlbums(howmany));
+    resizeEvent();
 }
 
 void RecentAlbumsView::resizeEvent(QResizeEvent* e)
@@ -58,6 +59,7 @@ void RecentAlbumsView::mouseReleaseEvent(QMouseEvent *event)
 {
     QPointF sc = this->mapToScene(event->pos());
     QGraphicsItem* item = scene->itemAt(sc);
+    if(item == NULL) return;
     if(item->type() == QGraphicsSvgItem::Type)
     {
         int aldex = plusbuttons.indexOf(dynamic_cast<QGraphicsSvgItem*>(item));

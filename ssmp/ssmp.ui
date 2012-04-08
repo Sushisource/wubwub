@@ -151,7 +151,7 @@ QMenuBar {
      spacing: 3px;
      padding: 1px 4px;
      background: transparent;
-     border-radius: 4px;
+     border-radius: 5px;
  }
 
  QMenuBar::item:selected { /* when selected using mouse or keyboard */
@@ -162,16 +162,14 @@ QMenuBar {
      background: #888888;
  }
 
-QMenu {
-	background: rgba(7, 54, 66,50);
+QMenu::item::selected {
+	background: rgba(0,0,0,30);
+	border-radius: 5px;
 }
 
-QMenu::item {
-	background: transparent;	
-}
 
 QListView {
-border:none;
+border: 1px solid grey;
 }
 
 QListView::item {
@@ -272,6 +270,9 @@ QPushButton {
          <width>16777215</width>
          <height>16777215</height>
         </size>
+       </property>
+       <property name="styleSheet">
+        <string notr="true">border: none;</string>
        </property>
        <property name="lineWidth">
         <number>0</number>

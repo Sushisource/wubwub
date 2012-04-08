@@ -35,9 +35,9 @@ private:
     int rnum;
     static const QFont albFont;
     void addAlbsToRecent(QList<Alb> albs);
-    void resizeEvent(QResizeEvent * e);
+    void resizeEvent(QResizeEvent* e = NULL);
     void mouseReleaseEvent(QMouseEvent *event);
-    void wheelEvent(QWheelEvent *event);
+    void wheelEvent(QWheelEvent* event);
 };
 
 #endif // RECENTALBUMSVIEW_H
