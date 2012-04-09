@@ -17,7 +17,7 @@
 #include <functional>
 #include <numeric>
 
-class TagExtractor : TagLib::FileRef::FileTypeResolver
+class TagExtractor
 {
 public:
 	static void extractID3v2Tag(TagLib::ID3v2::Tag* tag, QMap<QString, QString>* tagmap);

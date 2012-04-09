@@ -2,8 +2,7 @@
 #define PLAYBACKMGR_H
 
 #include <QObject>
-#include <Phonon/MediaObject>
-#include <Phonon/AudioOutput>
+#include <irrKlang.h>
 class ssmp;
 
 class PlaybackMgr : public QObject
@@ -19,8 +18,8 @@ public slots:
 
 private:
     ssmp* parent;
-    Phonon::MediaObject *cursong;
-    Phonon::AudioOutput *audioout;
+    irrklang::ISoundEngine* eng;
+    irrklang::ISound* cursong;
 
 };
 

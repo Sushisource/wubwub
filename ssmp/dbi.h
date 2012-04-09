@@ -67,6 +67,7 @@ private:
     QDateTime getPathLastMod(QString path);
     void updatePathLastMod(QString path);
     void subProcess(QString path, QDateTime rootlastmod);
+    void deleteAlbumIfEmpty(int alid);
 
     DBI();
     DBI(DBI const&); //Don't impl

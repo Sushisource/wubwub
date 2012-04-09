@@ -3,7 +3,7 @@
 std::vector<std::string> initFF()
 {
 	std::vector<std::string> v;
-	v.push_back("mp3");
+    v.push_back("mp3");
 	v.push_back("flac");
 	v.push_back("m4a");
 	v.push_back("ogg");
@@ -46,7 +46,7 @@ bool TagExtractor::extractTag(QString fpath, QMap<QString, QString>* stmap, QMap
 	}
 	else
 	{
-		TagLib::File* file = TagLib::FileRef::create(fname);
+        TagLib::File* file = TagLib::FileRef::create(fname);
 		suc = loadTagIntoMaps(file, stmap, itmap);		
 	}
 
@@ -74,37 +74,12 @@ bool TagExtractor::loadTagIntoMaps(TagLib::File* file, QMap<QString, QString>* s
     return true;
 }
 
-TagLib::File* TagExtractor::createFile(TagLib::FileName fileName, bool readAudioProperties, TagLib::AudioProperties::ReadStyle audioPropertiesStyle)
-{
-    QString fpath(fileName);
-    if(fpath.endsWith("mp3"))
-    {
-        return new TagLib::MPEG::File(fileName, true, TagLib::AudioProperties::Fast);
-    }
-    else if(fpath.endsWith("flac"))
-    {
-        return new TagLib::FLAC::File(fileName,true,TagLib::AudioProperties::Fast);
-    }
-    else if(fpath.endsWith("ogg"))
-        return new TagLib::Ogg::Vorbis::File(fileName,true,TagLib::AudioProperties::Fast);
-    else
-    {
-        return 0;
-    }
-}
-
-
 bool TagExtractor::isVaildAudioFile(QFileInfo f)
 {
     QString type = f.suffix();
     bool isaudio = std::accumulate(supportedFileFormats.begin(), supportedFileFormats.end(), false,
                                    [type](bool a, std::string b) {return (a || b == type.toStdString());});
-    if(!isaudio)
-        return false;
-    TagLib::File* tf = TagLib::FileRef::create(f.absoluteFilePath().toStdString().c_str());
-    bool isval = tf->isValid();
-    delete tf;
-    return isaudio && isval;
+    return isaudio;
 }
 
 TagExtractor::TagExtractor(void)

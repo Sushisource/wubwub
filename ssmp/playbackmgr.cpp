@@ -1,19 +1,25 @@
 #include "ssmp.h"
+using namespace irrklang;
 
 PlaybackMgr::PlaybackMgr(ssmp *parent) : QObject(NULL)
 {
     this->parent = parent;
     //Setup Audio output
-    audioout = new Phonon::AudioOutput(Phonon::MusicCategory);
-    audioout->setVolumeDecibel(100);
-    cursong = new Phonon::MediaObject();
-    Phonon::createPath(cursong, audioout);
+    eng = createIrrKlangDevice();
+    cursong = NULL;
+    qDebug() << eng->getDriverName();
 }
 
 void PlaybackMgr::changeSong(QString song)
 {
-    cursong->setCurrentSource(song);
-    cursong->play();
+    if(cursong != NULL)
+    {
+        cursong->drop();
+        cursong = NULL;
+        eng->stopAllSounds();
+    }
+    cursong = eng->play2D(song.toStdString().c_str(), false, false, true);
+    cursong->setVolume(1);
 }
 
 void PlaybackMgr::changeState(PlaybackMgr::Playstate s)

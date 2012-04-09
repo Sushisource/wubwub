@@ -164,6 +164,13 @@ QString DBI::getArtistNameFromID(QString arid)
     return qm.record(0).value(0).toString();
 }
 
+void DBI::processDir(QString dir)
+{
+    QList<QString> l;
+    l.append(dir);
+    processDirs(l);
+}
+
 void DBI::processDirs(QList<QString> dirlist)
 {
     foreach(QString dirstr, dirlist)
@@ -175,13 +182,6 @@ void DBI::processDirs(QList<QString> dirlist)
     }
 }
 
-void DBI::processDir(QString dir)
-{
-    QList<QString> l;
-    l.append(dir);
-    processDirs(l);
-}
-
 void DBI::subProcess(QString path, QDateTime rootlastmod)
 {
     emit atDir(path);
@@ -190,12 +190,14 @@ void DBI::subProcess(QString path, QDateTime rootlastmod)
     dir.setFilter(QDir::Files | QDir::Dirs | QDir::NoSymLinks | QDir::NoDotAndDotDot);
     QDirIterator di(dir);
 
+    //TODO: Remove files from DB which no longer exist
+
     while(di.hasNext())
     {
         di.next();
         QString fpath = di.filePath();
         QFileInfo f = di.fileInfo();
-        if(TagExtractor::isVaildAudioFile(f)) //Add this song to the database
+        if(TagExtractor::isVaildAudioFile(f)) //Add or update song
         {
             //We'll store tag information in these:
             QMap<QString, QString> stmap;
@@ -221,12 +223,20 @@ void DBI::subProcess(QString path, QDateTime rootlastmod)
     emit recentChange();
 }
 
-
 int DBI::addSong(DBItem sng)
 {
 	QString albartist, colnames = "", colbinds = "";
-	int alkey = 0, arkey = 0;
-	QSqlQuery q;
+    int alkey = 0, arkey = 0, prevalid = -1;
+    QSqlQuery q;
+
+    //Check if we're actually going to replace a song record
+    //and get what album it belonged to, at the end we check if it still has children
+    QSqlQueryModel qm;
+    QString qs = "SELECT album FROM song WHERE path='"+sanitize(sng.strVals["path"])+"'";
+    qm.setQuery(qs);
+    if(qm.rowCount() > 0)
+        prevalid = qm.record(0).value(0).toInt();
+
 
 	//Annoying exception
 	albartist = sng.strVals.value("albumartist", "unknown");
@@ -253,14 +263,13 @@ int DBI::addSong(DBItem sng)
 	}
 
 	//Now figure out album's ID
-	QSqlQueryModel qm;
-	QString qs = "SELECT * FROM album WHERE name like '";
+    qs = "SELECT * FROM album WHERE name like '";
 	qs.append(sanitize(sng.strVals.value("album","unknown")));
 	qs.append("'");
 	qm.setQuery(qs);
     if(qm.rowCount() > 0)
         alkey = qm.record(0).value("alid").toInt();
-	else //add album
+    else //add album
 	{
 		DBItem a;
 		a.strVals["name"] = sng.strVals.value("album", "unknown");
@@ -283,9 +292,15 @@ int DBI::addSong(DBItem sng)
 		arkey = addArtist(sng.strVals.value("artist","unknown"));
 	}
 
+    //Execute
 	q.bindValue(":album", alkey);
 	q.bindValue(":artist", arkey);
-	return (q.exec()) ? q.lastInsertId().toInt() : -1;
+    bool execsuccess = q.exec();
+
+    //Now check if the old album we may have replaced should be deleted
+    deleteAlbumIfEmpty(prevalid);
+
+    return (execsuccess) ? q.lastInsertId().toInt() : -1;
 }
 
 int DBI::addAlbum(DBItem a)
@@ -331,6 +346,24 @@ int DBI::addArtist(QString a)
 	q.bindValue(":name", a);
 	return (q.exec()) ? q.lastInsertId().toInt() : -1;
 }
+
+//If the given alid has no child songs remove it
+void DBI::deleteAlbumIfEmpty(int alid)
+{
+    QSqlQuery q;
+    QString qs = "SELECT sid FROM song WHERE album=:alid";
+    q.prepare(qs);
+    q.bindValue(":alid", alid);
+    q.exec();
+    if(q.next() && q.isValid())
+        return;
+    qDebug() << "Nosongs";
+    //No songs. Delete it.
+    q.prepare("DELETE FROM album WHERE alid=:alid");
+    q.bindValue(":alid", alid);
+    qDebug() << q.exec();
+}
+
 
 //TODO: This probably needs to fix more than just single quotes
 QString DBI::sanitize(QString s)
