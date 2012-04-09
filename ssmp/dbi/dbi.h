@@ -32,11 +32,15 @@ public:
     QList<QString> songCols;
 
     void initDB();
-	QMap<QString, QString> search(QString query, searchFlag s = DBI::All);
+    void refresh();
+    QMap<QString, int> search(QString query, searchFlag s = DBI::All);
     QList<int> getTrackIdsFromAlbum(int alid);
     QList<QString> getTrackColFromAlbum(int alid, int col);
+    QList<QString> getNames(QList<int> ids, QString type);
     QString getTrackColFromSong(int sid, int col);
     QString getSongNameFromId(int sid);
+    QString getAlbumNameFromId(int alid);
+    QString getArtistNameFromId(int arid);
     QList<Alb> getNRecentAlbums(int n);
 
     static DBI& getInstance()

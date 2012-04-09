@@ -14,22 +14,22 @@ DBI::DBI() : QObject(NULL)
     connect(watcher, SIGNAL(directoryChanged(QString)), SLOT(processDir(QString)));
 }
 
-QMap<QString, QString> DBI::search(QString query, searchFlag s)
+QMap<QString, int> DBI::search(QString query, searchFlag s)
 {
 	QSqlQueryModel qm;
 	query = sanitize(query);
-	QString quer = "select name, 'album' as tbn from album where name like '%"+query+"%'";
+    QString quer = "select alid as id, 'album' as tbn from album where name like '%"+query+"%'";
 	quer += " UNION";
-	quer += " select name, 'artist' as tbn from artist where name like '%"+query+"%'";
+    quer += " select arid as id, 'artist' as tbn from artist where name like '%"+query+"%'";
 	quer += " UNION";
-	quer += " select name, 'song' as tbn from song where name like '%"+query+"%'";
-	quer += " ORDER BY name COLLATE NOCASE ASC";
+    quer += " select sid as id, 'song' as tbn from song where name like '%"+query+"%'";
+    quer += " ORDER BY id COLLATE NOCASE ASC";
 	qm.setQuery(quer);	
-	QMap<QString, QString> ret;
+    QMap<QString, int> ret;
 	for(int i = 0; i < qm.rowCount(); i++)
 	{
-		QString type = qm.record(i).field(1).value().toString();
-		ret.insertMulti(type, qm.record(i).field(0).value().toString());
+        QString type = qm.record(i).field(1).value().toString();
+        ret.insertMulti(type, qm.record(i).field(0).value().toInt());
 	}
     return ret;
 }
@@ -116,6 +116,18 @@ void DBI::initDB()
     q.exec("CREATE TABLE dirs(dirid integer primary key autoincrement, path text, lastmod text)");
 }
 
+void DBI::refresh()
+{
+    QList<QString> dirs;
+    QSqlQueryModel qm;
+    qm.setQuery("SELECT path FROM dirs");
+    for(int i = 0; i < qm.rowCount(); ++i)
+    {
+        dirs.append(qm.record(i).value(0).toString());
+    }
+    processDirs(dirs);
+}
+
 QList<int> DBI::getTrackIdsFromAlbum(int alid)
 {
     QSqlQueryModel qm;
@@ -142,6 +154,33 @@ QList<QString> DBI::getTrackColFromAlbum(int alid, int col)
     return tracks;
 }
 
+QList<QString> DBI::getNames(QList<int> ids, QString type)
+{
+    QList<QString> ret;
+    if(type == "song")
+    {
+        foreach(int i, ids)
+        {
+            ret.append(getSongNameFromId(i));
+        }
+    }
+    else if(type == "album")
+    {
+        foreach(int i, ids)
+        {
+            ret.append(getAlbumNameFromId(i));
+        }
+    }
+    else if(type == "artist")
+    {
+        foreach(int i, ids)
+        {
+            ret.append(getArtistNameFromId(i));
+        }
+    }
+    return ret;
+}
+
 QString DBI::getTrackColFromSong(int sid, int col)
 {
     QSqlQueryModel qm;
@@ -154,6 +193,20 @@ QString DBI::getSongNameFromId(int sid)
 {
     QSqlQueryModel qm;
     qm.setQuery("SELECT name FROM song WHERE sid=" + QString::number(sid));
+    return qm.record(0).value(0).toString();
+}
+
+QString DBI::getAlbumNameFromId(int alid)
+{
+    QSqlQueryModel qm;
+    qm.setQuery("SELECT name FROM album WHERE alid=" + QString::number(alid));
+    return qm.record(0).value(0).toString();
+}
+
+QString DBI::getArtistNameFromId(int arid)
+{
+    QSqlQueryModel qm;
+    qm.setQuery("SELECT name FROM artist WHERE arid=" + QString::number(arid));
     return qm.record(0).value(0).toString();
 }
 

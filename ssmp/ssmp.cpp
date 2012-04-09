@@ -56,7 +56,8 @@ ssmp::ssmp(QWidget *parent, Qt::WFlags flags) : QMainWindow(parent, flags)
     //Now play list
     connect(ui.nowplayingLst, SIGNAL(songChange(QString)), ui.playbackwidget, SLOT(changeSong(QString)));
 
-	//Update the recent view
+    //Update the recent view
+    dbi->refresh();
     recentAlbs->update();
 }
 
@@ -82,7 +83,7 @@ void ssmp::autoSuggest()
 {
     QString q = ui.search->text();
     if(q.length() < 3) return;
-    QMap<QString, QString> res = dbi->search(q);
+    QMap<QString, int> res = dbi->search(q);
     if(res.count() < 1) return;
 
     popup->setUpdatesEnabled(false);
@@ -90,20 +91,27 @@ void ssmp::autoSuggest()
 
     foreach(QString t, searchtypes)
     {    
-        QList<QString> resp = res.values(t);
+        QList<int> resp = res.values(t);
+        QList<QString> resp_str = dbi->getNames(resp, t);
+        QList<QPair<QString, int>> pairs;
+        for(int i = 0; i < resp.count(); ++i)
+        {
+            pairs.append(qMakePair(resp_str[i],resp[i]));
+        }
         //Sort by string length and startsWith, shortest first
-        qSort(resp.begin(),resp.end(), [&q](const QString &s1, const QString &s2)->bool
+        qSort(pairs.begin(),pairs.end(), [&q](const QPair<QString, int> &s1, const QPair<QString, int> &s2)->bool
 		{
-			if(!s1.toLower().startsWith(q.toLower()))
+            if(!s1.first.toLower().startsWith(q.toLower()))
                 return false;	
-			return s1.length() < s2.length();
-		});
-        foreach(QString n, resp)
+            return s1.first.length() < s2.first.length();
+        });
+        for(int i = 0; i < pairs.count(); ++i)
         {
             QTreeWidgetItem * item;
             item = new QTreeWidgetItem(popup);
-            item->setText(0, n);
+            item->setText(0, pairs[i].first);
             item->setText(1, t);
+            item->setData(0,Qt::WhatsThisRole, pairs[i].second);
             item->setTextAlignment(1, Qt::AlignRight);
             item->setTextColor(1, disabledColor);
         }
@@ -141,15 +149,27 @@ bool ssmp::eventFilter(QObject* object, QEvent* e)
         {
             bool consumed = false;
             int key = static_cast<QKeyEvent *>(e)->key();
-            switch (key) 
+            QList<int> l;
+            switch (key)
             {
                 case Qt::Key_Enter:
                 case Qt::Key_Return:
-                    //doneCompletion();
                     consumed = true;
+                    ui.search->clearFocus();
+                    popup->hide();
+                    break;
+
+                case Qt::Key_Control:
+                    l.append(popup->selectedItems()[0]->data(0, Qt::WhatsThisRole).toInt());
+                    if(popup->selectedItems()[0]->text(1) == "song")
+                        ui.nowplayingLst->addSongs(l);
+                    consumed = true;
+                    ui.search->clearFocus();
+                    popup->hide();
+                    break;
 
                 case Qt::Key_Escape:
-                    ui.search->setFocus();
+                    ui.search->clearFocus();
                     popup->hide();
                     consumed = true;
 

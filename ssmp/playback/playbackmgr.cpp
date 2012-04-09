@@ -12,7 +12,7 @@ PlaybackMgr::PlaybackMgr(QWidget *parent) : QWidget(parent)
     seekerUpdater = new QTimer(this);
     connect(seekerUpdater, SIGNAL(timeout()), SLOT(updateSeeker()));
     connect(ui.playSlider, SIGNAL(seekTo(float)), SLOT(seek(float)));
-    seekerUpdater->setInterval(500);
+    seekerUpdater->setInterval(100);
 }
 
 PlaybackMgr::~PlaybackMgr()
