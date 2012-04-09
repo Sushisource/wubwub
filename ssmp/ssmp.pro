@@ -24,8 +24,26 @@ UI_DIR += GeneratedFiles
 RCC_DIR += GeneratedFiles
 RC_FILE = ssmp.rc
 QMAKE_CXXFLAGS += -std=c++0x -U__STRICT_ANSI__
-include(ssmp.pri)
+HEADERS += TagExtractor.h \
+    ssmp.h \
+    recentalbumsview.h \
+    dbi.h \
+    optionswindow.h \
+    playlist.h \
+    playbackmgr.h \
+    musicslider.h
+SOURCES += dbi.cpp \
+    optionswindow.cpp \
+    main.cpp \
+    recentalbumsview.cpp \
+    ssmp.cpp \
+    TagExtractor.cpp \
+    playlist.cpp \
+    playbackmgr.cpp \
+    musicslider.cpp
+FORMS += ssmp.ui \
+    options.ui \
+    playbackwidget.ui
 
-HEADERS +=
-
-SOURCES +=
+OTHER_FILES += \
+    Resources/plus_alt.svg

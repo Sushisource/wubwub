@@ -31,9 +31,6 @@ ssmp::ssmp(QWidget *parent, Qt::WFlags flags) : QMainWindow(parent, flags)
     recentAlbs = new RecentAlbumsView(this);
     ui.recentTab->layout()->addWidget(recentAlbs);
 
-    //and audio manager
-    playback = new PlaybackMgr(this);
-
     //Run db thread
     dbthread = new QThread;
     dbthread->start();
@@ -57,7 +54,7 @@ ssmp::ssmp(QWidget *parent, Qt::WFlags flags) : QMainWindow(parent, flags)
     //Connections for the recent view
     connect(recentAlbs, SIGNAL(addAlbsToNowPlaying(QList<int>)), ui.nowplayingLst, SLOT(addAlbums(QList<int>)));
     //Now play list
-    connect(ui.nowplayingLst, SIGNAL(songChange(QString)), playback, SLOT(changeSong(QString)));
+    connect(ui.nowplayingLst, SIGNAL(songChange(QString)), ui.playbackwidget, SLOT(changeSong(QString)));
 
 	//Update the recent view
     recentAlbs->update();

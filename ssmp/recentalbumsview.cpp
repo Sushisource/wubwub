@@ -33,11 +33,11 @@ void RecentAlbumsView::resizeEvent(QResizeEvent* e)
 {
     if(rnum < 1) //If there's nothing to resize, don't bother.
         return;
-    int padding = 5;
+    int padding = 8;
     float siz  = (this->geometry().height() - padding*(1+rnum)) / rnum;
     int buttonsiz = plusbuttons[0]->boundingRect().width();
     float scale = siz / 200.0;
-    int albumxpos = this->width()-scale*200;
+    int albumxpos = this->width()-padding-scale*200;
     for(int i = 0; i < rnum; i++)
     {
         int ypos = i*(siz + padding) + padding;
@@ -47,8 +47,8 @@ void RecentAlbumsView::resizeEvent(QResizeEvent* e)
         //Don't try to resize covers we couldn't load
         if(covers[i] != NULL)
         {
-            covers[i]->setScale(scale);
             covers[i]->setPos(albumxpos,ypos);
+            covers[i]->setScale(scale);
         }
     }
     //Update the bottom fade

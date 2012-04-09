@@ -294,7 +294,13 @@ QPushButton {
          <verstretch>0</verstretch>
         </sizepolicy>
        </property>
-       <layout class="QVBoxLayout" name="verticalLayout_2">
+       <layout class="QVBoxLayout" name="verticalLayout">
+        <property name="spacing">
+         <number>5</number>
+        </property>
+        <property name="leftMargin">
+         <number>9</number>
+        </property>
         <property name="topMargin">
          <number>0</number>
         </property>
@@ -309,137 +315,50 @@ QPushButton {
          </widget>
         </item>
         <item>
-         <layout class="QVBoxLayout" name="verticalLayout">
-          <item>
-           <widget class="QTabWidget" name="tabWidget">
-            <property name="currentIndex">
-             <number>1</number>
+         <widget class="QTabWidget" name="tabWidget">
+          <property name="currentIndex">
+           <number>1</number>
+          </property>
+          <widget class="QWidget" name="nowplayingTab">
+           <property name="autoFillBackground">
+            <bool>false</bool>
+           </property>
+           <attribute name="title">
+            <string>Now Playing</string>
+           </attribute>
+           <layout class="QHBoxLayout" name="horizontalLayout">
+            <property name="margin">
+             <number>0</number>
             </property>
-            <widget class="QWidget" name="nowplayingTab">
-             <property name="autoFillBackground">
-              <bool>false</bool>
-             </property>
-             <attribute name="title">
-              <string>Now Playing</string>
-             </attribute>
-             <layout class="QHBoxLayout" name="horizontalLayout">
-              <property name="margin">
-               <number>0</number>
-              </property>
-              <item>
-               <widget class="QGraphicsView" name="nowGView">
-                <property name="sizePolicy">
-                 <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
-                  <horstretch>0</horstretch>
-                  <verstretch>0</verstretch>
-                 </sizepolicy>
-                </property>
-                <property name="lineWidth">
-                 <number>0</number>
-                </property>
-               </widget>
-              </item>
-             </layout>
-            </widget>
-            <widget class="QWidget" name="recentTab">
-             <attribute name="title">
-              <string>Recently Added</string>
-             </attribute>
-             <layout class="QVBoxLayout" name="recentLayout">
-              <property name="margin">
-               <number>0</number>
-              </property>
-             </layout>
-            </widget>
-           </widget>
-          </item>
-          <item>
-           <layout class="QGridLayout" name="gridLayout">
-            <item row="1" column="1">
-             <widget class="QPushButton" name="playBtn">
-              <property name="maximumSize">
-               <size>
-                <width>40</width>
-                <height>16777215</height>
-               </size>
-              </property>
-              <property name="text">
-               <string>Play</string>
-              </property>
-             </widget>
-            </item>
-            <item row="0" column="5">
-             <widget class="QLabel" name="totalLbl">
-              <property name="text">
-               <string>0:00</string>
-              </property>
-             </widget>
-            </item>
-            <item row="1" column="0">
-             <widget class="QPushButton" name="prevBtn">
-              <property name="maximumSize">
-               <size>
-                <width>40</width>
-                <height>16777215</height>
-               </size>
-              </property>
-              <property name="text">
-               <string>&lt;&lt;</string>
-              </property>
-             </widget>
-            </item>
-            <item row="1" column="2">
-             <widget class="QPushButton" name="nextBtn">
-              <property name="maximumSize">
-               <size>
-                <width>40</width>
-                <height>16777215</height>
-               </size>
-              </property>
-              <property name="text">
-               <string>&gt;&gt;</string>
-              </property>
-             </widget>
-            </item>
-            <item row="0" column="3">
-             <widget class="Phonon::SeekSlider" name="seekSlider" native="true">
+            <item>
+             <widget class="QGraphicsView" name="nowGView">
               <property name="sizePolicy">
-               <sizepolicy hsizetype="Expanding" vsizetype="Preferred">
+               <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
                 <horstretch>0</horstretch>
                 <verstretch>0</verstretch>
                </sizepolicy>
               </property>
-             </widget>
-            </item>
-            <item row="0" column="4">
-             <spacer name="horizontalSpacer">
-              <property name="orientation">
-               <enum>Qt::Horizontal</enum>
-              </property>
-              <property name="sizeType">
-               <enum>QSizePolicy::Minimum</enum>
-              </property>
-              <property name="sizeHint" stdset="0">
-               <size>
-                <width>5</width>
-                <height>0</height>
-               </size>
-              </property>
-             </spacer>
-            </item>
-            <item row="0" column="1">
-             <widget class="QLabel" name="playedLbl">
-              <property name="text">
-               <string>0:00</string>
-              </property>
-              <property name="alignment">
-               <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+              <property name="lineWidth">
+               <number>0</number>
               </property>
              </widget>
             </item>
            </layout>
-          </item>
-         </layout>
+          </widget>
+          <widget class="QWidget" name="recentTab">
+           <attribute name="title">
+            <string>Recently Added</string>
+           </attribute>
+           <layout class="QVBoxLayout" name="recentLayout">
+            <property name="margin">
+             <number>0</number>
+            </property>
+           </layout>
+          </widget>
+         </widget>
+        </item>
+        <item>
+         <widget class="PlaybackMgr" name="playbackwidget" native="true"/>
         </item>
        </layout>
       </widget>
@@ -479,14 +398,15 @@ QPushButton {
  <layoutdefault spacing="5" margin="5"/>
  <customwidgets>
   <customwidget>
-   <class>Phonon::SeekSlider</class>
-   <extends>QWidget</extends>
-   <header location="global">phonon/seekslider.h</header>
-  </customwidget>
-  <customwidget>
    <class>Playlist</class>
    <extends>QListWidget</extends>
    <header>playlist.h</header>
+  </customwidget>
+  <customwidget>
+   <class>PlaybackMgr</class>
+   <extends>QWidget</extends>
+   <header>playbackmgr.h</header>
+   <container>1</container>
   </customwidget>
  </customwidgets>
  <resources/>
