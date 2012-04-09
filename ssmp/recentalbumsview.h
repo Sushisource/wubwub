@@ -5,7 +5,7 @@
 #include <QGraphicsEffect>
 #include <QGraphicsPixmapItem>
 #include <QGraphicsSvgItem>
-#include "dbi.h"
+#include "dbi/dbi.h"
 class ssmp; //TODO: Fucking circular depends
 struct Alb;
 

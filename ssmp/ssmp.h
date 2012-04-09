@@ -9,11 +9,11 @@
 #include <functional>
 #include <numeric>
 #include "ui_ssmp.h"
-#include "dbi.h"
-#include "optionswindow.h"
+#include "dbi/dbi.h"
+#include "options/optionswindow.h"
 #include "recentalbumsview.h"
 #include "playlist.h"
-#include "playbackmgr.h"
+#include "playback/playbackmgr.h"
 
 Q_DECLARE_METATYPE(QList<QString>)
 
