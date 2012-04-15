@@ -56,6 +56,8 @@ ssmp::ssmp(QWidget *parent, Qt::WFlags flags) : QMainWindow(parent, flags)
     //Now play list
     connect(ui.nowplayingLst, SIGNAL(songChange(QString)), ui.playbackwidget, SLOT(changeSong(QString)));
 
+    openAlbumTab(632);
+
     //Update the recent view
     dbi->refresh();
     recentAlbs->update();
@@ -63,7 +65,7 @@ ssmp::ssmp(QWidget *parent, Qt::WFlags flags) : QMainWindow(parent, flags)
 
 void ssmp::initPopup()
 {
-    popup = new QTreeWidget;
+    popup = new QTreeWidget(this);
     popup->setWindowFlags(Qt::Popup);
     popup->setFocusPolicy(Qt::NoFocus);
     popup->setMouseTracking(true);
@@ -196,10 +198,19 @@ bool ssmp::eventFilter(QObject* object, QEvent* e)
 
 void ssmp::openSearchWindow(QString name, QMap<QString,QString> results)
 {
-    QWidget* searchtab = new QWidget();
+    QWidget* searchtab = new QWidget(ui.tabWidget);
+    ui.tabWidget->addTab(searchtab, name);
+}
 
-    //Add to results pointer list and tabwiget
-    tabs[ui.tabWidget->addTab(searchtab, name)] = searchtab;	
+void ssmp::openAlbumTab(int alid)
+{
+    QWidget* container = new QWidget(ui.tabWidget);
+    ui.tabWidget->addTab(container, dbi->getAlbumNameFromId(alid));
+    container->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
+    QVBoxLayout* lay = new QVBoxLayout(container);
+    lay->setMargin(0);
+    AlbumTab* altab = new AlbumTab(alid);
+    lay->addWidget(altab,1,Qt::AlignLeft | Qt::AlignTop);
 }
 
 bool ssmp::openOptions()
@@ -212,5 +223,6 @@ ssmp::~ssmp()
 {	
     dbthread->terminate();
     delete dbthread;
+    delete settings;
     delete popup;
 }

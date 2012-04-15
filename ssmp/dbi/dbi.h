@@ -33,14 +33,18 @@ public:
 
     void initDB();
     void refresh();
+    static inline QString formatSeconds(int secs);
     QMap<QString, int> search(QString query, searchFlag s = DBI::All);
     QList<int> getTrackIdsFromAlbum(int alid);
+    QList<QString> getTrackLengthsFromAlbum(int alid);
     QList<QString> getTrackColFromAlbum(int alid, int col);
     QList<QString> getNames(QList<int> ids, QString type);
     QString getTrackColFromSong(int sid, int col);
     QString getSongNameFromId(int sid);
     QString getAlbumNameFromId(int alid);
     QString getArtistNameFromId(int arid);
+    QString getArtistNameFromAlbumId(int alid);
+    QString getImgUriFromAlbumId(int alid);
     QList<Alb> getNRecentAlbums(int n);
 
     static DBI& getInstance()
@@ -65,7 +69,6 @@ private:
     QThread* thread;
     QFileSystemWatcher* watcher;
 
-    QString getArtistNameFromID(QString arid);
 	QString getOrFindAlbumArt(Alb a);
     QString sanitize(QString);
     QDateTime getPathLastMod(QString path);

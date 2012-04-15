@@ -11,7 +11,7 @@ RecentAlbumsView::RecentAlbumsView(QWidget* parent, int listsize)
 	this->setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
 	this->setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
     this->setScene(scene);
-    bottomfade = new QGraphicsRectItem();
+    bottomfade = new QGraphicsRectItem;
     bottomfade->setPen(Qt::NoPen);
     bottomfade->setZValue(1000);
     bottomfade->setBrush(QApplication::palette().window());
@@ -169,5 +169,4 @@ void RecentAlbumsView::addAlbsToRecent(QList<Alb> albs)
 
 RecentAlbumsView::~RecentAlbumsView()
 {
-    delete scene;
 }

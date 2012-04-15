@@ -44,7 +44,7 @@ QList<Alb> DBI::getNRecentAlbums(int n)
 		Alb a;
 		a.name = qm.record(i).value("name").toString();
 		a.alid = qm.record(i).value("alid").toString();
-		a.artist = getArtistNameFromID(qm.record(i).value("artist").toString());
+        a.artist = getArtistNameFromId(qm.record(i).value("artist").toInt());
         a.tracks = getTrackColFromAlbum(qm.record(i).value(0).toInt(), 1);
 		a.imguri = getOrFindAlbumArt(a);
 		a.year = qm.record(i).value("year").toString();
@@ -128,6 +128,14 @@ void DBI::refresh()
     processDirs(dirs);
 }
 
+QString DBI::formatSeconds(int secs)
+{
+    int min = secs/60;
+    QString m =  QString::number(min);
+    QString s =  QString("%1").arg(secs - min*60, 2, 10, QChar('0'));
+    return m+":"+s;
+}
+
 QList<int> DBI::getTrackIdsFromAlbum(int alid)
 {
     QSqlQueryModel qm;
@@ -137,6 +145,20 @@ QList<int> DBI::getTrackIdsFromAlbum(int alid)
     for(int i = 0; i < qm.rowCount(); i++)
     {
         tracks.append(qm.record(i).value(0).toInt());
+    }
+    return tracks;
+}
+
+QList<QString> DBI::getTrackLengthsFromAlbum(int alid)
+{
+    QSqlQueryModel qm;
+    QList<QString> tracks;
+    QString quer = "SELECT length FROM song WHERE album=" + QString().setNum(alid);
+    qm.setQuery(quer);
+    for(int i = 0; i < qm.rowCount(); i++)
+    {
+        int t = qm.record(i).value(0).toInt();
+        tracks.append(formatSeconds(t));
     }
     return tracks;
 }
@@ -210,10 +232,17 @@ QString DBI::getArtistNameFromId(int arid)
     return qm.record(0).value(0).toString();
 }
 
-QString DBI::getArtistNameFromID(QString arid)
+QString DBI::getArtistNameFromAlbumId(int alid)
 {
-	QSqlQueryModel qm;
-	qm.setQuery("SELECT name FROM artist WHERE arid=" + arid);
+    QSqlQueryModel qm;
+    qm.setQuery("SELECT artist FROM album WHERE alid=" + QString::number(alid));
+    return getArtistNameFromId(qm.record(0).value(0).toInt());
+}
+
+QString DBI::getImgUriFromAlbumId(int alid)
+{
+    QSqlQueryModel qm;
+    qm.setQuery("SELECT imguri FROM album WHERE alid=" + QString::number(alid));
     return qm.record(0).value(0).toString();
 }
 

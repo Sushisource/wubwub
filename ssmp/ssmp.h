@@ -14,6 +14,7 @@
 #include "recentalbumsview.h"
 #include "playlist.h"
 #include "playback/playbackmgr.h"
+#include "albumtab.h"
 
 Q_DECLARE_METATYPE(QList<QString>)
 
@@ -26,7 +27,6 @@ public:
 	~ssmp();
 
 	QSettings* settings;
-	QMap<int, QWidget*> tabs;
     DBI* dbi;
 
 private:
@@ -44,7 +44,8 @@ private:
     void initPopup();
     void addAlbumToRecent(Alb);
 	void addAlbsToRecent(QList<Alb>);
-	void openSearchWindow(QString name, QMap<QString,QString> results);	
+    void openSearchWindow(QString name, QMap<QString,QString> results);
+    void openAlbumTab(int alid);
 	
 private slots:
     void autoSuggest();

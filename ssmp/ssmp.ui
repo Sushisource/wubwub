@@ -405,7 +405,7 @@ QPushButton {
   <customwidget>
    <class>PlaybackMgr</class>
    <extends>QWidget</extends>
-   <header>playbackmgr.h</header>
+   <header>playback/playbackmgr.h</header>
    <container>1</container>
   </customwidget>
  </customwidgets>

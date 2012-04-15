@@ -120,10 +120,10 @@ border: 1px solid #444;
       <number>0</number>
      </property>
      <property name="value">
-      <number>500</number>
+      <number>0</number>
      </property>
      <property name="sliderPosition">
-      <number>500</number>
+      <number>0</number>
      </property>
      <property name="orientation">
       <enum>Qt::Horizontal</enum>
