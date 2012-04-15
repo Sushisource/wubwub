@@ -47,5 +47,7 @@ FORMS += ssmp.ui \
     options/options.ui \
     playback/playbackwidget.ui
 
-OTHER_FILES += \
-    Resources/plus_alt.svg
+OTHER_FILES +=
+
+RESOURCES += \
+    res.qrc

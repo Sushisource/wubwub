@@ -12,6 +12,9 @@ public:
     explicit PlaybackMgr(QWidget *parent = 0);
     ~PlaybackMgr();
     enum Playstate {PLAYING, STOPPED, PAUSED};
+
+signals:
+    void songOver();
     
 public slots:
     void changeSong(QString path);
@@ -25,13 +28,15 @@ private:
     irrklang::ISound* cursong;
     int cursonglength;
     Playstate state;
-    QTimer* seekerUpdater;
+    QTimer* updateTimer;
+    QPixmap play;
+    QPixmap pause;
     void stopSong();
     static inline QString msToString(int ms);
 
 private slots:
     void togglePlay();
-    void updateSeeker();
+    void update();
 
 };
 

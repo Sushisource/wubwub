@@ -17,6 +17,7 @@ public:
 public slots:
     void addSongs(QList<int> songIds);
     void addAlbums(QList<int> alids);
+    void nextSong();
 
 signals:
     void sendSongList(QList<QString> sl);
@@ -27,6 +28,9 @@ private:
     void refresh();
     //Maps paths to user friendly songnames
     QMap<QString, QString> songs;
+    //Current playing song
+    QListWidgetItem* cursong;
+    QIcon playingIcon;
 
 private slots:
     void dblClkRedirect(QListWidgetItem* i);

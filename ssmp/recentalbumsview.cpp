@@ -3,8 +3,7 @@
 //Setup some constants
 const QFont RecentAlbumsView::albFont = QFont("Arial", 11);
 
-RecentAlbumsView::RecentAlbumsView(QWidget* parent, int listsize)
-	: QGraphicsView(parent)
+RecentAlbumsView::RecentAlbumsView(QWidget* parent, int listsize) : QGraphicsView(parent)
 {
 	scene = new QGraphicsScene(this);
     db = &DBI::getInstance();
@@ -137,7 +136,7 @@ void RecentAlbumsView::addAlbsToRecent(QList<Alb> albs)
         covers.push_front(cover);
 
         //add buttons
-        QGraphicsSvgItem* plus = new QGraphicsSvgItem("../ssmp/Resources/plus_alt.svg");
+        QGraphicsSvgItem* plus = new QGraphicsSvgItem(":/imgs/plus");
         plus->setZValue(znum+1);
         plus->setOpacity(0.8);
         scene->addItem(plus);

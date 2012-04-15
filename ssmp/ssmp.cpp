@@ -55,8 +55,11 @@ ssmp::ssmp(QWidget *parent, Qt::WFlags flags) : QMainWindow(parent, flags)
     connect(recentAlbs, SIGNAL(addAlbsToNowPlaying(QList<int>)), ui.nowplayingLst, SLOT(addAlbums(QList<int>)));
     //Now play list
     connect(ui.nowplayingLst, SIGNAL(songChange(QString)), ui.playbackwidget, SLOT(changeSong(QString)));
+    //Playback manager
+    connect(ui.playbackwidget, SIGNAL(songOver()), ui.nowplayingLst, SLOT(nextSong()));
 
-    openAlbumTab(632);
+    //Open test album tab (638 for huge)
+    openAlbumTab(638);
 
     //Update the recent view
     dbi->refresh();
@@ -209,8 +212,8 @@ void ssmp::openAlbumTab(int alid)
     container->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
     QVBoxLayout* lay = new QVBoxLayout(container);
     lay->setMargin(0);
-    AlbumTab* altab = new AlbumTab(alid);
-    lay->addWidget(altab,1,Qt::AlignLeft | Qt::AlignTop);
+    AlbumTab* altab = new AlbumTab(alid, container);
+    lay->addWidget(altab,1);
 }
 
 bool ssmp::openOptions()

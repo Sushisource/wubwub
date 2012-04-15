@@ -3,12 +3,12 @@
 Playlist::Playlist(QObject *par)
 {
     db = &DBI::getInstance();
+    cursong = NULL;
     songs = QMap<QString, QString>();
-    connect(this, SIGNAL(itemDoubleClicked(QListWidgetItem*)), SLOT(dblClkRedirect(QListWidgetItem*)));
-}
+    playingIcon = QPixmap(":/imgs/play");
+    this->setIconSize(QSize(8,8));
 
-Playlist::~Playlist()
-{
+    connect(this, SIGNAL(itemDoubleClicked(QListWidgetItem*)), SLOT(dblClkRedirect(QListWidgetItem*)));
 }
 
 void Playlist::addSongs(QList<int> songIds)
@@ -30,6 +30,19 @@ void Playlist::addAlbums(QList<int> alids)
     }
 }
 
+void Playlist::nextSong()
+{
+    this->setCurrentItem(cursong);
+    int i = this->currentRow();
+    if(i + 1 >= this->count()) //End of list
+    {
+        cursong->setIcon(QIcon());
+        return;
+    }
+    this->setCurrentRow(i+1);
+    dblClkRedirect(this->currentItem());
+}
+
 void Playlist::refresh()
 {
     this->clear();
@@ -44,5 +57,13 @@ void Playlist::refresh()
 
 void Playlist::dblClkRedirect(QListWidgetItem *i)
 {
+    if(cursong != NULL) //Reset old color
+        cursong->setIcon(QIcon());
+    cursong = i;
+    cursong->setIcon(playingIcon);
     emit songChange(i->data(Qt::WhatsThisRole).toString());
+}
+
+Playlist::~Playlist()
+{
 }

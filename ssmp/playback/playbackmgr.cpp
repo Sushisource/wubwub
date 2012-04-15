@@ -4,15 +4,20 @@ PlaybackMgr::PlaybackMgr(QWidget *parent) : QWidget(parent)
 {
     //Setup ui
     ui.setupUi(this);
+    play = QPixmap(":/imgs/play");
+    pause = QPixmap(":/imgs/pause");
+    ui.prevBtn->setIcon(QIcon(QPixmap(":/imgs/prev")));
+    ui.nextBtn->setIcon(QIcon(QPixmap(":/imgs/next")));
+    ui.playBtn->setIcon(QIcon(play));
     connect(ui.playBtn, SIGNAL(released()), SLOT(togglePlay()));
     //Setup Audio output
     eng = irrklang::createIrrKlangDevice();
     cursong = NULL;
     state = STOPPED;
-    seekerUpdater = new QTimer(this);
-    connect(seekerUpdater, SIGNAL(timeout()), SLOT(updateSeeker()));
+    updateTimer = new QTimer(this);
+    connect(updateTimer, SIGNAL(timeout()), SLOT(update()));
     connect(ui.playSlider, SIGNAL(seekTo(float)), SLOT(seek(float)));
-    seekerUpdater->setInterval(100);
+    updateTimer->setInterval(100);
 }
 
 PlaybackMgr::~PlaybackMgr()
@@ -37,13 +42,13 @@ void PlaybackMgr::changeState(PlaybackMgr::Playstate s)
         return;
     if(s == PLAYING)
     {
-        ui.playBtn->setText("pause");
+        ui.playBtn->setIcon(pause);
         cursong->setIsPaused(false);
-        seekerUpdater->start();
+        updateTimer->start();
     }
     else if(s == PAUSED)
     {
-        ui.playBtn->setText("play");
+        ui.playBtn->setIcon(play);
         cursong->setIsPaused(true);
     }
     else if(s == STOPPED)
@@ -63,7 +68,7 @@ void PlaybackMgr::stopSong()
     cursong->drop();
     cursong = NULL;
     eng->stopAllSounds();
-    seekerUpdater->stop();
+    updateTimer->stop();
 }
 
 QString PlaybackMgr::msToString(int ms)
@@ -83,11 +88,17 @@ void PlaybackMgr::togglePlay()
         changeState(PLAYING);
     else if(state == PLAYING)
         changeState(PAUSED);
-    qDebug() << state;
 }
 
-void PlaybackMgr::updateSeeker()
+void PlaybackMgr::update()
 {
+    //Check if the song is finished, and request the next one from playlist
+    if(state == PLAYING && cursong->isFinished())
+    {
+        state = STOPPED;
+        emit songOver();
+    }
+    //Now update the gui elements
     int ms = cursong->getPlayPosition();
     float ratio = (float)ms/cursonglength;
     ui.playedLbl->setText(msToString(ms));

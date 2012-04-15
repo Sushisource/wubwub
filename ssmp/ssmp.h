@@ -38,7 +38,6 @@ private:
 	QColor disabledColor;
 	QList<QString> searchtypes;
     RecentAlbumsView* recentAlbs;
-    PlaybackMgr* playback;
 
 	inline void addPopupItem(QString name, QString type);
     void initPopup();

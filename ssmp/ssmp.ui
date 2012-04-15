@@ -231,7 +231,7 @@ border-radius: 4px;
 }
 
 QPushButton {
-	border: 1px solid gray;
+	border: none;
 	padding: 3px;
 	font-size: 10px;
 }</string>

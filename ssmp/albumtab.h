@@ -6,6 +6,7 @@
 #include <QGraphicsPixmapItem>
 #include <QGraphicsSvgItem>
 #include <QVBoxLayout>
+#include <QApplication>
 #include "dbi/dbi.h"
 
 class AlbumTab : public QGraphicsView
@@ -22,11 +23,14 @@ public slots:
 
 private:
     QGraphicsScene* scene;
+    QGraphicsSimpleTextItem* title;
     //Fonts
     QFont titlefont;
     QFont trackfont;
     QGraphicsPixmapItem* cover;
+    QGraphicsRectItem* bgrect;
     void resizeEvent(QResizeEvent *event);
+    void wheelEvent(QWheelEvent *event);
 
 };
 

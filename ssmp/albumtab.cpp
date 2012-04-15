@@ -5,7 +5,7 @@ AlbumTab::AlbumTab(int alid, QWidget *parent) : QGraphicsView(parent)
     scene = new QGraphicsScene(this);
     this->setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
     this->setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
-    this->setSizeIncrement(QSizePolicy::Expanding, QSizePolicy::Expanding);
+    this->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
     this->setScene(scene);
 
     DBI* db = &DBI::getInstance();
@@ -16,34 +16,34 @@ AlbumTab::AlbumTab(int alid, QWidget *parent) : QGraphicsView(parent)
     trackfont = QFont("Arial",15,QFont::Bold);
 
     //Album title
-    QGraphicsSimpleTextItem* title = new QGraphicsSimpleTextItem();
-    QGraphicsDropShadowEffect* shadow = new QGraphicsDropShadowEffect();
-    shadow->setBlurRadius(4);
-    shadow->setColor(QColor(255,255,255));
-    shadow->setOffset(1.5,1.5);
+    title = new QGraphicsSimpleTextItem();
     QString tstr = db->getAlbumNameFromId(alid) + " - " + db->getArtistNameFromAlbumId(alid);
     title->setText(tstr);
     title->setFont(titlefont);
     title->setPos(0,0);
     title->setZValue(1);
-    //title->setGraphicsEffect(shadow);
     scene->addItem(title);
+
+    //Backing rectangle
+    bgrect = new QGraphicsRectItem();
+    QColor c = QApplication::palette().window().color();
+    bgrect->setPen(QPen(c,1));
+    c.setAlpha(180);
+    bgrect->setBrush(QBrush(c, Qt::Dense4Pattern));
+    scene->addItem(bgrect);
 
     //Individual Tracks
     addTracks(alid, db);
 
-    //Backing rectangle
-    /*
-    QGraphicsRectItem* bgrect = new QGraphicsRectItem();
-    bgrect->setRect(0,0,500,100);
-    bgrect->setPen(Qt::NoPen);
-    bgrect->setBrush(QBrush(QColor(255,255,255,160), Qt::Dense4Pattern));
-    scene->addItem(bgrect);*/
-
     //Album art
     cover = new QGraphicsPixmapItem(QPixmap(db->getImgUriFromAlbumId(alid)));
+    QGraphicsDropShadowEffect* shad = new QGraphicsDropShadowEffect();
+    shad->setBlurRadius(6);
+    shad->setColor(Qt::black);
+    shad->setOffset(0,0);
     cover->setTransformationMode(Qt::SmoothTransformation);
     cover->setZValue(-1);
+    cover->setGraphicsEffect(shad);
     scene->addItem(cover);
 }
 
@@ -51,24 +51,34 @@ void AlbumTab::addTracks(int alid, DBI* db)
 {
     QList<QString> tracknames = db->getTrackColFromAlbum(alid, 1);
     QList<QString> tracknums = db->getTrackColFromAlbum(alid, 2);
-    QGraphicsDropShadowEffect* shad = new QGraphicsDropShadowEffect();
+    int lasty = 0;
+    int widest = 0;
     for(int i = 0; i < tracknames.count(); ++i)
     {
         QGraphicsSimpleTextItem* track = new QGraphicsSimpleTextItem();
         track->setText(tracknums[i] + ".  " + tracknames[i]);
         track->setFont(trackfont);
-        track->setPos(5,i*16+30);
+        lasty = i*17+30;
+        track->setPos(5,lasty);
         track->setZValue(1);
-        shad->setBlurRadius(2);
-        shad->setColor(QColor(255,255,255,255));
-        shad->setOffset(0,0);
-        track->setGraphicsEffect(shad);
+        widest = max(widest, (int)track->boundingRect().width() + 5);
         scene->addItem(track);
     }
+    widest = max(widest, (int)title->boundingRect().width());
+    bgrect->setRect(-1,-1,widest + 3,lasty + 23);
 }
 
 void AlbumTab::resizeEvent(QResizeEvent *event)
 {
-    qDebug() << this->geometry();
-    cover->setPos(scene->width() - cover->boundingRect().width(),scene->height() - cover->boundingRect().height());
+    int pad = 5;
+    int ww = this->geometry().width();
+    int wh = this->geometry().height();
+    scene->setSceneRect(0,0,ww,wh);
+    title->setPos(0,0);
+    cover->setPos(ww - pad - cover->boundingRect().width(),wh - pad -cover->boundingRect().height());
+}
+
+void AlbumTab::wheelEvent(QWheelEvent *event)
+{
+    //Get owned
 }
