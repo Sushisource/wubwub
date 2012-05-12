@@ -43,6 +43,7 @@ void RecentAlbumsView::resizeEvent(QResizeEvent* e)
         backgrounds[i]->setRect(0,ypos,albumxpos,siz);
         descriptions[i]->setPos(0,ypos);
         plusbuttons[i]->setPos(albumxpos-(buttonsiz + 5),ypos);
+        tabbuttons[i]->setPos(albumxpos-(buttonsiz + 5),ypos+35);
         //Don't try to resize covers we couldn't load
         if(covers[i] != NULL)
         {
@@ -61,12 +62,19 @@ void RecentAlbumsView::mouseReleaseEvent(QMouseEvent *event)
     if(item == NULL) return;
     if(item->type() == QGraphicsSvgItem::Type)
     {
-        int aldex = plusbuttons.indexOf(dynamic_cast<QGraphicsSvgItem*>(item));
-        int alid = recents[aldex].toInt();
-
+        int alid = item->data(ALID).toInt();
         QList<int> em = QList<int>();
-        em.append(alid);
-        emit addAlbsToNowPlaying(em);
+
+        switch(item->data(BTNTYPE).toInt())
+        {
+            case PLUS:
+                em.append(alid);
+                emit addAlbsToNowPlaying(em);
+                break;
+            case TAB:
+                emit openAlbumTab(alid);
+                break;
+        }
     }
 }
 
@@ -80,7 +88,7 @@ void RecentAlbumsView::addAlbsToRecent(QList<Alb> albs)
     int znum = 0;
     //Add the albums
     foreach(Alb al, albs)
-    {	
+    {
         //Dont add if it's already in there
         if(recents.count() > 0 && recents.contains(al.alid))
             continue;
@@ -137,27 +145,39 @@ void RecentAlbumsView::addAlbsToRecent(QList<Alb> albs)
 
         //add buttons
         QGraphicsSvgItem* plus = new QGraphicsSvgItem(":/imgs/plus");
+        QGraphicsSvgItem* tabb = new QGraphicsSvgItem(":/imgs/eye");
         plus->setZValue(znum+1);
         plus->setOpacity(0.8);
+        tabb->setZValue(znum+1);
+        tabb->setOpacity(0.8);
+        plus->setData(ALID,al.alid);
+        plus->setData(BTNTYPE,PLUS);
+        tabb->setData(ALID,al.alid);
+        tabb->setData(BTNTYPE,TAB);
         scene->addItem(plus);
+        scene->addItem(tabb);
         plusbuttons.push_front(plus);
+        tabbuttons.push_front(tabb);
 
         recents.push_front(al.alid);
         //Remove bottom item if more than five in view
-		//TODO: Parameterize # in view
+        //TODO: Parameterize # in view
         if(recents.count() > 5)
         {
             scene->removeItem(descriptions.back());
             scene->removeItem(covers.back());
             scene->removeItem(plusbuttons.back());
+            scene->removeItem(tabbuttons.back());
             scene->removeItem(backgrounds.back());
             delete descriptions.back();
             delete covers.back();
             delete plusbuttons.back();
+            delete tabbuttons.back();
             delete backgrounds.back();
             descriptions.pop_back();
             covers.pop_back();
             plusbuttons.pop_back();
+            tabbuttons.pop_back();
             backgrounds.pop_back();
             recents.pop_back();
         }

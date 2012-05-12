@@ -6,5 +6,6 @@
         <file alias="pause">Resources/pause.svg</file>
         <file alias="play">Resources/play.svg</file>
         <file alias="plus">Resources/plus_alt.svg</file>
+        <file alias="eye">Resources/eye.svg</file>
     </qresource>
 </RCC>

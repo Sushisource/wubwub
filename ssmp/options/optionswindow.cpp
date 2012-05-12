@@ -7,7 +7,7 @@ optionsWindow::optionsWindow(ssmp * parent, Qt::WFlags flags)
 	ui.setupUi(this);	
 	connect(ui.addFolderBtn, SIGNAL(clicked()), this, SLOT(getDir()));	
 	connect(ui.saveBtn, SIGNAL(clicked()),this, SLOT(save()));
-	foreach(QVariant folder, parent->settings->value("libdir").toList())
+    foreach(QVariant folder, parent->settings->value("libdir").toList())
 	{
 		ui.libFList->addItem(folder.toString());
 	}

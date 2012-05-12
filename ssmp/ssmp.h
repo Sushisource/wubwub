@@ -26,7 +26,7 @@ public:
 	ssmp(QWidget *parent = 0, Qt::WFlags flags = 0);
 	~ssmp();
 
-	QSettings* settings;
+    QSettings* settings;
     DBI* dbi;
 
 private:
@@ -44,10 +44,11 @@ private:
     void addAlbumToRecent(Alb);
 	void addAlbsToRecent(QList<Alb>);
     void openSearchWindow(QString name, QMap<QString,QString> results);
-    void openAlbumTab(int alid);
+    QWidget *openAlbumTab(int alid);
 	
 private slots:
     void autoSuggest();
+    void newAlbumTab(int alid);
     bool eventFilter(QObject* object, QEvent* e);
 	bool openOptions();
 };

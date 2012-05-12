@@ -25,16 +25,12 @@ signals:
 
 private:
     DBI* db;
-    void refresh();
-    //Maps paths to user friendly songnames
-    QMap<QString, QString> songs;
     //Current playing song
     QListWidgetItem* cursong;
     QIcon playingIcon;
 
 private slots:
     void dblClkRedirect(QListWidgetItem* i);
-
 };
 
 #endif // NOWPLAYING_H

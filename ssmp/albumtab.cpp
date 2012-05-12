@@ -51,6 +51,7 @@ void AlbumTab::addTracks(int alid, DBI* db)
 {
     QList<QString> tracknames = db->getTrackColFromAlbum(alid, 1);
     QList<QString> tracknums = db->getTrackColFromAlbum(alid, 2);
+    QList<int> trackids = db->getTrackIdsFromAlbum(alid);
     int lasty = 0;
     int widest = 0;
     for(int i = 0; i < tracknames.count(); ++i)
@@ -61,6 +62,7 @@ void AlbumTab::addTracks(int alid, DBI* db)
         lasty = i*17+30;
         track->setPos(5,lasty);
         track->setZValue(1);
+        track->setData(TRACKID,trackids[i]);
         widest = max(widest, (int)track->boundingRect().width() + 5);
         scene->addItem(track);
     }
@@ -81,4 +83,15 @@ void AlbumTab::resizeEvent(QResizeEvent *event)
 void AlbumTab::wheelEvent(QWheelEvent *event)
 {
     //Get owned
+}
+
+void AlbumTab::mouseReleaseEvent(QMouseEvent *event)
+{
+    QPointF sc = this->mapToScene(event->pos());
+    QGraphicsItem* item = scene->itemAt(sc);
+    if(item->type() == QGraphicsSimpleTextItem::Type)
+    {
+        int songid = item->data(TRACKID).toInt();
+        emit clearPlaylist();
+    }
 }

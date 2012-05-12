@@ -22,6 +22,7 @@ public slots:
 
 signals:
     void addAlbsToNowPlaying(QList<int> alids);
+    void openAlbumTab(int alid);
 
 private:
     DBI* db;
@@ -32,7 +33,10 @@ private:
     QList<QGraphicsRectItem*> backgrounds;
     QGraphicsRectItem* bottomfade;
     QList<QGraphicsSvgItem*> plusbuttons;
+    QList<QGraphicsSvgItem*> tabbuttons;
     int rnum;
+    enum DataKeys {ALID, BTNTYPE};
+    enum BtnTypes {PLUS, TAB};
     static const QFont albFont;
     void addAlbsToRecent(QList<Alb> albs);
     void resizeEvent(QResizeEvent* e = NULL);

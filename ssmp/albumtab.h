@@ -7,6 +7,7 @@
 #include <QGraphicsSvgItem>
 #include <QVBoxLayout>
 #include <QApplication>
+#include <QMouseEvent>
 #include "dbi/dbi.h"
 
 class AlbumTab : public QGraphicsView
@@ -17,7 +18,9 @@ public:
 
     void addTrack(QFont trackfont, QList<QString> tracknums, QGraphicsDropShadowEffect* shadow, int i, QPen oline, QList<QString> tracknames);
     void addTracks(int alid, DBI* db);
+
 signals:
+    void clearPlaylist();
     
 public slots:
 
@@ -29,8 +32,10 @@ private:
     QFont trackfont;
     QGraphicsPixmapItem* cover;
     QGraphicsRectItem* bgrect;
+    enum DataKeys {TRACKID};
     void resizeEvent(QResizeEvent *event);
     void wheelEvent(QWheelEvent *event);
+    void mouseReleaseEvent(QMouseEvent *event);
 
 };
 

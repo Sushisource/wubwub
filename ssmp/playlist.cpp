@@ -4,7 +4,6 @@ Playlist::Playlist(QObject *par)
 {
     db = &DBI::getInstance();
     cursong = NULL;
-    songs = QMap<QString, QString>();
     playingIcon = QPixmap(":/imgs/play");
     this->setIconSize(QSize(8,8));
 
@@ -17,9 +16,10 @@ void Playlist::addSongs(QList<int> songIds)
     {
         QString name = db->getSongNameFromId(sid);
         //Insert pathname , user name
-        songs.insert(db->getTrackColFromSong(sid, 6), name);
+        QListWidgetItem* lwi = new QListWidgetItem(name);
+        lwi->setData(Qt::WhatsThisRole, db->getTrackColFromSong(sid, 6));
+        this->addItem(lwi);
     }
-    refresh();
 }
 
 void Playlist::addAlbums(QList<int> alids)
@@ -41,18 +41,6 @@ void Playlist::nextSong()
     }
     this->setCurrentRow(i+1);
     dblClkRedirect(this->currentItem());
-}
-
-void Playlist::refresh()
-{
-    this->clear();
-    QMap<QString,QString>::iterator i;
-    for(i=songs.begin(); i!=songs.end(); ++i)
-    {
-        QListWidgetItem* lwi = new QListWidgetItem(i.value());
-        lwi->setData(Qt::WhatsThisRole, i.key());
-        this->addItem(lwi);
-    }
 }
 
 void Playlist::dblClkRedirect(QListWidgetItem *i)

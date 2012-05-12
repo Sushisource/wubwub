@@ -11,7 +11,7 @@ ssmp::ssmp(QWidget *parent, Qt::WFlags flags) : QMainWindow(parent, flags)
     //Update global palette access
     QApplication::setPalette(this->palette());
 
-    settings = new QSettings("ssmp_config.ini",QSettings::IniFormat);
+    settings = new QSettings("ssmp_config.ini",QSettings::IniFormat, this);
     //Instantiate options menu
     optWin = new optionsWindow(this);
     //Setup suggest popup
@@ -32,7 +32,7 @@ ssmp::ssmp(QWidget *parent, Qt::WFlags flags) : QMainWindow(parent, flags)
     ui.recentTab->layout()->addWidget(recentAlbs);
 
     //Run db thread
-    dbthread = new QThread;
+    dbthread = new QThread(this);
     dbthread->start();
     dbi->moveToThread(dbthread);
 
@@ -53,13 +53,11 @@ ssmp::ssmp(QWidget *parent, Qt::WFlags flags) : QMainWindow(parent, flags)
     connect(ui.search, SIGNAL(textEdited(QString)), searchTimer, SLOT(start()));
     //Connections for the recent view
     connect(recentAlbs, SIGNAL(addAlbsToNowPlaying(QList<int>)), ui.nowplayingLst, SLOT(addAlbums(QList<int>)));
+    connect(recentAlbs, SIGNAL(openAlbumTab(int)), SLOT(newAlbumTab(int)));
     //Now play list
     connect(ui.nowplayingLst, SIGNAL(songChange(QString)), ui.playbackwidget, SLOT(changeSong(QString)));
     //Playback manager
     connect(ui.playbackwidget, SIGNAL(songOver()), ui.nowplayingLst, SLOT(nextSong()));
-
-    //Open test album tab (638 for huge)
-    openAlbumTab(638);
 
     //Update the recent view
     dbi->refresh();
@@ -134,6 +132,11 @@ void ssmp::autoSuggest()
     popup->show();
 }
 
+void ssmp::newAlbumTab(int alid)
+{
+    ui.tabWidget->setCurrentWidget(openAlbumTab(alid));
+}
+
 bool ssmp::eventFilter(QObject* object, QEvent* e)
 {
     if (object == ui.search) 
@@ -205,7 +208,7 @@ void ssmp::openSearchWindow(QString name, QMap<QString,QString> results)
     ui.tabWidget->addTab(searchtab, name);
 }
 
-void ssmp::openAlbumTab(int alid)
+QWidget* ssmp::openAlbumTab(int alid)
 {
     QWidget* container = new QWidget(ui.tabWidget);
     ui.tabWidget->addTab(container, dbi->getAlbumNameFromId(alid));
@@ -213,7 +216,9 @@ void ssmp::openAlbumTab(int alid)
     QVBoxLayout* lay = new QVBoxLayout(container);
     lay->setMargin(0);
     AlbumTab* altab = new AlbumTab(alid, container);
+    connect(altab, SIGNAL(clearPlaylist()), ui.nowplayingLst, SLOT(clear()));
     lay->addWidget(altab,1);
+    return container;
 }
 
 bool ssmp::openOptions()
@@ -225,7 +230,4 @@ bool ssmp::openOptions()
 ssmp::~ssmp()
 {	
     dbthread->terminate();
-    delete dbthread;
-    delete settings;
-    delete popup;
 }
