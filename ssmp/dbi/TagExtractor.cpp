@@ -23,8 +23,8 @@ void TagExtractor::extractID3v2Tag(TagLib::ID3v2::Tag* tag, QMap<QString, QStrin
 
 bool TagExtractor::extractTag(QString fpath, QMap<QString, QString>* stmap, QMap<QString, int>* itmap)
 {
-	wchar_t wname[250]; //TODO: Dynamic. Need to figure out wchar length from QStr length
-	wname[fpath.toWCharArray(wname)] = 0;
+	QByteArray qb = fpath.toLocal8Bit();
+	const char *wname = qb.data();
 	TagLib::FileName fname(wname);
 
 	bool suc = false;

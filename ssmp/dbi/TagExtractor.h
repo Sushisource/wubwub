@@ -6,14 +6,14 @@
 #include <QMap>
 #include <QDir>
 #include <qdebug.h>
-#include <taglib\tag.h>
-#include <taglib\fileref.h>
-#include <taglib\mpeg\id3v2\id3v2tag.h>
-#include <taglib\mpeg\mpegfile.h>
-#include <taglib\mp4\mp4file.h>
+#include <taglib/tag.h>
+#include <taglib/fileref.h>
+#include <taglib/mpeg/id3v2/id3v2tag.h>
+#include <taglib/mpeg/mpegfile.h>
+#include <taglib/mp4/mp4file.h>
 #include <taglib/ogg/vorbis/vorbisfile.h>
-#include <taglib\ogg\oggfile.h>
-#include <taglib\flac\flacfile.h>
+#include <taglib/ogg/oggfile.h>
+#include <taglib/flac/flacfile.h>
 #include <functional>
 #include <numeric>
 
