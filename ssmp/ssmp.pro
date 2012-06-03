@@ -16,6 +16,7 @@ win32 {
 
 LIBS += -L'E:/libs/irrKlang-1.3.0/bin/win32-gcc' \
         -l'irrKlang'\
+        -l'ikpFlac'\
         -l'ikpMP3'
 
 DEPENDPATH += .
@@ -24,6 +25,7 @@ UI_DIR += GeneratedFiles
 RCC_DIR += GeneratedFiles
 RC_FILE = ssmp.rc
 QMAKE_CXXFLAGS += -std=c++0x -U__STRICT_ANSI__
+QMAKE_LFLAGS += -static-libgcc -static-libstdc++
 HEADERS += dbi/TagExtractor.h \
     ssmp.h \
     recentalbumsview.h \

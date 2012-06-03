@@ -4,6 +4,9 @@ ssmp/ssmp_config.ini #don't need to up config
 #Vim Swapfiles
 *.swp
 #No generated files
+*_Debug/*
+*_Release/*
+mingwout/*
 ssmp/GeneratedFiles/*
 #More VS crap
 vc10/ipch/*
