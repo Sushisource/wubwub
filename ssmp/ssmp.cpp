@@ -17,7 +17,7 @@ ssmp::ssmp(QWidget *parent, Qt::WFlags flags) : QMainWindow(parent, flags)
     //Setup suggest popup
     initPopup();
 
-    //Connect to database	
+    //Connect to database
     dbi = &DBI::getInstance();
 
     //If db not initialized, initialize it
@@ -36,12 +36,12 @@ ssmp::ssmp(QWidget *parent, Qt::WFlags flags) : QMainWindow(parent, flags)
     dbthread->start();
     dbi->moveToThread(dbthread);
 
-    //Link up stuff	
+    //Link up stuff
     //Dbi updates
     connect(dbi, SIGNAL(atDir(QString)), optWin, SLOT(changeStatus(QString)));
     connect(dbi, SIGNAL(recentChange()), recentAlbs, SLOT(update()));
     //Open options windows
-    connect(ui.optionsAction, SIGNAL(triggered()), SLOT(openOptions()));	
+    connect(ui.optionsAction, SIGNAL(triggered()), SLOT(openOptions()));
     //Save button on options window
     connect(optWin, SIGNAL(startSongParsing(QList<QString>)), dbi, SLOT(processDirs(QList<QString>)));
     //Search bar. Auto suggest after 500ms of stopped typing
@@ -93,7 +93,7 @@ void ssmp::autoSuggest()
     popup->clear();
 
     foreach(QString t, searchtypes)
-    {    
+    {
         QList<int> resp = res.values(t);
         QList<QString> resp_str = dbi->getNames(resp, t);
         QList<QPair<QString, int>> pairs;
@@ -103,9 +103,9 @@ void ssmp::autoSuggest()
         }
         //Sort by string length and startsWith, shortest first
         qSort(pairs.begin(),pairs.end(), [&q](const QPair<QString, int> &s1, const QPair<QString, int> &s2)->bool
-		{
+        {
             if(!s1.first.toLower().startsWith(q.toLower()))
-                return false;	
+                return false;
             return s1.first.length() < s2.first.length();
         });
         for(int i = 0; i < pairs.count(); ++i)
@@ -139,7 +139,7 @@ void ssmp::newAlbumTab(int alid)
 
 bool ssmp::eventFilter(QObject* object, QEvent* e)
 {
-    if (object == ui.search) 
+    if (object == ui.search)
     {
         if(e->type() == QEvent::MouseButtonPress) //Select all of search when clicked
             QTimer::singleShot(0, object, SLOT(selectAll()));
@@ -147,7 +147,7 @@ bool ssmp::eventFilter(QObject* object, QEvent* e)
     }
     else if(object == popup)
     {
-        if (e->type() == QEvent::MouseButtonPress) 
+        if (e->type() == QEvent::MouseButtonPress)
         {
             popup->hide();
             ui.search->setFocus();
@@ -222,12 +222,12 @@ QWidget* ssmp::openAlbumTab(int alid)
 }
 
 bool ssmp::openOptions()
-{		
+{
     optWin->show();
-    return true;	
+    return true;
 }
 
 ssmp::~ssmp()
-{	
+{
     dbthread->terminate();
 }

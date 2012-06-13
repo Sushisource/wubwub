@@ -1,11 +1,10 @@
 #include "ssmp.h"
 
 //Setup some constants
-const QFont RecentAlbumsView::albFont = QFont("Arial", 11);
-
 RecentAlbumsView::RecentAlbumsView(QWidget* parent, int listsize) : QGraphicsView(parent)
 {
-	scene = new QGraphicsScene(this);
+    rnum = 0;
+    scene = new QGraphicsScene(this);
     db = &DBI::getInstance();
 	this->setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
 	this->setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
@@ -107,7 +106,7 @@ void RecentAlbumsView::addAlbsToRecent(QList<Alb> albs)
         trackz.remove(trackz.length()-1,1); //Remove final newline
         desc += trackz;
         textDesc->setHtml(desc);
-        textDesc->setFont(albFont);
+        textDesc->setFont(QFont("Arial", 11));
         textDesc->setZValue(znum+1);
         //First add a backing rectangle
         QGraphicsRectItem* back = new QGraphicsRectItem();

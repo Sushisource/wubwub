@@ -10,7 +10,7 @@ INCLUDEPATH += E:/libs/taglib \
         .
 
 win32 {
-    win32-g++:LIBS += -L'E:/libs/taglib/Release/release' \
+    win32-g++:LIBS += -L'E:/libs/taglib/taglib-build-desktop-Qt_4_8_2__qtmingw__Release/release' \
         -l:libTagLib1.a
 }
 
@@ -19,13 +19,9 @@ LIBS += -L'E:/libs/irrKlang-1.3.0/bin/win32-gcc' \
         -l'ikpFlac'\
         -l'ikpMP3'
 
-DEPENDPATH += .
-MOC_DIR += GeneratedFiles/debug
-UI_DIR += GeneratedFiles
-RCC_DIR += GeneratedFiles
 RC_FILE = ssmp.rc
-QMAKE_CXXFLAGS += -std=c++0x -U__STRICT_ANSI__
-QMAKE_LFLAGS += -static-libgcc -static-libstdc++
+QMAKE_CXXFLAGS += -std=c++0x #-U__STRICT_ANSI__
+#QMAKE_LFLAGS += -static-libgcc -static-libstdc++
 HEADERS += dbi/TagExtractor.h \
     ssmp.h \
     recentalbumsview.h \
