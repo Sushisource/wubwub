@@ -203,7 +203,7 @@ QList<QString> DBI::getNames(QList<int> ids, QString type)
     return ret;
 }
 
-QString DBI::getTrackColFromSong(int sid, int col)
+QString DBI::getTrackColFromSong(int sid, SongCol col)
 {
     QSqlQueryModel qm;
     QString quer = "SELECT "+songCols[col]+" FROM song WHERE sid=" + QString().setNum(sid);

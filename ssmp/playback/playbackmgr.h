@@ -4,6 +4,7 @@
 #include <QObject>
 #include <irrKlang.h>
 #include "ui_playbackwidget.h"
+#include "dbi/dbi.h"
 
 class PlaybackMgr : public QWidget
 {
@@ -18,11 +19,13 @@ signals:
     
 public slots:
     void changeSong(QString path);
+    void changeSong(int songid);
     void changeState(Playstate s);
     void seek(float ratio);
 
 private:
     Ui::pbwidget ui;
+    DBI* db;
 
     irrklang::ISoundEngine* eng;
     irrklang::ISound* cursong;

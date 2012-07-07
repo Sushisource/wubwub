@@ -217,6 +217,7 @@ QWidget* ssmp::openAlbumTab(int alid)
     lay->setMargin(0);
     AlbumTab* altab = new AlbumTab(alid, container);
     connect(altab, SIGNAL(clearPlaylist()), ui.nowplayingLst, SLOT(clear()));
+    connect(altab, SIGNAL(playSong(int)), ui.playbackwidget, SLOT(changeSong(int)));
     lay->addWidget(altab,1);
     return container;
 }

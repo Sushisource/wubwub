@@ -2,6 +2,7 @@
 
 PlaybackMgr::PlaybackMgr(QWidget *parent) : QWidget(parent)
 {
+    db = &DBI::getInstance();
     //Setup ui
     ui.setupUi(this);
     play = QPixmap(":/imgs/play");
@@ -29,6 +30,16 @@ PlaybackMgr::~PlaybackMgr()
 void PlaybackMgr::changeSong(QString song)
 {
     stopSong();
+    cursong = eng->play2D(song.toStdString().c_str(), false, false, true);
+    cursong->setVolume(1);
+    cursonglength = cursong->getPlayLength();
+    changeState(PLAYING);
+}
+
+void PlaybackMgr::changeSong(int songid)
+{
+    stopSong();
+    QString song = db->getTrackColFromSong(songid, SongCol::path);
     cursong = eng->play2D(song.toStdString().c_str(), false, false, true);
     cursong->setVolume(1);
     cursonglength = cursong->getPlayLength();

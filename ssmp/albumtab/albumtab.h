@@ -9,6 +9,7 @@
 #include <QApplication>
 #include <QMouseEvent>
 #include "dbi/dbi.h"
+#include "prettytext.h"
 
 class AlbumTab : public QGraphicsView
 {
@@ -21,6 +22,7 @@ public:
 
 signals:
     void clearPlaylist();
+    void playSong(int songid);
     
 public slots:
 
@@ -35,8 +37,7 @@ private:
     enum DataKeys {TRACKID};
     void resizeEvent(QResizeEvent *event);
     void wheelEvent(QWheelEvent *event);
-    void mouseReleaseEvent(QMouseEvent *event);
-
+    void mouseDoubleClickEvent(QMouseEvent *event);
 };
 
 #endif // ALBUMTAB_H

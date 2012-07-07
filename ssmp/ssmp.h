@@ -14,7 +14,7 @@
 #include "recentalbumsview.h"
 #include "playlist.h"
 #include "playback/playbackmgr.h"
-#include "albumtab.h"
+#include "albumtab/albumtab.h"
 
 Q_DECLARE_METATYPE(QList<QString>)
 

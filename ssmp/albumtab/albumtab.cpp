@@ -7,6 +7,7 @@ AlbumTab::AlbumTab(int alid, QWidget *parent) : QGraphicsView(parent)
     this->setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
     this->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
     this->setScene(scene);
+    this->setMouseTracking(true);
 
     DBI* db = &DBI::getInstance();
 
@@ -24,19 +25,12 @@ AlbumTab::AlbumTab(int alid, QWidget *parent) : QGraphicsView(parent)
     title->setZValue(1);
     scene->addItem(title);
 
-    //Backing rectangle
-    bgrect = new QGraphicsRectItem();
-    QColor c = QApplication::palette().window().color();
-    bgrect->setPen(QPen(c,1));
-    c.setAlpha(180);
-    bgrect->setBrush(QBrush(c, Qt::Dense4Pattern));
-    scene->addItem(bgrect);
-
     //Individual Tracks
     addTracks(alid, db);
 
     //Album art
-    cover = new QGraphicsPixmapItem(QPixmap(db->getImgUriFromAlbumId(alid)));
+    QPixmap aart = QPixmap(db->getImgUriFromAlbumId(alid));
+    cover = new QGraphicsPixmapItem(aart.scaledToWidth(300));
     QGraphicsDropShadowEffect* shad = new QGraphicsDropShadowEffect();
     shad->setBlurRadius(6);
     shad->setColor(Qt::black);
@@ -56,18 +50,18 @@ void AlbumTab::addTracks(int alid, DBI* db)
     int widest = 0;
     for(int i = 0; i < tracknames.count(); ++i)
     {
-        QGraphicsSimpleTextItem* track = new QGraphicsSimpleTextItem();
+        PrettyText* track = new PrettyText();
+        track->setAcceptHoverEvents(true);
         track->setText(tracknums[i] + ".  " + tracknames[i]);
         track->setFont(trackfont);
         lasty = i*17+30;
         track->setPos(5,lasty);
         track->setZValue(1);
         track->setData(TRACKID,trackids[i]);
-        widest = std::max(widest, (int)track->boundingRect().width() + 5);
+        widest = max(widest, (int)track->boundingRect().width() + 5);
         scene->addItem(track);
     }
-    widest = std::max(widest, (int)title->boundingRect().width());
-    bgrect->setRect(-1,-1,widest + 3,lasty + 23);
+    widest = max(widest, (int)title->boundingRect().width());
 }
 
 void AlbumTab::resizeEvent(QResizeEvent *event)
@@ -75,9 +69,8 @@ void AlbumTab::resizeEvent(QResizeEvent *event)
     int pad = 5;
     int ww = this->geometry().width();
     int wh = this->geometry().height();
+    cover->setPos(ww-300-pad,wh-300-pad);
     scene->setSceneRect(0,0,ww,wh);
-    title->setPos(0,0);
-    cover->setPos(ww - pad - cover->boundingRect().width(),wh - pad -cover->boundingRect().height());
 }
 
 void AlbumTab::wheelEvent(QWheelEvent *event)
@@ -85,13 +78,14 @@ void AlbumTab::wheelEvent(QWheelEvent *event)
     //Get owned
 }
 
-void AlbumTab::mouseReleaseEvent(QMouseEvent *event)
+void AlbumTab::mouseDoubleClickEvent(QMouseEvent *event)
 {
     QPointF sc = this->mapToScene(event->pos());
     QGraphicsItem* item = scene->itemAt(sc);
-    if(item->type() == QGraphicsSimpleTextItem::Type)
+    if(item == NULL) return;
+    if(item->type() == PrettyText::Type)
     {
         int songid = item->data(TRACKID).toInt();
-        emit clearPlaylist();
+        emit playSong(songid);
     }
 }
