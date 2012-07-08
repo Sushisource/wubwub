@@ -388,7 +388,7 @@ QLabel#playlistLbl {
          </widget>
         </item>
         <item>
-         <widget class="PlaybackMgr" name="playbackwidget" native="true"/>
+         <widget class="PlaybackWidget" name="playbackwidget" native="true"/>
         </item>
        </layout>
       </widget>
@@ -433,9 +433,9 @@ QLabel#playlistLbl {
    <header>playlist.h</header>
   </customwidget>
   <customwidget>
-   <class>PlaybackMgr</class>
+   <class>PlaybackWidget</class>
    <extends>QWidget</extends>
-   <header>playback/playbackmgr.h</header>
+   <header>playback/playbackwidget.h</header>
    <container>1</container>
   </customwidget>
  </customwidgets>

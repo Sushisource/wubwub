@@ -13,7 +13,7 @@
 #include "options/optionswindow.h"
 #include "recentalbumsview.h"
 #include "playlist.h"
-#include "playback/playbackmgr.h"
+#include "playback/playbackwidget.h"
 #include "albumtab/albumtab.h"
 
 Q_DECLARE_METATYPE(QList<QString>)
@@ -49,8 +49,12 @@ private:
 private slots:
     void autoSuggest();
     void newAlbumTab(int alid);
+    void changeSong(int songid);
     bool eventFilter(QObject* object, QEvent* e);
-	bool openOptions();
+    bool openOptions();
+
+signals:
+    void songChange(int songid);
 };
 
 #endif // SSMP_H

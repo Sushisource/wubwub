@@ -6,26 +6,25 @@ DEFINES += QT_LARGEFILE_SUPPORT QT_SQL_LIB QT_OPENGL_LIB
 INCLUDEPATH += E:/libs/taglib \
         E:/libs/taglib/taglib \
         E:/libs/taglib/taglib/toolkit \
-        E:/libs/irrKlang-1.3.0/include \
+        E:/libs/bass64/c \
         .
 
-LIBS += -L'E:/libs/irrKlang-1.3.0/lib/win32-visualStudio' \
+LIBS += -L'E:/libs/bass64/c' \
         -L'E:/libs/taglib/taglib/MinSizeRel' \
         -l'tag' \
-        -l'irrKlang'\
+        -l'bass'\
 
 RC_FILE = ssmp.rc
-#QMAKE_CXXFLAGS += -std=c++0x -U__STRICT_ANSI__
 HEADERS += dbi/TagExtractor.h \
     ssmp.h \
     recentalbumsview.h \
     dbi/dbi.h \
     options/optionswindow.h \
     playlist.h \
-    playback/playbackmgr.h \
     playback/musicslider.h \
     albumtab/albumtab.h \
-    albumtab/prettytext.h
+    albumtab/prettytext.h \
+    playback/playbackwidget.h
 SOURCES += dbi/dbi.cpp \
     options/optionswindow.cpp \
     main.cpp \
@@ -33,10 +32,10 @@ SOURCES += dbi/dbi.cpp \
     ssmp.cpp \
     dbi/TagExtractor.cpp \
     playlist.cpp \
-    playback/playbackmgr.cpp \
     playback/musicslider.cpp \
     albumtab/albumtab.cpp \
-    albumtab/prettytext.cpp
+    albumtab/prettytext.cpp \
+    playback/playbackwidget.cpp
 FORMS += ssmp.ui \
     options/options.ui \
     playback/playbackwidget.ui

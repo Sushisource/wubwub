@@ -33,6 +33,7 @@ public:
     ~DBI();
     enum searchFlag {All, ArtOnly, AlbOnly, SonOnly};
     //Song table's columns. ORMs are for bitches
+    //*** KEEP IN SYNC WITH ENUM ABOVE***//
     QList<QString> songCols;
 
     void initDB();
