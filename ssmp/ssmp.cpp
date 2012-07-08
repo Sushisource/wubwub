@@ -137,6 +137,15 @@ void ssmp::newAlbumTab(int alid)
     ui.tabWidget->setCurrentWidget(openAlbumTab(alid));
 }
 
+//Song message multiplexer, notifies all
+//objects that need to know about song changes
+void ssmp::changeSong(int songid)
+{
+    QString songname = dbi->getTrackColFromSong(songid, SongCol::path);
+    ui.playbackwidget->changeSong(songname);
+    emit songChange(songid);
+}
+
 bool ssmp::eventFilter(QObject* object, QEvent* e)
 {
     if (object == ui.search)
@@ -217,6 +226,7 @@ QWidget* ssmp::openAlbumTab(int alid)
     lay->setMargin(0);
     AlbumTab* altab = new AlbumTab(alid, container);
     connect(altab, SIGNAL(clearPlaylist()), ui.nowplayingLst, SLOT(clear()));
+    connect(altab, SIGNAL(playSong(int)), SLOT(changeSong(int)));
     lay->addWidget(altab,1);
     return container;
 }

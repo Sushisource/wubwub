@@ -20,6 +20,10 @@ struct Alb
 	QList<QString> tracks;
 };
 
+enum SongCol {
+sid,name,tracknum,album,artist,length,path,numplays,genre,year
+};
+
 //Database interface. Is a singleton which runs on it's own thread.
 class DBI : public QObject
 {
@@ -29,6 +33,7 @@ public:
     ~DBI();
     enum searchFlag {All, ArtOnly, AlbOnly, SonOnly};
     //Song table's columns. ORMs are for bitches
+    //*** KEEP IN SYNC WITH ENUM ABOVE***//
     QList<QString> songCols;
 
     void initDB();
@@ -39,7 +44,7 @@ public:
     QList<QString> getTrackLengthsFromAlbum(int alid);
     QList<QString> getTrackColFromAlbum(int alid, int col);
     QList<QString> getNames(QList<int> ids, QString type);
-    QString getTrackColFromSong(int sid, int col);
+    QString getTrackColFromSong(int sid, SongCol col);
     QString getSongNameFromId(int sid);
     QString getAlbumNameFromId(int alid);
     QString getArtistNameFromId(int arid);

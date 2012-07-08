@@ -2,15 +2,16 @@
 #define PLAYBACKMGR_H
 
 #include <QObject>
-#include <irrKlang.h>
+#include <bass.h>
 #include "ui_playbackwidget.h"
+#include "dbi/dbi.h"
 
-class PlaybackMgr : public QWidget
+class PlaybackWidget : public QWidget
 {
     Q_OBJECT
 public:
-    explicit PlaybackMgr(QWidget *parent = 0);
-    ~PlaybackMgr();
+    explicit PlaybackWidget(QWidget *parent = 0);
+    ~PlaybackWidget();
     enum Playstate {PLAYING, STOPPED, PAUSED};
 
 signals:
@@ -23,10 +24,11 @@ public slots:
 
 private:
     Ui::pbwidget ui;
+    DBI* db;
 
-    irrklang::ISoundEngine* eng;
-    irrklang::ISound* cursong;
     int cursonglength;
+    int cursongblength; //Byte length
+    DWORD curchan;
     Playstate state;
     QTimer* updateTimer;
     QPixmap play;
