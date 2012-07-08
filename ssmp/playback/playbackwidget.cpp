@@ -79,6 +79,7 @@ void PlaybackWidget::stopSong()
 {
     if(curchan == NULL)
         return;
+    emit stoppedPlaying();
     BASS_ChannelStop(curchan);
     curchan = NULL;
     updateTimer->stop();

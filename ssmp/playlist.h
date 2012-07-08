@@ -21,7 +21,7 @@ public slots:
 
 signals:
     void sendSongList(QList<QString> sl);
-    void songChange(QString path);
+    void songChange(int sid);
 
 private:
     DBI* db;

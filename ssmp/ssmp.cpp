@@ -55,7 +55,7 @@ ssmp::ssmp(QWidget *parent, Qt::WFlags flags) : QMainWindow(parent, flags)
     connect(recentAlbs, SIGNAL(addAlbsToNowPlaying(QList<int>)), ui.nowplayingLst, SLOT(addAlbums(QList<int>)));
     connect(recentAlbs, SIGNAL(openAlbumTab(int)), SLOT(newAlbumTab(int)));
     //Now play list
-    connect(ui.nowplayingLst, SIGNAL(songChange(QString)), ui.playbackwidget, SLOT(changeSong(QString)));
+    connect(ui.nowplayingLst, SIGNAL(songChange(int)), SLOT(changeSong(int)));
     //Playback manager
     connect(ui.playbackwidget, SIGNAL(songOver()), ui.nowplayingLst, SLOT(nextSong()));
 
@@ -141,8 +141,11 @@ void ssmp::newAlbumTab(int alid)
 //objects that need to know about song changes
 void ssmp::changeSong(int songid)
 {
-    QString songname = dbi->getTrackColFromSong(songid, SongCol::path);
-    ui.playbackwidget->changeSong(songname);
+    QString songpath = dbi->getTrackColFromSong(songid, SongCol::path);
+    QString sname = dbi->getSongNameFromId(songid);
+    QString arname = dbi->getArtistNameFromSongId(songid);
+    ui.tabWidget->setTabText(0,arname + " - " + sname);
+    ui.playbackwidget->changeSong(songpath);
     emit songChange(songid);
 }
 
