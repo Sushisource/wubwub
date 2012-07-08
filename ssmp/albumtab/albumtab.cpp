@@ -58,10 +58,10 @@ void AlbumTab::addTracks(int alid, DBI* db)
         track->setPos(5,lasty);
         track->setZValue(1);
         track->setData(TRACKID,trackids[i]);
-        widest = max(widest, (int)track->boundingRect().width() + 5);
+        widest = std::max(widest, (int)track->boundingRect().width() + 5);
         scene->addItem(track);
     }
-    widest = max(widest, (int)title->boundingRect().width());
+    widest = std::max(widest, (int)title->boundingRect().width());
 }
 
 void AlbumTab::resizeEvent(QResizeEvent *event)

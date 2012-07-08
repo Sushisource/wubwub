@@ -2,22 +2,19 @@ TEMPLATE = app
 TARGET = ssmp
 DESTDIR = ../Output
 QT += core gui sql opengl svg
-DEFINES += QT_LARGEFILE_SUPPORT QT_SQL_LIB QT_OPENGL_LIB
-        E:/libs/taglib/taglib \
-        E:/libs/taglib/taglib/toolkit \
-        .
+DEFINES += QT_SQL_LIB QT_OPENGL_LIB
 
-    LIBS += -L'E:/libs/irrKlang-1.3.0/bin/win32-gcc'
+mac {
+    INCLUDEPATH += /Developer/Libraries/bass24-osx \
+                   /Developer/Libraries/taglib/output/include
+    LIBS += -L/Developer/Libraries/bass24-osx \
+            -framework tag \
+            -lbass
+}
 
+QMAKE_CXXFLAGS += -std=c++11 -U__STRICT_ANSI__
+QMAKE_LFLAGS += -F/Library/Frameworks/tag.framework
 
-LIBS += -l'irrKlang'\
-        -l'tag'\
-        #-l'ikpFLAC'\
-        #-l'ikpMP3'
-
-
-QMAKE_CXXFLAGS += -std=c++0x #-U__STRICT_ANSI__
-#QMAKE_LFLAGS += -static-libgcc -static-libstdc++
 HEADERS += dbi/TagExtractor.h \
     ssmp.h \
     recentalbumsview.h \

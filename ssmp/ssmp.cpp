@@ -96,7 +96,7 @@ void ssmp::autoSuggest()
     {
         QList<int> resp = res.values(t);
         QList<QString> resp_str = dbi->getNames(resp, t);
-        QList<QPair<QString, int>> pairs;
+        QList<QPair<QString, int> > pairs;
         for(int i = 0; i < resp.count(); ++i)
         {
             pairs.append(qMakePair(resp_str[i],resp[i]));
