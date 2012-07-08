@@ -30,7 +30,7 @@ PlaybackWidget::PlaybackWidget(QWidget *parent) : QWidget(parent)
     updateTimer = new QTimer(this);
     connect(updateTimer, SIGNAL(timeout()), SLOT(update()));
     connect(ui.playSlider, SIGNAL(seekTo(float)), SLOT(seek(float)));
-    updateTimer->setInterval(95);
+    updateTimer->setInterval(50);
 }
 
 PlaybackWidget::~PlaybackWidget()
@@ -44,7 +44,8 @@ void PlaybackWidget::changeSong(QString songPath)
     curchan = BASS_StreamCreateFile(false,songPath.toAscii(),0,0,
                                     BASS_SAMPLE_FLOAT | BASS_STREAM_AUTOFREE);
     BASS_ChannelPlay(curchan,false);
-    cursonglength = BASS_ChannelBytes2Seconds(curchan,0);
+    cursongblength = BASS_ChannelGetLength(curchan, BASS_POS_BYTE);
+    cursonglength = BASS_ChannelBytes2Seconds(curchan,cursongblength);
     changeState(PLAYING);
 }
 
@@ -71,7 +72,7 @@ void PlaybackWidget::changeState(PlaybackWidget::Playstate s)
 
 void PlaybackWidget::seek(float ratio)
 {
-    BASS_ChannelSetPosition(curchan,ratio*cursonglength,BASS_FILEPOS_BUFFER);
+    BASS_ChannelSetPosition(curchan,ratio*cursongblength,BASS_POS_BYTE);
 }
 
 void PlaybackWidget::stopSong()
@@ -83,9 +84,8 @@ void PlaybackWidget::stopSong()
     updateTimer->stop();
 }
 
-QString PlaybackWidget::msToString(int ms)
+QString PlaybackWidget::msToString(int secs)
 {
-    float secs = ms/1000.0;
     int mins = secs / 60;
     int remainder = secs - mins*60;
     QString m =  QString("%1").arg(mins, 2, 10, QChar('0'));
@@ -111,7 +111,8 @@ void PlaybackWidget::update()
         emit songOver();
     }
     //Now update the gui elements
-    int ms = BASS_ChannelGetPosition(curchan, BASS_POS_MUSIC_ORDER);
+    QWORD pos = BASS_ChannelGetPosition(curchan, BASS_POS_BYTE);
+    int ms = BASS_ChannelBytes2Seconds(curchan, pos);
     float ratio = (float)ms/cursonglength;
     ui.playedLbl->setText(msToString(ms));
     ui.totalLbl->setText("-" + msToString(cursonglength - ms));

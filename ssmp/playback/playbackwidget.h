@@ -27,6 +27,7 @@ private:
     DBI* db;
 
     int cursonglength;
+    int cursongblength; //Byte length
     DWORD curchan;
     Playstate state;
     QTimer* updateTimer;
