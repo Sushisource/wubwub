@@ -14,12 +14,17 @@ void Playlist::addSongs(QList<int> songIds)
 {
     foreach(int sid, songIds)
     {
-        QString name = db->getSongNameFromId(sid);
-        //Insert pathname , user name
-        QListWidgetItem* lwi = new QListWidgetItem(name);
-        lwi->setData(Qt::WhatsThisRole, sid);
-        this->addItem(lwi);
+        addSong(sid);
     }
+}
+
+void Playlist::addSong(int songid)
+{
+    QString name = db->getSongNameFromId(songid);
+    //Insert pathname , user name
+    QListWidgetItem* lwi = new QListWidgetItem(name);
+    lwi->setData(Qt::WhatsThisRole, songid);
+    this->addItem(lwi);
 }
 
 void Playlist::addAlbums(QList<int> alids)

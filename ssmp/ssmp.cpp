@@ -95,7 +95,7 @@ void ssmp::autoSuggest()
     {
         QList<int> resp = res.values(t);
         QList<QString> resp_str = dbi->getNames(resp, t);
-        QList<QPair<QString, int>> pairs;
+        QList<QPair<QString, int> > pairs;
         for(int i = 0; i < resp.count(); ++i)
         {
             pairs.append(qMakePair(resp_str[i],resp[i]));
@@ -133,7 +133,7 @@ void ssmp::autoSuggest()
 
 void ssmp::newAlbumTab(int alid)
 {
-    ui.tabWidget->setCurrentWidget(openAlbumTab(alid));
+    openAlbumTab(alid);
 }
 
 //Song message multiplexer, notifies all
@@ -168,7 +168,8 @@ bool ssmp::eventFilter(QObject* object, QEvent* e)
         {
             bool consumed = false;
             int key = static_cast<QKeyEvent *>(e)->key();
-            QList<int> l;
+            QString type = popup->selectedItems()[0]->text(1);
+            int id = popup->selectedItems()[0]->data(0, Qt::WhatsThisRole).toInt();
             switch (key)
             {
                 case Qt::Key_Enter:
@@ -179,9 +180,10 @@ bool ssmp::eventFilter(QObject* object, QEvent* e)
                     break;
 
                 case Qt::Key_Control:
-                    l.append(popup->selectedItems()[0]->data(0, Qt::WhatsThisRole).toInt());
-                    if(popup->selectedItems()[0]->text(1) == "song")
-                        ui.nowplayingLst->addSongs(l);
+                    if(type == "song")
+                        ui.nowplayingLst->addSong(id);
+                    else if(type == "album")
+                        openAlbumTab(id);
                     consumed = true;
                     ui.search->clearFocus();
                     popup->hide();
@@ -230,6 +232,7 @@ QWidget* ssmp::openAlbumTab(int alid)
     connect(altab, SIGNAL(clearPlaylist()), ui.nowplayingLst, SLOT(clear()));
     connect(altab, SIGNAL(playSong(int)), SLOT(changeSong(int)));
     lay->addWidget(altab,1);
+    ui.tabWidget->setCurrentWidget(container);
     return container;
 }
 

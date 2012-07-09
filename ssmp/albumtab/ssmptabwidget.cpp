@@ -10,7 +10,7 @@ void ssmpTabWidget::addCTab(QWidget *container, QString name, bool closeable)
     int ix = this->addTab(container, name);
     if(closeable)
     {
-        QToolButton* close = new QToolButton();
+        QToolButton* close = new QToolButton(container);
         close->setStyleSheet("background-color: rgba( 255, 255, 255, 0% );");
         close->setGeometry(QRect(0,0,btnw,btnw));
         close->setProperty("tabix", QVariant(ix));
@@ -26,5 +26,6 @@ void ssmpTabWidget::closeMyTab()
 {
     QToolButton* clicked = (QToolButton*)QObject::sender();
     int index = clicked->property("tabix").toInt();
+    delete widget(index);
     removeTab(index);
 }

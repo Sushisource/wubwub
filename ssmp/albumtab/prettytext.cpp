@@ -17,6 +17,11 @@ void PrettyText::hoverLeaveEvent(QGraphicsSceneHoverEvent* e)
     //tl->start();
 }
 
+PrettyText::~PrettyText()
+{
+
+}
+
 /*void PrettyText::colorTick(int i)
 {
     this->setBrush(QBrush(QColor::fromRgb(shade+i,shade+i,shade+i), Qt::SolidPattern));

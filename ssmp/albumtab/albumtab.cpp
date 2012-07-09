@@ -30,8 +30,8 @@ AlbumTab::AlbumTab(int alid, QWidget *parent) : QGraphicsView(parent)
 
     //Album art
     QPixmap aart = QPixmap(db->getImgUriFromAlbumId(alid));
-    cover = new QGraphicsPixmapItem(aart.scaledToWidth(300));
-    QGraphicsDropShadowEffect* shad = new QGraphicsDropShadowEffect();
+    cover = new QGraphicsPixmapItem(aart.scaledToWidth(300, Qt::SmoothTransformation));
+    QGraphicsDropShadowEffect* shad = new QGraphicsDropShadowEffect(this);
     shad->setBlurRadius(6);
     shad->setColor(Qt::black);
     shad->setOffset(0,0);
@@ -50,7 +50,7 @@ void AlbumTab::addTracks(int alid, DBI* db)
     int widest = 0;
     for(int i = 0; i < tracknames.count(); ++i)
     {
-        PrettyText* track = new PrettyText();
+        PrettyText* track = new PrettyText(title);
         track->setAcceptHoverEvents(true);
         track->setText(tracknums[i] + ".  " + tracknames[i]);
         track->setFont(trackfont);
@@ -59,7 +59,6 @@ void AlbumTab::addTracks(int alid, DBI* db)
         track->setZValue(1);
         track->setData(TRACKID,trackids[i]);
         widest = max(widest, (int)track->boundingRect().width() + 5);
-        scene->addItem(track);
     }
     widest = max(widest, (int)title->boundingRect().width());
 }
@@ -88,4 +87,11 @@ void AlbumTab::mouseDoubleClickEvent(QMouseEvent *event)
         int songid = item->data(TRACKID).toInt();
         emit playSong(songid);
     }
+}
+
+AlbumTab::~AlbumTab()
+{
+    delete title;
+    delete cover;
+    delete scene;
 }
