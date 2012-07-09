@@ -19,6 +19,7 @@ public:
 
     void addTrack(QFont trackfont, QList<QString> tracknums, QGraphicsDropShadowEffect* shadow, int i, QPen oline, QList<QString> tracknames);
     void addTracks(int alid, DBI* db);
+    ~AlbumTab();
 
 signals:
     void clearPlaylist();

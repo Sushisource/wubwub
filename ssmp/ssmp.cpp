@@ -5,7 +5,6 @@ ssmp::ssmp(QWidget *parent, Qt::WFlags flags) : QMainWindow(parent, flags)
     //Register metatypes
     qRegisterMetaType<QList<QString>>("QList<QString>");
     ui.setupUi(this);
-    ui.menuOptions->setWindowOpacity(.5);
     disabledColor = this->palette().color(QPalette::Disabled, QPalette::WindowText);
     searchtypes = QList<QString>() << "artist" << "album" << "song";
     //Update global palette access
@@ -55,7 +54,7 @@ ssmp::ssmp(QWidget *parent, Qt::WFlags flags) : QMainWindow(parent, flags)
     connect(recentAlbs, SIGNAL(addAlbsToNowPlaying(QList<int>)), ui.nowplayingLst, SLOT(addAlbums(QList<int>)));
     connect(recentAlbs, SIGNAL(openAlbumTab(int)), SLOT(newAlbumTab(int)));
     //Now play list
-    connect(ui.nowplayingLst, SIGNAL(songChange(QString)), ui.playbackwidget, SLOT(changeSong(QString)));
+    connect(ui.nowplayingLst, SIGNAL(songChange(int)), SLOT(changeSong(int)));
     //Playback manager
     connect(ui.playbackwidget, SIGNAL(songOver()), ui.nowplayingLst, SLOT(nextSong()));
 
@@ -134,15 +133,18 @@ void ssmp::autoSuggest()
 
 void ssmp::newAlbumTab(int alid)
 {
-    ui.tabWidget->setCurrentWidget(openAlbumTab(alid));
+    openAlbumTab(alid);
 }
 
 //Song message multiplexer, notifies all
 //objects that need to know about song changes
 void ssmp::changeSong(int songid)
 {
-    QString songname = dbi->getTrackColFromSong(songid, SongCol::path);
-    ui.playbackwidget->changeSong(songname);
+    QString songpath = dbi->getTrackColFromSong(songid, SongCol::path);
+    QString sname = dbi->getSongNameFromId(songid);
+    QString arname = dbi->getArtistNameFromSongId(songid);
+    ui.tabWidget->setTabText(0,arname + " - " + sname);
+    ui.playbackwidget->changeSong(songpath);
     emit songChange(songid);
 }
 
@@ -166,7 +168,8 @@ bool ssmp::eventFilter(QObject* object, QEvent* e)
         {
             bool consumed = false;
             int key = static_cast<QKeyEvent *>(e)->key();
-            QList<int> l;
+            QString type = popup->selectedItems()[0]->text(1);
+            int id = popup->selectedItems()[0]->data(0, Qt::WhatsThisRole).toInt();
             switch (key)
             {
                 case Qt::Key_Enter:
@@ -177,9 +180,10 @@ bool ssmp::eventFilter(QObject* object, QEvent* e)
                     break;
 
                 case Qt::Key_Control:
-                    l.append(popup->selectedItems()[0]->data(0, Qt::WhatsThisRole).toInt());
-                    if(popup->selectedItems()[0]->text(1) == "song")
-                        ui.nowplayingLst->addSongs(l);
+                    if(type == "song")
+                        ui.nowplayingLst->addSong(id);
+                    else if(type == "album")
+                        openAlbumTab(id);
                     consumed = true;
                     ui.search->clearFocus();
                     popup->hide();
@@ -214,13 +218,13 @@ bool ssmp::eventFilter(QObject* object, QEvent* e)
 void ssmp::openSearchWindow(QString name, QMap<QString,QString> results)
 {
     QWidget* searchtab = new QWidget(ui.tabWidget);
-    ui.tabWidget->addTab(searchtab, name);
+    ui.tabWidget->addCTab(searchtab, name);
 }
 
 QWidget* ssmp::openAlbumTab(int alid)
 {
     QWidget* container = new QWidget(ui.tabWidget);
-    ui.tabWidget->addTab(container, dbi->getAlbumNameFromId(alid));
+    ui.tabWidget->addCTab(container, dbi->getAlbumNameFromId(alid));
     container->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
     QVBoxLayout* lay = new QVBoxLayout(container);
     lay->setMargin(0);
@@ -228,6 +232,7 @@ QWidget* ssmp::openAlbumTab(int alid)
     connect(altab, SIGNAL(clearPlaylist()), ui.nowplayingLst, SLOT(clear()));
     connect(altab, SIGNAL(playSong(int)), SLOT(changeSong(int)));
     lay->addWidget(altab,1);
+    ui.tabWidget->setCurrentWidget(container);
     return container;
 }
 

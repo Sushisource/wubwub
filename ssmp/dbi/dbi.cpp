@@ -239,6 +239,12 @@ QString DBI::getArtistNameFromAlbumId(int alid)
     return getArtistNameFromId(qm.record(0).value(0).toInt());
 }
 
+QString DBI::getArtistNameFromSongId(int sid)
+{
+    int arid = this->getTrackColFromSong(sid, SongCol::artist).toInt();
+    return getArtistNameFromId(arid);
+}
+
 QString DBI::getImgUriFromAlbumId(int alid)
 {
     QSqlQueryModel qm;

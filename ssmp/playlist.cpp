@@ -14,12 +14,17 @@ void Playlist::addSongs(QList<int> songIds)
 {
     foreach(int sid, songIds)
     {
-        QString name = db->getSongNameFromId(sid);
-        //Insert pathname , user name
-        QListWidgetItem* lwi = new QListWidgetItem(name);
-        lwi->setData(Qt::WhatsThisRole, db->getTrackColFromSong(sid, SongCol::path));
-        this->addItem(lwi);
+        addSong(sid);
     }
+}
+
+void Playlist::addSong(int songid)
+{
+    QString name = db->getSongNameFromId(songid);
+    //Insert pathname , user name
+    QListWidgetItem* lwi = new QListWidgetItem(name);
+    lwi->setData(Qt::WhatsThisRole, songid);
+    this->addItem(lwi);
 }
 
 void Playlist::addAlbums(QList<int> alids)
@@ -49,7 +54,7 @@ void Playlist::dblClkRedirect(QListWidgetItem *i)
         cursong->setIcon(QIcon());
     cursong = i;
     cursong->setIcon(playingIcon);
-    emit songChange(i->data(Qt::WhatsThisRole).toString());
+    emit songChange(i->data(Qt::WhatsThisRole).toInt());
 }
 
 Playlist::~Playlist()

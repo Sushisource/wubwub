@@ -16,12 +16,13 @@ public:
 
 public slots:
     void addSongs(QList<int> songIds);
+    void addSong(int songid);
     void addAlbums(QList<int> alids);
     void nextSong();
 
 signals:
     void sendSongList(QList<QString> sl);
-    void songChange(QString path);
+    void songChange(int sid);
 
 private:
     DBI* db;

@@ -22,27 +22,27 @@
      <colorrole role="Button">
       <brush brushstyle="SolidPattern">
        <color alpha="255">
-        <red>167</red>
-        <green>167</green>
-        <blue>167</blue>
+        <red>180</red>
+        <green>180</green>
+        <blue>180</blue>
        </color>
       </brush>
      </colorrole>
      <colorrole role="Base">
       <brush brushstyle="SolidPattern">
        <color alpha="255">
-        <red>167</red>
-        <green>167</green>
-        <blue>167</blue>
+        <red>180</red>
+        <green>180</green>
+        <blue>180</blue>
        </color>
       </brush>
      </colorrole>
      <colorrole role="Window">
       <brush brushstyle="SolidPattern">
        <color alpha="255">
-        <red>167</red>
-        <green>167</green>
-        <blue>167</blue>
+        <red>180</red>
+        <green>180</green>
+        <blue>180</blue>
        </color>
       </brush>
      </colorrole>
@@ -60,27 +60,27 @@
      <colorrole role="Button">
       <brush brushstyle="SolidPattern">
        <color alpha="255">
-        <red>167</red>
-        <green>167</green>
-        <blue>167</blue>
+        <red>180</red>
+        <green>180</green>
+        <blue>180</blue>
        </color>
       </brush>
      </colorrole>
      <colorrole role="Base">
       <brush brushstyle="SolidPattern">
        <color alpha="255">
-        <red>167</red>
-        <green>167</green>
-        <blue>167</blue>
+        <red>180</red>
+        <green>180</green>
+        <blue>180</blue>
        </color>
       </brush>
      </colorrole>
      <colorrole role="Window">
       <brush brushstyle="SolidPattern">
        <color alpha="255">
-        <red>167</red>
-        <green>167</green>
-        <blue>167</blue>
+        <red>180</red>
+        <green>180</green>
+        <blue>180</blue>
        </color>
       </brush>
      </colorrole>
@@ -98,27 +98,27 @@
      <colorrole role="Button">
       <brush brushstyle="SolidPattern">
        <color alpha="255">
-        <red>167</red>
-        <green>167</green>
-        <blue>167</blue>
+        <red>180</red>
+        <green>180</green>
+        <blue>180</blue>
        </color>
       </brush>
      </colorrole>
      <colorrole role="Base">
       <brush brushstyle="SolidPattern">
        <color alpha="255">
-        <red>167</red>
-        <green>167</green>
-        <blue>167</blue>
+        <red>180</red>
+        <green>180</green>
+        <blue>180</blue>
        </color>
       </brush>
      </colorrole>
      <colorrole role="Window">
       <brush brushstyle="SolidPattern">
        <color alpha="255">
-        <red>167</red>
-        <green>167</green>
-        <blue>167</blue>
+        <red>180</red>
+        <green>180</green>
+        <blue>180</blue>
        </color>
       </brush>
      </colorrole>
@@ -139,7 +139,7 @@
   </property>
   <property name="styleSheet">
    <string notr="true">QObject {
-	background: rgb(167, 167, 167);
+	background: rgb(180, 180, 180);
 }
 
 QMenuBar {
@@ -150,23 +150,23 @@ QMenuBar {
  QMenuBar::item {
      spacing: 3px;
      padding: 1px 4px;
-     background: transparent;
-     border-radius: 5px;
+	background: transparent;
  }
 
  QMenuBar::item:selected { /* when selected using mouse or keyboard */
-     background: #a8a8a8;
+     background: rgba(0,0,0,50);
+border: 1px solid gray;
  }
 
  QMenuBar::item:pressed {
-     background: #888888;
+     background: rgba(0,0,0,80);
+border: 1px solid gray;
  }
 
 QMenu::item::selected {
-	background: rgba(0,0,0,30);
-	border-radius: 5px;
+    background: rgba(255,255,255,50);
+	color: black;
 }
-
 
 QListView {
 border: 1px solid grey;
@@ -174,8 +174,6 @@ border: 1px solid grey;
 
 QListView::item {
 border: none;
-border-top-color: transparent;
-border-bottom-color: transparent;
 }
 
 QListView::item:selected {
@@ -345,7 +343,7 @@ QLabel#playlistLbl {
          </widget>
         </item>
         <item>
-         <widget class="QTabWidget" name="tabWidget">
+         <widget class="ssmpTabWidget" name="tabWidget">
           <property name="currentIndex">
            <number>1</number>
           </property>
@@ -402,15 +400,12 @@ QLabel#playlistLbl {
      <x>0</x>
      <y>0</y>
      <width>771</width>
-     <height>22</height>
+     <height>18</height>
     </rect>
-   </property>
-   <property name="nativeMenuBar">
-    <bool>false</bool>
    </property>
    <widget class="QMenu" name="menuOptions">
     <property name="title">
-     <string>&lt;&gt;</string>
+     <string>Actions</string>
     </property>
     <addaction name="optionsAction"/>
     <addaction name="actionAbout"/>
@@ -439,6 +434,12 @@ QLabel#playlistLbl {
    <class>PlaybackWidget</class>
    <extends>QWidget</extends>
    <header>playback/playbackwidget.h</header>
+   <container>1</container>
+  </customwidget>
+  <customwidget>
+   <class>ssmpTabWidget</class>
+   <extends>QTabWidget</extends>
+   <header>albumtab/ssmptabwidget.h</header>
    <container>1</container>
   </customwidget>
  </customwidgets>

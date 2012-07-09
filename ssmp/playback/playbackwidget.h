@@ -16,6 +16,7 @@ public:
 
 signals:
     void songOver();
+    void stoppedPlaying();
     
 public slots:
     void changeSong(QString path);

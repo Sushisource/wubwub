@@ -49,6 +49,7 @@ public:
     QString getAlbumNameFromId(int alid);
     QString getArtistNameFromId(int arid);
     QString getArtistNameFromAlbumId(int alid);
+    QString getArtistNameFromSongId(int sid);
     QString getImgUriFromAlbumId(int alid);
     QList<Alb> getNRecentAlbums(int n);
 

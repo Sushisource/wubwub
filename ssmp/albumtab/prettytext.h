@@ -13,6 +13,7 @@ private:
     void hoverEnterEvent(QGraphicsSceneHoverEvent *event);
     void hoverLeaveEvent(QGraphicsSceneHoverEvent *event);
     static const short shade = 90;
+    ~PrettyText();
 
 public:
 //    QTimeLine* tl;
