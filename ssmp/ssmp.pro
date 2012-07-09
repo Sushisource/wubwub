@@ -24,7 +24,8 @@ HEADERS += dbi/TagExtractor.h \
     playback/musicslider.h \
     albumtab/albumtab.h \
     albumtab/prettytext.h \
-    playback/playbackwidget.h
+    playback/playbackwidget.h \
+    albumtab/ssmptabwidget.h
 SOURCES += dbi/dbi.cpp \
     options/optionswindow.cpp \
     main.cpp \
@@ -35,7 +36,8 @@ SOURCES += dbi/dbi.cpp \
     playback/musicslider.cpp \
     albumtab/albumtab.cpp \
     albumtab/prettytext.cpp \
-    playback/playbackwidget.cpp
+    playback/playbackwidget.cpp \
+    albumtab/ssmptabwidget.cpp
 FORMS += ssmp.ui \
     options/options.ui \
     playback/playbackwidget.ui

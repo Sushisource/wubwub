@@ -5,7 +5,6 @@ ssmp::ssmp(QWidget *parent, Qt::WFlags flags) : QMainWindow(parent, flags)
     //Register metatypes
     qRegisterMetaType<QList<QString>>("QList<QString>");
     ui.setupUi(this);
-    ui.menuOptions->setWindowOpacity(.5);
     disabledColor = this->palette().color(QPalette::Disabled, QPalette::WindowText);
     searchtypes = QList<QString>() << "artist" << "album" << "song";
     //Update global palette access
@@ -217,13 +216,13 @@ bool ssmp::eventFilter(QObject* object, QEvent* e)
 void ssmp::openSearchWindow(QString name, QMap<QString,QString> results)
 {
     QWidget* searchtab = new QWidget(ui.tabWidget);
-    ui.tabWidget->addTab(searchtab, name);
+    ui.tabWidget->addCTab(searchtab, name);
 }
 
 QWidget* ssmp::openAlbumTab(int alid)
 {
     QWidget* container = new QWidget(ui.tabWidget);
-    ui.tabWidget->addTab(container, dbi->getAlbumNameFromId(alid));
+    ui.tabWidget->addCTab(container, dbi->getAlbumNameFromId(alid));
     container->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
     QVBoxLayout* lay = new QVBoxLayout(container);
     lay->setMargin(0);
