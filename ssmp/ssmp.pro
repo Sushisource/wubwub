@@ -5,6 +5,7 @@ QT += core gui sql opengl svg
 DEFINES += QT_LARGEFILE_SUPPORT QT_SQL_LIB QT_OPENGL_LIB
 INCLUDEPATH += E:/libs/taglib \
         E:/libs/taglib/taglib \
+        E:/libs/taglib/taglib/ogg \
         E:/libs/taglib/taglib/toolkit \
         E:/libs/bass64/c \
         .

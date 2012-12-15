@@ -39,8 +39,10 @@ void RecentAlbumsView::resizeEvent(QResizeEvent* e)
     for(int i = 0; i < rnum; i++)
     {
         int ypos = i*(siz + padding) + padding;
-        backgrounds[i]->setRect(0,ypos,albumxpos,siz);
-        descriptions[i]->setPos(0,ypos);
+        // This + 10 hides long text from an album one above showing up
+        // behind the bottom fade of the album below
+        backgrounds[i]->setRect(0, ypos, albumxpos, siz + 10);
+        descriptions[i]->setPos(0, ypos);
         plusbuttons[i]->setPos(albumxpos-(buttonsiz + 5),ypos);
         tabbuttons[i]->setPos(albumxpos-(buttonsiz + 5),ypos+35);
         //Don't try to resize covers we couldn't load
