@@ -2,6 +2,7 @@
 
 AlbumTab::AlbumTab(int alid, QWidget *parent) : QGraphicsView(parent)
 {
+    album_id = alid;
     scene = new QGraphicsScene(this);
     this->setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
     this->setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
@@ -85,7 +86,7 @@ void AlbumTab::mouseDoubleClickEvent(QMouseEvent *event)
     if(item->type() == PrettyText::Type)
     {
         int songid = item->data(TRACKID).toInt();
-        emit playSong(songid);
+        emit playSongFromAlbum(album_id, songid);
     }
 }
 

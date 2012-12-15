@@ -35,6 +35,7 @@ private:
     QList<QGraphicsSvgItem*> plusbuttons;
     QList<QGraphicsSvgItem*> tabbuttons;
     int rnum;
+    int znum; // Most recent Z depth of albums being displayed
     enum DataKeys {ALID, BTNTYPE};
     enum BtnTypes {PLUS, TAB};
     static const QFont albFont;

@@ -23,11 +23,13 @@ public:
 
 signals:
     void clearPlaylist();
-    void playSong(int songid);
+    void playSongFromAlbum(int alid, int songid);
     
 public slots:
 
 private:
+    int album_id;
+
     QGraphicsScene* scene;
     QGraphicsSimpleTextItem* title;
     //Fonts

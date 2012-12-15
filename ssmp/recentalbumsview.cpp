@@ -4,6 +4,7 @@
 RecentAlbumsView::RecentAlbumsView(QWidget* parent, int listsize) : QGraphicsView(parent)
 {
     rnum = 0;
+    znum = 0;
     scene = new QGraphicsScene(this);
     db = &DBI::getInstance();
 	this->setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
@@ -86,7 +87,6 @@ void RecentAlbumsView::wheelEvent(QWheelEvent *event)
 
 void RecentAlbumsView::addAlbsToRecent(QList<Alb> albs)
 {
-    int znum = 0;
     //Add the albums
     foreach(Alb al, albs)
     {

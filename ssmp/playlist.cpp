@@ -48,9 +48,29 @@ void Playlist::nextSong()
     dblClkRedirect(this->currentItem());
 }
 
+void Playlist::playSongWithSid(int sid)
+{
+    foreach(QListWidgetItem* song, findItems("*", Qt::MatchWildcard))
+    {
+        if(song->data(Qt::WhatsThisRole) == sid)
+        {
+            this->setCurrentItem(song);
+            this->dblClkRedirect(song);
+        }
+    }
+}
+
+void Playlist::playSongFromAlbum(int alid, int sid)
+{
+    this->clear();
+    cursong = NULL;
+    this->addAlbums(QList<int>() << alid);
+    this->playSongWithSid(sid);
+}
+
 void Playlist::dblClkRedirect(QListWidgetItem *i)
 {
-    if(cursong != NULL) //Reset old color
+    if(cursong != NULL) //Reset old icon
         cursong->setIcon(QIcon());
     cursong = i;
     cursong->setIcon(playingIcon);
