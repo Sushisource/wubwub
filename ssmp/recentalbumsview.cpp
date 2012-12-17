@@ -1,6 +1,6 @@
 #include "ssmp.h"
 
-RecentAlbumsView::RecentAlbumsView(QWidget *parent, int listsize) : AlbumView(parent)
+RecentAlbumsView::RecentAlbumsView(QWidget *parent) : AlbumView(parent)
 {
     db = &DBI::getInstance();
 }

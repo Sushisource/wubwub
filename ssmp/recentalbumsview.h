@@ -13,7 +13,7 @@ class RecentAlbumsView : public AlbumView
 	Q_OBJECT
 
 public:
-    RecentAlbumsView(QWidget *parent, int listsize = 5);
+    RecentAlbumsView(QWidget *parent);
 	~RecentAlbumsView();
 
 public slots:

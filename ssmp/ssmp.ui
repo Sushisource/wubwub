@@ -336,7 +336,7 @@ QLabel#playlistLbl {
          <number>0</number>
         </property>
         <item>
-         <widget class="QLineEdit" name="search">
+         <widget class="SsmpSearch" name="search">
           <property name="text">
            <string>Search</string>
           </property>
@@ -441,6 +441,11 @@ QLabel#playlistLbl {
    <extends>QTabWidget</extends>
    <header>albumtab/ssmptabwidget.h</header>
    <container>1</container>
+  </customwidget>
+  <customwidget>
+   <class>SsmpSearch</class>
+   <extends>QLineEdit</extends>
+   <header>ssmpsearch.h</header>
   </customwidget>
  </customwidgets>
  <resources/>

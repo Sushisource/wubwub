@@ -21,6 +21,7 @@ signals:
 public slots:
     void changeSong(QString path);
     void changeState(Playstate s);
+    void togglePlay();
     void seek(float ratio);
 
 private:
@@ -38,7 +39,6 @@ private:
     static inline QString msToString(int ms);
 
 private slots:
-    void togglePlay();
     void update();
 
 };

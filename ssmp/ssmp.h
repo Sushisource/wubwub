@@ -1,18 +1,19 @@
 #ifndef SSMP_H
 #define SSMP_H
 
-#include <QtGui/QMainWindow>
-#include <qsettings.h>
-#include <qthreadpool.h>
-#include <qtreewidget.h>
-#include <QKeyEvent>
 #include <functional>
 #include <numeric>
+
+#include <QtGui/QMainWindow>
+#include <QSettings>
+#include <QThreadPool>
+#include <QKeyEvent>
+
 #include "ui_ssmp.h"
-#include "dbi/dbi.h"
-#include "options/optionswindow.h"
 #include "recentalbumsview.h"
 #include "playlist.h"
+#include "dbi/dbi.h"
+#include "options/optionswindow.h"
 #include "playback/playbackwidget.h"
 #include "albumtab/albumtab.h"
 
@@ -33,10 +34,6 @@ private:
 	Ui::ssmpClass ui;		
 	optionsWindow* optWin;
 	QThread* dbthread;	
-	QTreeWidget* popup;
-	QTimer* searchTimer;
-	QColor disabledColor;
-	QList<QString> searchtypes;
     RecentAlbumsView* recentAlbs;
 
 	inline void addPopupItem(QString name, QString type);
@@ -44,14 +41,14 @@ private:
     void addAlbumToRecent(Alb);
 	void addAlbsToRecent(QList<Alb>);
     void openSearchWindow(QString name, QMap<QString,QString> results);
-    QWidget *openAlbumTab(int alid);
 	
 private slots:
-    void autoSuggest();
     void newAlbumTab(int alid);
     void changeSong(int songid);
     bool eventFilter(QObject* object, QEvent* e);
     bool openOptions();
+    void addSongToNowPlaying(int sid);
+    QWidget *openAlbumTab(int alid);
 
 signals:
     void songChange(int songid);

@@ -1,7 +1,7 @@
 #include "ssmp.h"
 
 //Setup some constants
-AlbumView::AlbumView(QWidget* parent, int listsize) : QGraphicsView(parent)
+AlbumView::AlbumView(QWidget* parent) : QGraphicsView(parent)
 {
     rnum = 0;
     znum = 0;

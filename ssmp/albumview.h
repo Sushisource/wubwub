@@ -13,7 +13,7 @@ class AlbumView : public QGraphicsView
 	Q_OBJECT
 
 public:
-    AlbumView(QWidget *parent, int listsize = 5);
+    AlbumView(QWidget *parent);
     ~AlbumView();
 
 signals:
