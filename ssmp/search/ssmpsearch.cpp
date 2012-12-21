@@ -40,7 +40,6 @@ void SsmpSearch::initPopup()
 
 void SsmpSearch::autoSuggest()
 {
-    qDebug() << "HI";
     if(db == NULL)
         return;
     QString q = this->text();
@@ -127,6 +126,8 @@ bool SsmpSearch::eventFilter(QObject* object, QEvent* e)
                         emit addSongToNowPlaying(id);
                     else if(type == "album")
                         emit openAlbumTab(id);
+                    else if(type == "artist")
+                        emit openArtistTab(id);
                     consumed = true;
                     this->clearFocus();
                     popup->clearFocus();

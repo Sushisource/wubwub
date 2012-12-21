@@ -31,7 +31,6 @@ class DBI : public QObject
 
 public:		
     ~DBI();
-    enum searchFlag {All, ArtOnly, AlbOnly, SonOnly};
     //Song table's columns. ORMs are for bitches
     //*** KEEP IN SYNC WITH ENUM ABOVE***//
     QList<QString> songCols;
@@ -39,6 +38,7 @@ public:
     void initDB();
     void refresh();
     static inline QString formatSeconds(int secs);
+    enum searchFlag {All, ArtOnly, AlbOnly, SonOnly};
     QMap<QString, int> search(QString query, searchFlag s = DBI::All);
     QList<int> getTrackIdsFromAlbum(int alid);
     QList<QString> getTrackLengthsFromAlbum(int alid);
@@ -52,6 +52,7 @@ public:
     QString getArtistNameFromSongId(int sid);
     QString getImgUriFromAlbumId(int alid);
     QList<Alb> getNRecentAlbums(int n);
+    QList<Alb> getArtistAlbums(int arid);
 
     static DBI& getInstance()
     {
@@ -81,6 +82,8 @@ private:
     void updatePathLastMod(QString path);
     void subProcess(QString path, QDateTime rootlastmod);
     void deleteAlbumIfEmpty(int alid);
+
+    QList<Alb> extractAlbums(QSqlQueryModel *qm);
 
     DBI();
     DBI(DBI const&); //Don't impl

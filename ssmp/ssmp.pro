@@ -28,7 +28,8 @@ HEADERS += dbi/TagExtractor.h \
     playback/playbackwidget.h \
     albumtab/ssmptabwidget.h \
     albumview.h \
-    search/ssmpsearch.h
+    search/ssmpsearch.h \
+    artistalbumsview.h
 SOURCES += dbi/dbi.cpp \
     options/optionswindow.cpp \
     main.cpp \
@@ -42,7 +43,8 @@ SOURCES += dbi/dbi.cpp \
     playback/playbackwidget.cpp \
     albumtab/ssmptabwidget.cpp \
     albumview.cpp \
-    search/ssmpsearch.cpp
+    search/ssmpsearch.cpp \
+    artistalbumsview.cpp
 FORMS += ssmp.ui \
     options/options.ui \
     playback/playbackwidget.ui

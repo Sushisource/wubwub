@@ -11,6 +11,7 @@
 
 #include "ui_ssmp.h"
 #include "recentalbumsview.h"
+#include "artistalbumsview.h"
 #include "playlist.h"
 #include "dbi/dbi.h"
 #include "options/optionswindow.h"
@@ -43,12 +44,12 @@ private:
     void openSearchWindow(QString name, QMap<QString,QString> results);
 	
 private slots:
-    void newAlbumTab(int alid);
     void changeSong(int songid);
     bool eventFilter(QObject* object, QEvent* e);
     bool openOptions();
     void addSongToNowPlaying(int sid);
     QWidget *openAlbumTab(int alid);
+    QWidget *openArtistTab(int arid);
 
 signals:
     void songChange(int songid);

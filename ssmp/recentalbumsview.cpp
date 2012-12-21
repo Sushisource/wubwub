@@ -1,16 +1,15 @@
-#include "ssmp.h"
+#include "recentalbumsview.h"
 
 RecentAlbumsView::RecentAlbumsView(QWidget *parent) : AlbumView(parent)
 {
-    db = &DBI::getInstance();
 }
 
 RecentAlbumsView::~RecentAlbumsView()
 {
 }
 
-void RecentAlbumsView::update(int howmany)
+void RecentAlbumsView::update()
 {
-    addAlbs(db->getNRecentAlbums(howmany));
+    addAlbs(db->getNRecentAlbums(5));
     resizeEvent();
 }

@@ -5,6 +5,8 @@ AlbumView::AlbumView(QWidget* parent) : QGraphicsView(parent)
 {
     rnum = 0;
     znum = 0;
+    maxAlbs = 5; //Sensible default
+    db = &DBI::getInstance();
     scene = new QGraphicsScene(this);
 	this->setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
 	this->setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
@@ -154,9 +156,9 @@ void AlbumView::addAlbs(QList<Alb> albs)
         tabbuttons.push_front(tabb);
 
         alids.push_front(al.alid);
-        //Remove bottom item if more than five in view
-        //TODO: Parameterize # in view
-        if(alids.count() > 5)
+        //Remove bottom item if there are more albums
+        //than we allow
+        if(alids.count() > maxAlbs)
         {
             scene->removeItem(descriptions.back());
             scene->removeItem(covers.back());

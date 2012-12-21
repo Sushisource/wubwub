@@ -26,6 +26,7 @@ private:
 signals:
     void addSongToNowPlaying(int sid);
     void openAlbumTab(int alid);
+    void openArtistTab(int alid);
 
 public slots:
 

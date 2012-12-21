@@ -36,32 +36,25 @@ ssmp::ssmp(QWidget *parent, Qt::WindowFlags flags) : QMainWindow(parent, flags)
 
     //Link up stuff
     //Dbi updates
-    connect(dbi, SIGNAL(atDir(QString)), optWin, SLOT(changeStatus(QString)));
-    connect(dbi, SIGNAL(recentChange()), recentAlbs, SLOT(update()));
-    //Open options windows
-    connect(ui.optionsAction, SIGNAL(triggered()), SLOT(openOptions()));
+    connect(dbi, &DBI::atDir, optWin, &optionsWindow::changeStatus);
+    connect(dbi, &DBI::recentChange, recentAlbs, &RecentAlbumsView::update);
     //Save button on options window
-    connect(optWin, SIGNAL(startSongParsing(QList<QString>)), dbi, SLOT(processDirs(QList<QString>)));
+    connect(optWin, &optionsWindow::startSongParsing, dbi, &DBI::processDirs);
     //Connections for the recent view
-    connect(recentAlbs, SIGNAL(addAlbsToNowPlaying(QList<int>)), ui.nowplayingLst, SLOT(addAlbums(QList<int>)));
-    connect(recentAlbs, SIGNAL(openAlbumTab(int)), SLOT(newAlbumTab(int)));
+    connect(recentAlbs, &RecentAlbumsView::addAlbsToNowPlaying, ui.nowplayingLst, &Playlist::addAlbums);
+    connect(recentAlbs, &RecentAlbumsView::openAlbumTab, this, &ssmp::openAlbumTab);
     //Now play list
-    connect(ui.nowplayingLst, SIGNAL(songChange(int)), SLOT(changeSong(int)));
+    connect(ui.nowplayingLst, &Playlist::songChange, this, &ssmp::changeSong);
     //Playback manager
-    connect(ui.playbackwidget, SIGNAL(songOver()), ui.nowplayingLst, SLOT(nextSong()));
+    connect(ui.playbackwidget, &PlaybackWidget::songOver, ui.nowplayingLst, &Playlist::nextSong);
     //Search bar
-    connect(ui.search, SIGNAL(addSongToNowPlaying(int)), SLOT(addSongToNowPlaying(int)));
-    connect(ui.search, SIGNAL(openAlbumTab(int)), SLOT(openAlbumTab(int)));
+    connect(ui.search, &SsmpSearch::addSongToNowPlaying, this, &ssmp::addSongToNowPlaying);
+    connect(ui.search, &SsmpSearch::openAlbumTab, this, &ssmp::openAlbumTab);
+    connect(ui.search, &SsmpSearch::openArtistTab, this, &ssmp::openArtistTab);
 
     //Update the recent view
     dbi->refresh();
     recentAlbs->update();
-}
-
-
-void ssmp::newAlbumTab(int alid)
-{
-    openAlbumTab(alid);
 }
 
 void ssmp::addSongToNowPlaying(int sid)
@@ -110,6 +103,21 @@ QWidget* ssmp::openAlbumTab(int alid)
     connect(altab, SIGNAL(clearPlaylist()), ui.nowplayingLst, SLOT(clear()));
     connect(altab, SIGNAL(playSongFromAlbum(int, int)), ui.nowplayingLst, SLOT(playSongFromAlbum(int,int)));
     lay->addWidget(altab,1);
+    ui.tabWidget->setCurrentWidget(container);
+    return container;
+}
+
+QWidget *ssmp::openArtistTab(int arid)
+{
+    QWidget* container = new QWidget(ui.tabWidget);
+    ui.tabWidget->addCTab(container, dbi->getArtistNameFromId(arid));
+    container->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
+    QVBoxLayout* lay = new QVBoxLayout(container);
+    lay->setMargin(0);
+    ArtistAlbumsView* arview = new ArtistAlbumsView(arid, container);
+    connect(arview, &ArtistAlbumsView::addAlbsToNowPlaying, ui.nowplayingLst, &Playlist::addAlbums);
+    connect(arview, &ArtistAlbumsView::openAlbumTab, this, &ssmp::openAlbumTab);
+    lay->addWidget(arview,1);
     ui.tabWidget->setCurrentWidget(container);
     return container;
 }

@@ -449,5 +449,25 @@ QLabel#playlistLbl {
   </customwidget>
  </customwidgets>
  <resources/>
- <connections/>
+ <connections>
+  <connection>
+   <sender>optionsAction</sender>
+   <signal>triggered()</signal>
+   <receiver>ssmpClass</receiver>
+   <slot>openOptions()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>-1</x>
+     <y>-1</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>385</x>
+     <y>342</y>
+    </hint>
+   </hints>
+  </connection>
+ </connections>
+ <slots>
+  <slot>openOptions()</slot>
+ </slots>
 </ui>

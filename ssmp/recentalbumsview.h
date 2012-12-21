@@ -17,10 +17,9 @@ public:
 	~RecentAlbumsView();
 
 public slots:
-    void update(int howmany = 5);
+    void update();
 
 private:
-    DBI* db;
 };
 
 #endif // RECENTALBUMSVIEW_H

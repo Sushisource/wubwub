@@ -5,6 +5,7 @@
 #include <QGraphicsEffect>
 #include <QGraphicsPixmapItem>
 #include <QGraphicsSvgItem>
+#include "dbi/dbi.h"
 class ssmp; //TODO: Fucking circular depends
 struct Alb;
 
@@ -21,8 +22,10 @@ signals:
     void openAlbumTab(int alid);
 
 protected:
+    DBI* db;
     void addAlbs(QList<Alb> albs);
     void resizeEvent(QResizeEvent* e = NULL);
+    int maxAlbs;
 
 private:
 	QGraphicsScene* scene;	
