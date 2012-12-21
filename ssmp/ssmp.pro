@@ -51,3 +51,5 @@ OTHER_FILES +=
 
 RESOURCES += \
     res.qrc
+
+QMAKE_CXXFLAGS += /DNOMINMAX

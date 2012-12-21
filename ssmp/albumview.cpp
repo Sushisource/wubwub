@@ -53,7 +53,7 @@ void AlbumView::resizeEvent(QResizeEvent* e)
 void AlbumView::mouseReleaseEvent(QMouseEvent *event)
 {
     QPointF sc = this->mapToScene(event->pos());
-    QGraphicsItem* item = scene->itemAt(sc);
+    QGraphicsItem* item = scene->itemAt(sc, QTransform());
     if(item == NULL) return;
     if(item->type() == QGraphicsSvgItem::Type)
     {
@@ -182,4 +182,5 @@ void AlbumView::addAlbs(QList<Alb> albs)
 
 AlbumView::~AlbumView()
 {
+    delete bottomfade;
 }

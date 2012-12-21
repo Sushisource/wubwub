@@ -490,5 +490,5 @@ void DBI::updatePathLastMod(QString path)
 
 DBI::~DBI()
 {
-
+    delete watcher;
 }

@@ -81,7 +81,7 @@ void AlbumTab::wheelEvent(QWheelEvent *event)
 void AlbumTab::mouseDoubleClickEvent(QMouseEvent *event)
 {
     QPointF sc = this->mapToScene(event->pos());
-    QGraphicsItem* item = scene->itemAt(sc);
+    QGraphicsItem* item = scene->itemAt(sc, QTransform());
     if(item == NULL) return;
     if(item->type() == PrettyText::Type)
     {

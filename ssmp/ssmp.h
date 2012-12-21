@@ -4,7 +4,7 @@
 #include <functional>
 #include <numeric>
 
-#include <QtGui/QMainWindow>
+#include <QMainWindow>
 #include <QSettings>
 #include <QThreadPool>
 #include <QKeyEvent>
@@ -24,7 +24,7 @@ class ssmp : public QMainWindow
 	Q_OBJECT
 
 public:
-	ssmp(QWidget *parent = 0, Qt::WFlags flags = 0);
+    ssmp(QWidget *parent = 0, Qt::WindowFlags flags = 0);
 	~ssmp();
 
     QSettings* settings;

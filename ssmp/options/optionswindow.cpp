@@ -1,6 +1,6 @@
 #include "ssmp.h"
 
-optionsWindow::optionsWindow(ssmp * parent, Qt::WFlags flags)
+optionsWindow::optionsWindow(ssmp * parent, Qt::WindowFlags flags)
 	: QMainWindow(parent, flags)
 {
 	myparent = parent;

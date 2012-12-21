@@ -1,12 +1,10 @@
 #include "ssmp.h"
 
-ssmp::ssmp(QWidget *parent, Qt::WFlags flags) : QMainWindow(parent, flags)
+ssmp::ssmp(QWidget *parent, Qt::WindowFlags flags) : QMainWindow(parent, flags)
 {
     //Register metatypes
     qRegisterMetaType<QList<QString>>("QList<QString>");
     ui.setupUi(this);
-    //Accept multimedia keys
-    QCoreApplication::setAttribute(Qt::AA_CaptureMultimediaKeys);
     //Update global palette access
     QApplication::setPalette(this->palette());
     //Initiate settings file

@@ -445,7 +445,7 @@ QLabel#playlistLbl {
   <customwidget>
    <class>SsmpSearch</class>
    <extends>QLineEdit</extends>
-   <header>ssmpsearch.h</header>
+   <header>search/ssmpsearch.h</header>
   </customwidget>
  </customwidgets>
  <resources/>
