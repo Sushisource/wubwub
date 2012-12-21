@@ -61,7 +61,8 @@ QList<Alb> DBI::getNRecentAlbums(int n)
 QList<Alb> DBI::getArtistAlbums(int arid)
 {
     QSqlQueryModel qm;
-    qm.setQuery("SELECT * FROM album WHERE artist=" + QString().setNum(arid) + " ORDER BY year DESC");
+    qm.setQuery("SELECT * FROM album WHERE artist=" +
+                QString().setNum(arid) + " ORDER BY year DESC, alid DESC");
     return extractAlbums(&qm);
 }
 
