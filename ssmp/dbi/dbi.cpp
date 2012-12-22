@@ -34,23 +34,35 @@ QMap<QString, int> DBI::search(QString query, searchFlag s)
     return ret;
 }
 
+QList<Alb> DBI::extractAlbums(QSqlQueryModel* qm)
+{
+    QList<Alb> retme;
+    for(int i = qm->rowCount()-1; i >= 0; i--)
+    {
+        Alb a;
+        a.name = qm->record(i).value("name").toString();
+        a.alid = qm->record(i).value("alid").toString();
+        a.artist = getArtistNameFromId(qm->record(i).value("artist").toInt());
+        a.tracks = getTrackColFromAlbum(qm->record(i).value(0).toInt(), 1);
+        a.imguri = getOrFindAlbumArt(a);
+        a.year = qm->record(i).value("year").toString();
+        retme.append(a);
+    }
+    return retme;
+}
+
 QList<Alb> DBI::getNRecentAlbums(int n)
 {
-	QList<Alb> retme;
-	QSqlQueryModel qm;
+    QSqlQueryModel qm;
 	qm.setQuery("SELECT * FROM album ORDER BY alid DESC LIMIT " + QString::number(n));
-	for(int i = qm.rowCount()-1; i >= 0; i--)
-	{
-		Alb a;
-		a.name = qm.record(i).value("name").toString();
-		a.alid = qm.record(i).value("alid").toString();
-        a.artist = getArtistNameFromId(qm.record(i).value("artist").toInt());
-        a.tracks = getTrackColFromAlbum(qm.record(i).value(0).toInt(), 1);
-		a.imguri = getOrFindAlbumArt(a);
-		a.year = qm.record(i).value("year").toString();
-		retme.append(a);
-	}
-	return retme;
+    return extractAlbums(&qm);
+}
+
+QList<Alb> DBI::getArtistAlbums(int arid)
+{
+    QSqlQueryModel qm;
+    qm.setQuery("SELECT * FROM album WHERE artist=" + QString().setNum(arid) + " ORDER BY year DESC");
+    return extractAlbums(&qm);
 }
 
 //Finds if the album has a stored imguri, finds one and sets it if not
@@ -97,11 +109,6 @@ QString DBI::getOrFindAlbumArt(Alb a)
 void DBI::initDB()
 {
     QSqlQuery q;
-    /* Not sure this needs to be done
-	q.exec("drop table artist");
-	q.exec("drop table album");
-	q.exec("drop table song");
-    q.exec("drop table dirs");*/
     q.exec("PRAGMA foreign_keys = ON");
 	q.exec("CREATE TABLE artist(arid integer primary key autoincrement, name text, "
 		"UNIQUE(name) ON CONFLICT IGNORE)");
@@ -490,5 +497,5 @@ void DBI::updatePathLastMod(QString path)
 
 DBI::~DBI()
 {
-
+    delete watcher;
 }

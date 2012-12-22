@@ -19,6 +19,8 @@ public slots:
     void addSong(int songid);
     void addAlbums(QList<int> alids);
     void nextSong();
+    void playSongWithSid(int sid);
+    void playSongFromAlbum(int alid, int sid);
 
 signals:
     void sendSongList(QList<QString> sl);

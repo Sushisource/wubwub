@@ -41,7 +41,7 @@ PlaybackWidget::~PlaybackWidget()
 void PlaybackWidget::changeSong(QString songPath)
 {
     stopSong();
-    curchan = BASS_StreamCreateFile(false,songPath.toAscii(),0,0,
+    curchan = BASS_StreamCreateFile(false,songPath.toLatin1(),0,0,
                                     BASS_SAMPLE_FLOAT | BASS_STREAM_AUTOFREE);
     BASS_ChannelPlay(curchan,false);
     cursongblength = BASS_ChannelGetLength(curchan, BASS_POS_BYTE);

@@ -10,10 +10,11 @@ mac {
     LIBS += -L/Developer/Libraries/bass24-osx \
             -framework tag \
             -lbass
+
+    QMAKE_CXXFLAGS += -std=c++11 -U__STRICT_ANSI__
+    QMAKE_LFLAGS += -F/Library/Frameworks/tag.framework
 }
 
-QMAKE_CXXFLAGS += -std=c++11 -U__STRICT_ANSI__
-QMAKE_LFLAGS += -F/Library/Frameworks/tag.framework
 
 HEADERS += dbi/TagExtractor.h \
     ssmp.h \
@@ -25,7 +26,10 @@ HEADERS += dbi/TagExtractor.h \
     albumtab/albumtab.h \
     albumtab/prettytext.h \
     playback/playbackwidget.h \
-    albumtab/ssmptabwidget.h
+    albumtab/ssmptabwidget.h \
+    albumview.h \
+    search/ssmpsearch.h \
+    artistalbumsview.h
 SOURCES += dbi/dbi.cpp \
     options/optionswindow.cpp \
     main.cpp \
@@ -37,7 +41,10 @@ SOURCES += dbi/dbi.cpp \
     albumtab/albumtab.cpp \
     albumtab/prettytext.cpp \
     playback/playbackwidget.cpp \
-    albumtab/ssmptabwidget.cpp
+    albumtab/ssmptabwidget.cpp \
+    albumview.cpp \
+    search/ssmpsearch.cpp \
+    artistalbumsview.cpp
 FORMS += ssmp.ui \
     options/options.ui \
     playback/playbackwidget.ui

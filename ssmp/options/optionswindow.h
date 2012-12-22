@@ -12,7 +12,7 @@ class optionsWindow : public QMainWindow
 	Q_OBJECT
 
 public:
-	optionsWindow(ssmp * parent = 0, Qt::WFlags flags = 0);
+    optionsWindow(ssmp * parent = 0, Qt::WindowFlags flags = 0);
 	~optionsWindow();
 
 public slots:
