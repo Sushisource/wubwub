@@ -1,6 +1,10 @@
 #ignore thumbnails created by windows
 Thumbs.db
 ssmp/ssmp_config.ini #don't need to up config
+#sqllite browser
+sqlitebrowser_200_b1_win/
+# vs dir
+vsproj/
 #Vim Swapfiles
 *.swp
 #No generated files
