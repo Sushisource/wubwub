@@ -14,10 +14,10 @@ AlbumView::AlbumView(QWidget* parent) : QGraphicsView(parent)
     bottomfade = new QGraphicsRectItem;
     bottomfade->setPen(Qt::NoPen);
     bottomfade->setZValue(1000);
-    bottomfade->setBrush(QApplication::palette().window());
+    bottomfade->setBrush(palette().color(QPalette::Window));
     QGraphicsDropShadowEffect* shadow = new QGraphicsDropShadowEffect();
     shadow->setBlurRadius(7);
-    shadow->setColor(QApplication::palette().window().color());
+    shadow->setColor(palette().color(QPalette::Window));
     shadow->setOffset(0,-7);
     bottomfade->setGraphicsEffect(shadow);
     scene->addItem(bottomfade);
@@ -109,10 +109,10 @@ void AlbumView::addAlbs(QList<Alb> albs)
         QGraphicsRectItem* back = new QGraphicsRectItem();
         back->setPen(Qt::NoPen);
         back->setZValue(znum);
-        back->setBrush(QApplication::palette().window());
+        back->setBrush(palette().color(QPalette::Window));
         QGraphicsDropShadowEffect* shadow = new QGraphicsDropShadowEffect();
         shadow->setBlurRadius(7);
-        shadow->setColor(QApplication::palette().window().color());
+        shadow->setColor(palette().color(QPalette::Window));
         shadow->setOffset(0,-7);
         back->setGraphicsEffect(shadow);
         scene->addItem(back);
