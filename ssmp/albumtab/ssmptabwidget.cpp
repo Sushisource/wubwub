@@ -5,7 +5,7 @@ ssmpTabWidget::ssmpTabWidget(QWidget *parent) :
 {
 }
 
-void ssmpTabWidget::addCTab(QWidget *container, QString name, bool closeable)
+void ssmpTabWidget::addCloseableTab(QWidget *container, QString name, bool closeable)
 {
     int ix = this->addTab(container, name);
     if(closeable)

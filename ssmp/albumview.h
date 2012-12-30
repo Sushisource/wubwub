@@ -28,7 +28,7 @@ protected:
     int maxAlbs;
 
 private:
-	QGraphicsScene* scene;	
+    QGraphicsScene* scene;
     QList<QString> alids;
     QList<QGraphicsTextItem*> descriptions;
     QList<QGraphicsPixmapItem*> covers;

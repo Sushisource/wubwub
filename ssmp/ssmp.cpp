@@ -89,13 +89,13 @@ bool ssmp::eventFilter(QObject* object, QEvent* e)
 void ssmp::openSearchWindow(QString name, QMap<QString,QString> results)
 {
     QWidget* searchtab = new QWidget(ui.tabWidget);
-    ui.tabWidget->addCTab(searchtab, name);
+    ui.tabWidget->addCloseableTab(searchtab, name);
 }
 
 QWidget* ssmp::openAlbumTab(int alid)
 {
     QWidget* container = new QWidget(ui.tabWidget);
-    ui.tabWidget->addCTab(container, dbi->getAlbumNameFromId(alid));
+    ui.tabWidget->addCloseableTab(container, dbi->getAlbumNameFromId(alid));
     container->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
     QVBoxLayout* lay = new QVBoxLayout(container);
     lay->setMargin(0);
@@ -110,7 +110,7 @@ QWidget* ssmp::openAlbumTab(int alid)
 QWidget *ssmp::openArtistTab(int arid)
 {
     QWidget* container = new QWidget(ui.tabWidget);
-    ui.tabWidget->addCTab(container, dbi->getArtistNameFromId(arid));
+    ui.tabWidget->addCloseableTab(container, dbi->getArtistNameFromId(arid));
     container->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
     QVBoxLayout* lay = new QVBoxLayout(container);
     lay->setMargin(0);

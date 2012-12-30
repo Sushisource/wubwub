@@ -8,8 +8,8 @@ AlbumView::AlbumView(QWidget* parent) : QGraphicsView(parent)
     maxAlbs = 5; //Sensible default
     db = &DBI::getInstance();
     scene = new QGraphicsScene(this);
-	this->setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
-	this->setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
+    this->setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
+    //this->setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
     this->setScene(scene);
     bottomfade = new QGraphicsRectItem;
     bottomfade->setPen(Qt::NoPen);

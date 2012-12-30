@@ -11,7 +11,7 @@ class ssmpTabWidget : public QTabWidget
     Q_OBJECT
 public:
     explicit ssmpTabWidget(QWidget *parent = 0);
-    void addCTab(QWidget* container, QString name, bool closeable = true);
+    void addCloseableTab(QWidget* container, QString name, bool closeable = true);
     
 signals:
     
