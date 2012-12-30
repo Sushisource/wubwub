@@ -114,7 +114,7 @@ QWidget *ssmp::openArtistTab(int arid)
     container->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
     QVBoxLayout* lay = new QVBoxLayout(container);
     lay->setMargin(0);
-    ArtistAlbumsView* arview = new ArtistAlbumsView(arid, container);
+    ArtistAlbumsView* arview = new ArtistAlbumsView(arid, container, 100);
     connect(arview, &ArtistAlbumsView::addAlbsToNowPlaying, ui.nowplayingLst, &Playlist::addAlbums);
     connect(arview, &ArtistAlbumsView::openAlbumTab, this, &ssmp::openAlbumTab);
     lay->addWidget(arview,1);

@@ -14,7 +14,7 @@ class AlbumView : public QGraphicsView
 	Q_OBJECT
 
 public:
-    AlbumView(QWidget *parent);
+    AlbumView(QWidget *parent, float minThumbSiz=-1);
     ~AlbumView();
 
 signals:
@@ -38,6 +38,7 @@ private:
     QList<QGraphicsSvgItem*> tabbuttons;
     int rnum;
     int znum; // Most recent Z depth of albums being displayed
+    float minThumbSize; // Minimum size of album art thumbnails
     enum DataKeys {ALID, BTNTYPE};
     enum BtnTypes {PLUS, TAB};
     static const QFont albFont;

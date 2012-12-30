@@ -1,10 +1,11 @@
 #include "ssmp.h"
 
 //Setup some constants
-AlbumView::AlbumView(QWidget* parent) : QGraphicsView(parent)
+AlbumView::AlbumView(QWidget* parent, float minThumbSiz) : QGraphicsView(parent)
 {
     rnum = 0;
     znum = 0;
+    minThumbSize = minThumbSiz;
     maxAlbs = 5; //Sensible default
     db = &DBI::getInstance();
     scene = new QGraphicsScene(this);
@@ -29,6 +30,8 @@ void AlbumView::resizeEvent(QResizeEvent* e)
         return;
     int padding = 8;
     float siz  = (this->geometry().height() - padding*(1+rnum)) / rnum;
+    if(minThumbSize >= 0)
+        siz = qMax(siz, minThumbSize);
     int buttonsiz = plusbuttons[0]->boundingRect().width();
     float scale = siz / 200.0;
     int albumxpos = this->width()-padding-scale*200;

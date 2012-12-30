@@ -8,7 +8,7 @@ class ArtistAlbumsView : public AlbumView
     Q_OBJECT
 
 public:
-    explicit ArtistAlbumsView(int arid, QWidget *parent = 0);
+    explicit ArtistAlbumsView(int arid, QWidget *parent = 0, float minThumbSiz=-1);
     
 signals:
     
