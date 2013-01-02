@@ -78,11 +78,6 @@ void AlbumView::mouseReleaseEvent(QMouseEvent *event)
     }
 }
 
-void AlbumView::wheelEvent(QWheelEvent *event)
-{
-    //SCREW YOU WHEEL EVENTS!!! HAHAHAHA!!!@!!111
-}
-
 void AlbumView::addAlbs(QList<Alb> albs)
 {
     //Add the albums
@@ -93,14 +88,14 @@ void AlbumView::addAlbs(QList<Alb> albs)
             continue;
         //add description
         QGraphicsTextItem* textDesc = new QGraphicsTextItem();
-        QString desc = "<b>" + al.name + " - " + al.artist;
+        QString desc = "<b>" + al.name.toHtmlEscaped() + " - " + al.artist.toHtmlEscaped();
         desc += (al.year != "0") ? " [" + al.year + "]" : "";
         desc += "</b><br/>";
         QString trackz = "";
         int i = 1;
         foreach(QString t, al.tracks)
         {
-            trackz += QString::number(i) + ". " + t + "<br/>";
+            trackz += QString::number(i) + ". " + t.toHtmlEscaped() + "<br/>";
             ++i;
         }
         trackz.remove(trackz.length()-1,1); //Remove final newline

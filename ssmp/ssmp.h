@@ -4,6 +4,7 @@
 #include <functional>
 #include <numeric>
 
+#include <Qt>
 #include <QMainWindow>
 #include <QSettings>
 #include <QThreadPool>

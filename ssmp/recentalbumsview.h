@@ -20,6 +20,7 @@ public slots:
     void update();
 
 private:
+    void wheelEvent(QWheelEvent* event);
 };
 
 #endif // RECENTALBUMSVIEW_H

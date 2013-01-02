@@ -5,6 +5,8 @@
 #include <QTabBar>
 #include <QToolButton>
 #include <QVariant>
+#include <QKeyEvent>
+#include <QApplication>
 
 class ssmpTabWidget : public QTabWidget
 {
@@ -20,6 +22,9 @@ public slots:
 
 private:
     const static short btnw = 12;
+
+private slots:
+    bool eventFilter(QObject *object, QEvent *e);
 };
 
 #endif // SSMPTABWIDGET_H

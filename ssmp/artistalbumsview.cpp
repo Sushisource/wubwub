@@ -6,3 +6,4 @@ ArtistAlbumsView::ArtistAlbumsView(int arid, QWidget *parent, float minThumbSiz)
     maxAlbs = INT_MAX; //UNLIMITEDDDDDD
     addAlbs(db->getArtistAlbums(arid));
 }
+

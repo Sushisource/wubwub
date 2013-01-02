@@ -1,8 +1,25 @@
 #include "ssmptabwidget.h"
+#include <QDebug>
 
 ssmpTabWidget::ssmpTabWidget(QWidget *parent) :
     QTabWidget(parent)
 {
+    this->installEventFilter(this);
+}
+
+bool ssmpTabWidget::eventFilter(QObject *object, QEvent *e)
+{
+    if(e->type() == QEvent::KeyPress)
+    {
+        QKeyEvent* key = static_cast<QKeyEvent*>(e);
+        if(key->key() == Qt::Key_W && QApplication::keyboardModifiers() & Qt::ControlModifier)
+        {
+            int curtab = this->currentIndex();
+            delete widget(curtab);
+            removeTab(curtab);
+        }
+    }
+    return false;
 }
 
 void ssmpTabWidget::addCloseableTab(QWidget *container, QString name, bool closeable)

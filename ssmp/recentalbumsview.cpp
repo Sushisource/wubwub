@@ -11,6 +11,11 @@ RecentAlbumsView::~RecentAlbumsView()
 {
 }
 
+void RecentAlbumsView::wheelEvent(QWheelEvent *event)
+{
+    //SCREW YOU WHEEL EVENTS!!! HAHAHAHA!!!@!!111
+}
+
 void RecentAlbumsView::update()
 {
     addAlbs(db->getNRecentAlbums(5));

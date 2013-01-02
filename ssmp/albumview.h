@@ -24,7 +24,7 @@ signals:
 protected:
     DBI* db;
     void addAlbs(QList<Alb> albs);
-    void resizeEvent(QResizeEvent* e = NULL);
+    virtual void resizeEvent(QResizeEvent* e = NULL);
     int maxAlbs;
 
 private:
@@ -43,7 +43,6 @@ private:
     enum BtnTypes {PLUS, TAB};
     static const QFont albFont;
     void mouseReleaseEvent(QMouseEvent *event);
-    void wheelEvent(QWheelEvent* event);
 };
 
 #endif // ALBUMVIEW_H
