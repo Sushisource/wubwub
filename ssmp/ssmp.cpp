@@ -119,6 +119,7 @@ QWidget *ssmp::openArtistTab(int arid)
     connect(arview, &ArtistAlbumsView::openAlbumTab, this, &ssmp::openAlbumTab);
     lay->addWidget(arview,1);
     ui.tabWidget->setCurrentWidget(container);
+    ui.tabWidget->setFocus();
     return container;
 }
 

@@ -22,6 +22,9 @@ public slots:
 
 private:
     const static short btnw = 12;
+    QList<int> closeableTabs;
+
+    void closeTab(int index);
 
 private slots:
     bool eventFilter(QObject *object, QEvent *e);

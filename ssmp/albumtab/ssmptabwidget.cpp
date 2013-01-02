@@ -15,8 +15,7 @@ bool ssmpTabWidget::eventFilter(QObject *object, QEvent *e)
         if(key->key() == Qt::Key_W && QApplication::keyboardModifiers() & Qt::ControlModifier)
         {
             int curtab = this->currentIndex();
-            delete widget(curtab);
-            removeTab(curtab);
+            closeTab(curtab);
         }
     }
     return false;
@@ -35,6 +34,7 @@ void ssmpTabWidget::addCloseableTab(QWidget *container, QString name, bool close
         QIcon closeicon(QPixmap(":/imgs/x").scaledToWidth(btnw,Qt::SmoothTransformation));
         close->setIcon(closeicon);
         tabBar()->setTabButton(ix, QTabBar::RightSide, close);
+        closeableTabs.append(ix);
     }
 }
 
@@ -43,6 +43,14 @@ void ssmpTabWidget::closeMyTab()
 {
     QToolButton* clicked = (QToolButton*)QObject::sender();
     int index = clicked->property("tabix").toInt();
-    delete widget(index);
-    removeTab(index);
+    closeTab(index);
+}
+
+void ssmpTabWidget::closeTab(int index)
+{
+    if(closeableTabs.contains(index))
+    {
+        delete widget(index);
+        removeTab(index);
+    }
 }
