@@ -7,6 +7,7 @@
 #include <QDir>
 #include <qdebug.h>
 #include <taglib/tag.h>
+#include <taglib/toolkit/tpropertymap.h>
 #include <taglib/fileref.h>
 #include <taglib/mpeg/id3v2/id3v2tag.h>
 #include <taglib/mpeg/mpegfile.h>

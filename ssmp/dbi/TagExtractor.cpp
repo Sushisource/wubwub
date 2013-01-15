@@ -13,12 +13,22 @@ const std::vector<std::string> TagExtractor::supportedFileFormats = initFF();
 
 void TagExtractor::extractID3v2Tag(TagLib::ID3v2::Tag* tag, QMap<QString, QString>* tagmap)
 {
-	//Somehow this means album artist / band. http://www.id3.org/id3v2.4.0-frames
-    TagLib::ID3v2::FrameList l = tag->frameList("TPE2");
-	if(!l.isEmpty())
-		tagmap->insert("albumartist",l.front()->toString().toCString());
-	else //Fallback on artist name
-		tagmap->insert("albumartist",tag->artist().toCString());
+    TagLib::PropertyMap props = tag->properties();
+    if(!props.isEmpty())
+    {
+        if(props.contains("ALBUMARTIST"))
+            tagmap->insert("albumartist", props["ALBUMARTIST"].toString().toCString());
+    }
+    else
+    {
+        //Fallback on this old way just in case
+        //Somehow this means album artist / band. http://www.id3.org/id3v2.4.0-frames
+        TagLib::ID3v2::FrameList l = tag->frameListMap()["TPE2"];
+        if(!l.isEmpty())
+            tagmap->insert("albumartist",l.front()->toString().toCString());
+        else //Fallback on artist name
+            tagmap->insert("albumartist",tag->artist().toCString());
+    }
 }
 
 bool TagExtractor::extractTag(QString fpath, QMap<QString, QString>* stmap, QMap<QString, int>* itmap)
@@ -32,8 +42,8 @@ bool TagExtractor::extractTag(QString fpath, QMap<QString, QString>* stmap, QMap
 	//MP3 or FLAC Means we can check for additional info in ID3v2 tags
 	if(fpath.endsWith("mp3"))
 	{				
-		TagLib::MPEG::File fr(fname, true, TagLib::AudioProperties::Fast);				
-		if(fr.ID3v2Tag())
+        TagLib::MPEG::File fr(fname, true, TagLib::AudioProperties::Fast);
+        if(fr.ID3v2Tag())
 			extractID3v2Tag(fr.ID3v2Tag(), stmap);
 		suc = loadTagIntoMaps(&fr, stmap, itmap);		
 	}

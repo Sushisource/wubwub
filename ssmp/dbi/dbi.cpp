@@ -85,7 +85,7 @@ QString DBI::getOrFindAlbumArt(Alb a)
 		QString path = qm.record(0).value(0).toString();
 		QDir d = QDir(path.left(path.lastIndexOf("/")));
 		QStringList filters;
-		filters << "*.jpg" << "*.png" << "*.jpeg" << "*.bmp";
+        filters << "*.jpg" << "*.png" << "*.jpeg" << "*.bmp" << "*.gif";
 		d.setNameFilters(filters);
 		QStringList imgs = d.entryList(QDir::Hidden | QDir::Files);
 		QString ret = "";
