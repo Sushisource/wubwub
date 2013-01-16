@@ -14,21 +14,10 @@ const std::vector<std::string> TagExtractor::supportedFileFormats = initFF();
 void TagExtractor::extractID3v2Tag(TagLib::ID3v2::Tag* tag, QMap<QString, QString>* tagmap)
 {
     TagLib::PropertyMap props = tag->properties();
-    if(!props.isEmpty())
-    {
-        if(props.contains("ALBUMARTIST"))
-            tagmap->insert("albumartist", props["ALBUMARTIST"].toString().toCString());
-    }
-    else
-    {
-        //Fallback on this old way just in case
-        //Somehow this means album artist / band. http://www.id3.org/id3v2.4.0-frames
-        TagLib::ID3v2::FrameList l = tag->frameListMap()["TPE2"];
-        if(!l.isEmpty())
-            tagmap->insert("albumartist",l.front()->toString().toCString());
-        else //Fallback on artist name
-            tagmap->insert("albumartist",tag->artist().toCString());
-    }
+    if(!props.isEmpty() && props.contains("ALBUMARTIST"))
+        tagmap->insert("albumartist", props["ALBUMARTIST"].toString().toCString());
+    else //Fallback on artist name
+        tagmap->insert("albumartist",tag->artist().toCString());
 }
 
 bool TagExtractor::extractTag(QString fpath, QMap<QString, QString>* stmap, QMap<QString, int>* itmap)
