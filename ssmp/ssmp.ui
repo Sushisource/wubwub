@@ -359,17 +359,7 @@ QLabel#playlistLbl {
              <number>0</number>
             </property>
             <item>
-             <widget class="QGraphicsView" name="nowGView">
-              <property name="sizePolicy">
-               <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
-                <horstretch>0</horstretch>
-                <verstretch>0</verstretch>
-               </sizepolicy>
-              </property>
-              <property name="lineWidth">
-               <number>0</number>
-              </property>
-             </widget>
+             <widget class="VizWidget" name="viz" native="true"/>
             </item>
            </layout>
           </widget>
@@ -446,6 +436,12 @@ QLabel#playlistLbl {
    <class>SsmpSearch</class>
    <extends>QLineEdit</extends>
    <header>search/ssmpsearch.h</header>
+  </customwidget>
+  <customwidget>
+   <class>VizWidget</class>
+   <extends>QWidget</extends>
+   <header>viz/vizwidget.h</header>
+   <container>1</container>
   </customwidget>
  </customwidgets>
  <resources/>

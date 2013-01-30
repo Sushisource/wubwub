@@ -29,7 +29,9 @@ HEADERS += dbi/TagExtractor.h \
     albumtab/ssmptabwidget.h \
     albumview.h \
     search/ssmpsearch.h \
-    artistalbumsview.h
+    artistalbumsview.h \
+    viz/vizwidget.h \
+    viz/testviz.h
 SOURCES += dbi/dbi.cpp \
     options/optionswindow.cpp \
     main.cpp \
@@ -44,12 +46,16 @@ SOURCES += dbi/dbi.cpp \
     albumtab/ssmptabwidget.cpp \
     albumview.cpp \
     search/ssmpsearch.cpp \
-    artistalbumsview.cpp
+    artistalbumsview.cpp \
+    viz/vizwidget.cpp \
+    viz/testviz.cpp
 FORMS += ssmp.ui \
     options/options.ui \
     playback/playbackwidget.ui
 
-OTHER_FILES +=
+OTHER_FILES += \
+    shaders/basic.vert \
+    shaders/basic.frag
 
 RESOURCES += \
     res.qrc
