@@ -17,15 +17,15 @@ signals:
 public slots:
 
 protected:
-    void initializeGL();
-    void paintGL();
+    QOpenGLShaderProgram m_shader;
+    QString vertShader;
+    QString fragShader;
 
-private:
+    void initializeGL();
+    virtual void vizInitialize() = 0;
     bool prepareShaders(const QString& vertShaderPath,
                         const QString& fragShaderPath);
 
-    QOpenGLShaderProgram m_shader;
-    QOpenGLBuffer m_vertexBuffer;
 };
 
 #endif // VIZWIDGET_H

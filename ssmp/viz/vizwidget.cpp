@@ -1,8 +1,7 @@
 #include "vizwidget.h"
 
 VizWidget::VizWidget(QWidget *parent) :
-    QGLWidget(parent),
-    m_vertexBuffer(QOpenGLBuffer::VertexBuffer)
+    QGLWidget(parent)
 {
 }
 
@@ -12,20 +11,8 @@ void VizWidget::initializeGL()
     glEnable(GL_DEPTH_TEST);
 
     // Prepare a complete shader program...
-    if ( !prepareShaders(":/shaders/basic.vert", ":/shaders/basic.frag" ) )
+    if ( !prepareShaders(vertShader, fragShader) )
         return;
-    // We need us some vertex data. Start simple with a triangle ;-)
-    float points[] = { -0.5f, -0.5f, 0.0f, 1.0f,
-                       0.5f, -0.5f, 0.0f, 1.0f,
-                       0.0f,  0.5f, 0.0f, 1.0f };
-    m_vertexBuffer.create();
-    m_vertexBuffer.setUsagePattern( QOpenGLBuffer::StaticDraw );
-    if ( !m_vertexBuffer.bind() )
-    {
-        qWarning() << "Could not bind vertex buffer to the context";
-        return;
-    }
-    m_vertexBuffer.allocate( points, 3 * 4 * sizeof( float ) );
     // Bind the shader program so that we can associate variables from
     // our application to the shaders
     if ( !m_shader.bind() )
@@ -34,19 +21,8 @@ void VizWidget::initializeGL()
         return;
     }
 
-    // Enable the "vertex" attribute to bind it to our currently bound
-    // vertex buffer.
-    m_shader.setAttributeBuffer( "vertex", GL_FLOAT, 0, 4 );
-    m_shader.enableAttributeArray( "vertex" );
-}
-
-void VizWidget::paintGL()
-{
-    // Clear the buffer with the current clearing color
-    glClear( GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT );
-
-    // Draw stuff
-    glDrawArrays( GL_TRIANGLES, 0, 3 );
+    //Call the viz's initialization logic
+    vizInitialize();
 }
 
 bool VizWidget::prepareShaders(const QString &vertShaderPath, const QString &fragShaderPath)
