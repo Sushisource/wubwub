@@ -31,7 +31,9 @@ HEADERS += dbi/TagExtractor.h \
     search/ssmpsearch.h \
     artistalbumsview.h \
     viz/vizwidget.h \
-    viz/firstviz.h
+    viz/firstviz.h \
+    viz/vizrenderthread.h \
+    viz/glhelp/uniformbufferobject.h
 SOURCES += dbi/dbi.cpp \
     options/optionswindow.cpp \
     main.cpp \
@@ -48,7 +50,9 @@ SOURCES += dbi/dbi.cpp \
     search/ssmpsearch.cpp \
     artistalbumsview.cpp \
     viz/vizwidget.cpp \
-    viz/firstviz.cpp
+    viz/firstviz.cpp \
+    viz/vizrenderthread.cpp \
+    viz/glhelp/uniformbufferobject.cpp
 FORMS += ssmp.ui \
     options/options.ui \
     playback/playbackwidget.ui

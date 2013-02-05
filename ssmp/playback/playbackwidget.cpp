@@ -38,6 +38,14 @@ PlaybackWidget::~PlaybackWidget()
     stopSong();
 }
 
+bool PlaybackWidget::getFFT(void *buffer)
+{
+    if(state == PLAYING
+       && BASS_ChannelGetData(curchan, buffer, BASS_DATA_FFT4096) >= 0)
+        return true;
+    return false;
+}
+
 void PlaybackWidget::changeSong(QString songPath)
 {
     stopSong();
@@ -82,6 +90,7 @@ void PlaybackWidget::stopSong()
     emit stoppedPlaying();
     BASS_ChannelStop(curchan);
     curchan = NULL;
+    state = STOPPED;
     updateTimer->stop();
 }
 

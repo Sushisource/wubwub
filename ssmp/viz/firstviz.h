@@ -11,7 +11,6 @@ public:
 protected:
     void vizInitialize();
     void paintGL();
-    QOpenGLBuffer m_vertexBuffer;
 
 signals:
     

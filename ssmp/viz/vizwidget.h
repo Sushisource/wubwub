@@ -5,26 +5,31 @@
 #include <QOpenGLShader>
 #include <QOpenGLShaderProgram>
 #include <QtOpenGL>
+#include "playback/playbackwidget.h"
+#include "viz/vizrenderthread.h"
 
 class VizWidget : public QGLWidget
 {
     Q_OBJECT
 public:
     explicit VizWidget(QWidget *parent = 0);
+    ~VizWidget();
     
+    void setPlayBackPointer(PlaybackWidget *p);
+    void stopRenderThread();
+    void startRenderThread();
 signals:
     
 public slots:
 
 protected:
-    QOpenGLShaderProgram m_shader;
-    QString vertShader;
-    QString fragShader;
+    VizRenderThread renderThread;
 
-    void initializeGL();
+    void closeEvent(QCloseEvent *evt);
+    void resizeEvent(QResizeEvent *evt);
+    void paintEvent(QPaintEvent *);
+
     virtual void vizInitialize() = 0;
-    bool prepareShaders(const QString& vertShaderPath,
-                        const QString& fragShaderPath);
 
 };
 

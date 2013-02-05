@@ -7,7 +7,6 @@
 #include <Qt>
 #include <QMainWindow>
 #include <QSettings>
-#include <QThreadPool>
 #include <QKeyEvent>
 
 #include "ui_ssmp.h"

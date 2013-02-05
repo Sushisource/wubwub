@@ -1,6 +1,8 @@
 #ifndef PLAYBACKMGR_H
 #define PLAYBACKMGR_H
 
+#define FFT_SIZE 2048
+
 #include <QObject>
 #include <bass.h>
 #include "ui_playbackwidget.h"
@@ -14,6 +16,7 @@ public:
     ~PlaybackWidget();
     enum Playstate {PLAYING, STOPPED, PAUSED};
 
+    bool getFFT(void *buffer);
 signals:
     void songOver();
     void stoppedPlaying();

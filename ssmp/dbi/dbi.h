@@ -4,8 +4,6 @@
 #include <QObject>
 #include <QtSql>
 #include <QPair>
-#include <qrunnable.h>
-#include <qthread.h>
 #include "TagExtractor.h"
 
 struct DBItem 
@@ -73,7 +71,6 @@ signals:
 
 private:
     QSqlDatabase db;
-    QThread* thread;
     QFileSystemWatcher* watcher;
 
 	QString getOrFindAlbumArt(Alb a);

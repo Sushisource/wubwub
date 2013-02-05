@@ -321,7 +321,10 @@ void DBI::subProcess(QString path, QDateTime rootlastmod)
 
 int DBI::addSong(DBItem sng)
 {
-	QString albartist, colnames = "", colbinds = "";
+    // TODO: Deal with albums with the same name, deal with song renaming properly.
+    // INSERT OR REPLACE isn't good enough unless I get the ID first, so I should probably
+    // just use update
+    QString albartist, colnames = "", colbinds = "";
     int alkey = 0, arkey = 0, prevalid = -1;
     QSqlQuery q;
 
