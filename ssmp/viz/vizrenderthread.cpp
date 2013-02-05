@@ -10,9 +10,9 @@ VizRenderThread::VizRenderThread(VizWidget *parent) :
     playbackWidget = NULL;
     vertShader = ":/shaders/basic.vert";
     fragShader = ":/shaders/basic.frag";
-    frameCount = 0;
     rendering = true;
     needsResize = false;
+    frameCount = 0;
 }
 
 void VizRenderThread::resize(int w, int h)
@@ -26,6 +26,7 @@ void VizRenderThread::run()
 {
     parent->makeCurrent();
     initialize();
+    rendering = true;
     while(rendering)
     {
         if(needsResize)
@@ -43,6 +44,11 @@ void VizRenderThread::run()
         ++frameCount;
         msleep(16);
     }
+    //Unload every thing for the next time the viz starts
+    fftBuffer.release();
+    vertexBuffer.release();
+    shaderProgram.removeAllShaders();
+    shaderProgram.release();
 }
 
 void VizRenderThread::updateShaders()
@@ -67,6 +73,7 @@ void VizRenderThread::initialize()
 {
     glClearColor(0.0, 0.0, 0.0, 0.0);
     glEnable(GL_DEPTH_TEST);
+    frameCount = 0;
 
     // Prepare a complete shader program...
     if ( !prepareShaders(vertShader, fragShader) )

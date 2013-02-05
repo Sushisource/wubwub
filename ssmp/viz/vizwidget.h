@@ -28,6 +28,8 @@ protected:
     void closeEvent(QCloseEvent *evt);
     void resizeEvent(QResizeEvent *evt);
     void paintEvent(QPaintEvent *);
+    void showEvent(QShowEvent *e);
+    void hideEvent(QHideEvent *e);
 
     virtual void vizInitialize() = 0;
 

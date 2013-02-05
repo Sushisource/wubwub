@@ -20,14 +20,14 @@ signals:
 public slots:
     void closeMyTab();
 
+protected:
+    bool event(QEvent *e);
+
 private:
     const static short btnw = 12;
     QList<int> closeableTabs;
 
     void closeTab(int index);
-
-private slots:
-    bool eventFilter(QObject *object, QEvent *e);
 };
 
 #endif // SSMPTABWIDGET_H

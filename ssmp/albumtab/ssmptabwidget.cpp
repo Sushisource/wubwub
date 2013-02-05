@@ -4,21 +4,6 @@
 ssmpTabWidget::ssmpTabWidget(QWidget *parent) :
     QTabWidget(parent)
 {
-    this->installEventFilter(this);
-}
-
-bool ssmpTabWidget::eventFilter(QObject *object, QEvent *e)
-{
-    if(e->type() == QEvent::KeyPress)
-    {
-        QKeyEvent* key = static_cast<QKeyEvent*>(e);
-        if(key->key() == Qt::Key_W && QApplication::keyboardModifiers() & Qt::ControlModifier)
-        {
-            int curtab = this->currentIndex();
-            closeTab(curtab);
-        }
-    }
-    return false;
 }
 
 void ssmpTabWidget::addCloseableTab(QWidget *container, QString name, bool closeable)
@@ -44,6 +29,21 @@ void ssmpTabWidget::closeMyTab()
     QToolButton* clicked = (QToolButton*)QObject::sender();
     int index = clicked->property("tabix").toInt();
     closeTab(index);
+}
+
+bool ssmpTabWidget::event(QEvent* e)
+{
+    if(e->type() == QEvent::KeyPress)
+    {
+        QKeyEvent* key = static_cast<QKeyEvent*>(e);
+        if(key->key() == Qt::Key_W && QApplication::keyboardModifiers() & Qt::ControlModifier)
+        {
+            int curtab = this->currentIndex();
+            closeTab(curtab);
+        }
+    }
+    QTabWidget::event(e);
+    return false;
 }
 
 void ssmpTabWidget::closeTab(int index)

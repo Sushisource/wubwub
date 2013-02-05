@@ -5,6 +5,7 @@ VizWidget::VizWidget(QWidget *parent) :
     renderThread(this)
 {
     setAutoBufferSwap(false);
+    context()->moveToThread(&renderThread);
 }
 
 VizWidget::~VizWidget()
@@ -19,7 +20,6 @@ void VizWidget::setPlayBackPointer(PlaybackWidget *p)
 void VizWidget::startRenderThread()
 {
     doneCurrent();
-    context()->moveToThread(&renderThread);
     renderThread.start();
 }
 
@@ -43,4 +43,16 @@ void VizWidget::closeEvent(QCloseEvent *evt)
 void VizWidget::paintEvent(QPaintEvent *)
 {
     //handled by render thread
+}
+
+void VizWidget::showEvent(QShowEvent *e)
+{
+    QGLWidget::showEvent(e);
+    startRenderThread();
+}
+
+void VizWidget::hideEvent(QHideEvent *e)
+{
+    QGLWidget::hideEvent(e);
+    stopRenderThread();
 }

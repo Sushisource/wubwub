@@ -12,12 +12,15 @@ out vec4 fragColor;
 void main( void )
 {
     vec2 uPos = ( gl_FragCoord.xy / winSize.xy ); //normalize wrt y axis
+    vec2 uPosx = ( gl_FragCoord.yx / winSize.yx ); //normalize wrt y axis
     vec3 color = vec3(0.0);
 
     //const int numBands = 10;
     //float bandSize = 1./numBands;
     int curBin = int(uPos * FFT_SIZE / 3);
+    int curBinx = int(uPosx * FFT_SIZE / 3);
     color.r = fft[curBin] * 50;
+    color.b = fft[curBinx] * 50;
 
     
     vec4 color_final = vec4(color, 1.0);

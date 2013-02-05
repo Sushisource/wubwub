@@ -47,8 +47,6 @@ ssmp::ssmp(QWidget *parent, Qt::WindowFlags flags) : QMainWindow(parent, flags)
     connect(ui.nowplayingLst, &Playlist::songChange, this, &ssmp::changeSong);
     //Playback manager
     connect(ui.playbackwidget, &PlaybackWidget::songOver, ui.nowplayingLst, &Playlist::nextSong);
-    ui.viz->setPlayBackPointer(ui.playbackwidget);
-    ui.viz->startRenderThread();
     //Search bar
     connect(ui.search, &SsmpSearch::addSongToNowPlaying, this, &ssmp::addSongToNowPlaying);
     connect(ui.search, &SsmpSearch::openAlbumTab, this, &ssmp::openAlbumTab);
@@ -57,6 +55,9 @@ ssmp::ssmp(QWidget *parent, Qt::WindowFlags flags) : QMainWindow(parent, flags)
     //Update the recent view
     dbi->refresh();
     recentAlbs->update();
+
+    //Setup viz
+    ui.viz->setPlayBackPointer(ui.playbackwidget);
 }
 
 void ssmp::addSongToNowPlaying(int sid)
@@ -133,5 +134,6 @@ bool ssmp::openOptions()
 
 ssmp::~ssmp()
 {
+    ui.viz->stopRenderThread();
     dbthread->terminate();
 }
