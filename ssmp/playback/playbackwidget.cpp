@@ -41,7 +41,7 @@ PlaybackWidget::~PlaybackWidget()
 bool PlaybackWidget::getFFT(void *buffer)
 {
     if(state == PLAYING
-       && BASS_ChannelGetData(curchan, buffer, BASS_DATA_FFT4096) >= 0)
+       && BASS_ChannelGetData(curchan, buffer, BASS_DATA_FFT8192) >= 0)
         return true;
     return false;
 }

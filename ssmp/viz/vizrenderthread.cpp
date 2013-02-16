@@ -8,8 +8,8 @@ VizRenderThread::VizRenderThread(VizWidget *parent) :
 {
     this->parent = parent;
     playbackWidget = NULL;
-    vertShader = ":/shaders/basic.vert";
-    fragShader = ":/shaders/basic.frag";
+    vertShader = "./shaders/basic.vert";
+    fragShader = "./shaders/basic.frag";
     rendering = true;
     needsResize = false;
     frameCount = 0;

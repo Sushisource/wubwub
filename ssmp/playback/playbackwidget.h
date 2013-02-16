@@ -1,7 +1,7 @@
 #ifndef PLAYBACKMGR_H
 #define PLAYBACKMGR_H
 
-#define FFT_SIZE 2048
+#define FFT_SIZE 4096
 
 #include <QObject>
 #include <bass.h>
