@@ -4,6 +4,7 @@ ssmp::ssmp(QWidget *parent, Qt::WindowFlags flags) : QMainWindow(parent, flags)
 {
     //Register metatypes
     qRegisterMetaType<QList<QString>>("QList<QString>");
+    qRegisterMetaType<QList<QString>>("QList<Alb>");
     ui.setupUi(this);
     //Update global palette access
     QApplication::setPalette(this->palette());
@@ -37,7 +38,7 @@ ssmp::ssmp(QWidget *parent, Qt::WindowFlags flags) : QMainWindow(parent, flags)
     //Link up stuff
     //Dbi updates
     connect(dbi, &DBI::atDir, optWin, &optionsWindow::changeStatus);
-    connect(dbi, &DBI::recentChange, recentAlbs, &RecentAlbumsView::update);
+    connect(dbi, &DBI::recentChange, recentAlbs, &RecentAlbumsView::newAlbs);
     //Save button on options window
     connect(optWin, &optionsWindow::startSongParsing, dbi, &DBI::processDirs);
     //Connections for the recent view

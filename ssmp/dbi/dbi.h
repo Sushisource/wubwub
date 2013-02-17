@@ -67,20 +67,19 @@ public slots:
 
 signals:
 	void atDir(const QString &s);
-	void recentChange();
+    void recentChange(QList<Alb>);
 
 private:
     QSqlDatabase db;
     QFileSystemWatcher* watcher;
-
 	QString getOrFindAlbumArt(Alb a);
     QString sanitize(QString);
     QDateTime getPathLastMod(QString path);
+    QList<Alb> extractAlbums(QSqlQueryModel *qm);
+
     void updatePathLastMod(QString path);
     void subProcess(QString path, QDateTime rootlastmod);
     void deleteAlbumIfEmpty(int alid);
-
-    QList<Alb> extractAlbums(QSqlQueryModel *qm);
 
     DBI();
     DBI(DBI const&); //Don't impl

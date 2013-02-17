@@ -178,6 +178,7 @@ void AlbumView::addAlbs(QList<Alb> albs)
         znum -= 2;
     }
     rnum = alids.count();
+    resizeEvent();
 }
 
 AlbumView::~AlbumView()

@@ -286,7 +286,9 @@ void DBI::subProcess(QString path, QDateTime rootlastmod)
     dir.setFilter(QDir::Files | QDir::Dirs | QDir::NoSymLinks | QDir::NoDotAndDotDot);
     QDirIterator di(dir);
 
-    //TODO: Remove files from DB which no longer exist
+    //TODO: Remove files from DB which no longer exist best way to do this is maybe
+    //any time a song is accesed, delete it if it no longer exists. Unfortunately
+    //I need a song object...
 
     while(di.hasNext())
     {
@@ -315,8 +317,7 @@ void DBI::subProcess(QString path, QDateTime rootlastmod)
             subProcess(fpath, rootlastmod);
         }
     }
-    //Update ui
-    emit recentChange();
+    emit recentChange(getNRecentAlbums(1));
 }
 
 int DBI::addSong(DBItem sng)

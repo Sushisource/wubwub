@@ -19,5 +19,9 @@ void RecentAlbumsView::wheelEvent(QWheelEvent *event)
 void RecentAlbumsView::update()
 {
     addAlbs(db->getNRecentAlbums(5));
-    resizeEvent();
+}
+
+void RecentAlbumsView::newAlbs(QList<Alb> albs)
+{
+    addAlbs(albs);
 }

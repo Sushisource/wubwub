@@ -18,6 +18,7 @@ public:
 
 public slots:
     void update();
+    void newAlbs(QList<Alb> albs);
 
 private:
     void wheelEvent(QWheelEvent* event);
