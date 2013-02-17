@@ -22,9 +22,11 @@ void TagExtractor::extractID3v2Tag(TagLib::ID3v2::Tag* tag, QMap<QString, QStrin
 
 bool TagExtractor::extractTag(QString fpath, QMap<QString, QString>* stmap, QMap<QString, int>* itmap)
 {
-	QByteArray qb = fpath.toLocal8Bit();
-	const char *wname = qb.data();
-	TagLib::FileName fname(wname);
+#ifdef Q_OS_WIN
+    TagLib::FileName fname((wchar_t *)fpath.constData());
+#else
+    TagLib::FileName fname(QFile::encodeName(fpath).constData());
+#endif
 
 	bool suc = false;
 					 
@@ -46,7 +48,8 @@ bool TagExtractor::extractTag(QString fpath, QMap<QString, QString>* stmap, QMap
 	else
 	{
         TagLib::File* file = TagLib::FileRef::create(fname);
-		suc = loadTagIntoMaps(file, stmap, itmap);		
+        suc = loadTagIntoMaps(file, stmap, itmap);
+        delete file;
 	}
 
 	if(suc)
@@ -62,12 +65,12 @@ bool TagExtractor::loadTagIntoMaps(TagLib::File* file, QMap<QString, QString>* s
 	TagLib::AudioProperties* ap = file->audioProperties();
 
 	TagLib::Tag* genTag = file->tag();			
-	stmap->insert("name", genTag->title().toCString());
-	stmap->insert("genre", genTag->genre().toCString());
+    stmap->insert("name", genTag->title().toCString(true));
+    stmap->insert("genre", genTag->genre().toCString(true));
 	itmap->insert("year", genTag->year());
 	itmap->insert("tracknum", genTag->track());
-	stmap->insert("album", genTag->album().toCString());
-    stmap->insert("artist", genTag->artist().toCString());
+    stmap->insert("album", genTag->album().toCString(true));
+    stmap->insert("artist", genTag->artist().toCString(true));
 	if(ap != NULL)
 		itmap->insert("length", ap->length());	
     return true;

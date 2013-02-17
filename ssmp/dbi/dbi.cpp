@@ -10,7 +10,7 @@ DBI::DBI() : QObject(NULL)
     //This has to match the DB. ORMs are for bitches.
     songCols << "sid" << "name" << "tracknum" << "album" << "artist" << "length" << "path" << "numplays" << "genre" << "year";
     //Setup watcher on root dirs
-    watcher = new QFileSystemWatcher();
+    watcher = new QFileSystemWatcher(this);
     connect(watcher, SIGNAL(directoryChanged(QString)), SLOT(processDir(QString)));
 }
 
@@ -321,27 +321,28 @@ void DBI::subProcess(QString path, QDateTime rootlastmod)
 
 int DBI::addSong(DBItem sng)
 {
-    // TODO: Deal with albums with the same name, deal with song renaming properly.
-    // INSERT OR REPLACE isn't good enough unless I get the ID first, so I should probably
-    // just use update
     QString albartist, colnames = "", colbinds = "";
-    int alkey = 0, arkey = 0, prevalid = -1;
+    int alkey = 0, arkey = 0, prevalid = -1, prevsid = -1;
     QSqlQuery q;
 
     //Check if we're actually going to replace a song record
     //and get what album it belonged to, at the end we check if it still has children
     QSqlQueryModel qm;
-    QString qs = "SELECT album FROM song WHERE path='"+sanitize(sng.strVals["path"])+"'";
+    QString qs = "SELECT sid, album FROM song WHERE path='"+sanitize(sng.strVals["path"])+"'";
     qm.setQuery(qs);
-    if(qm.rowCount() > 0)
-        prevalid = qm.record(0).value(0).toInt();
+    if(qm.rowCount() > 0) {
+        prevsid = qm.record(0).value(0).toInt();
+        prevalid = qm.record(0).value(1).toInt();
+    }
 
 
 	//Annoying exception
 	albartist = sng.strVals.value("albumartist", "unknown");
 	sng.strVals.remove("albumartist");
 	
-	colnames += QStringList(sng.strVals.keys()).join(", ");
+    if(prevsid >= 0)
+        sng.intVals.insert("sid", prevsid);
+    colnames += QStringList(sng.strVals.keys()).join(", ");
 	colbinds += ":" + QStringList(sng.strVals.keys()).join(", :");
 	colnames += ", " + QStringList(sng.intVals.keys()).join(", ");
 	colbinds += ", :" + QStringList(sng.intVals.keys()).join(", :");
@@ -359,13 +360,24 @@ int DBI::addSong(DBItem sng)
 	while (i.hasNext()) {
 		i.next();
 		q.bindValue(":"+i.key(), i.value());
-	}
+    }
+
+    //First try to determine if an aritst in the database matches the albumartist
+    qs = "SELECT arid FROM artist WHERE name LIKE '";
+    qs.append(sanitize(albartist) + "'");
+    qm.setQuery(qs);
+    if(qm.rowCount() > 0)
+        arkey = qm.record(0).value("arid").toInt();
+    else //add artist
+    {
+        arkey = addArtist(albartist);
+    }
 
 	//Now figure out album's ID
     qs = "SELECT * FROM album WHERE name like '";
-	qs.append(sanitize(sng.strVals.value("album","unknown")));
-	qs.append("'");
-	qm.setQuery(qs);
+    qs.append(sanitize(sng.strVals.value("album","unknown")) + "'");
+    qs.append(" AND artist = " + QString::number(arkey));
+    qm.setQuery(qs);
     if(qm.rowCount() > 0)
         alkey = qm.record(0).value("alid").toInt();
     else //add album
@@ -379,27 +391,29 @@ int DBI::addSong(DBItem sng)
 		alkey = addAlbum(a);
 	}
 
-	//Now figure out artist's ID
-	qs = "SELECT * FROM artist WHERE name like '";
-	qs.append(sanitize(sng.strVals.value("artist", "unknown")));
-	qs.append("'");
-	qm.setQuery(qs);
-	if(qm.rowCount() > 0) //If artist present, get id
-		arkey = qm.record(0).value("arid").toInt();
-	else //add artist
-	{
-		arkey = addArtist(sng.strVals.value("artist","unknown"));
-	}
+    //Now figure out artist's ID
+    qs = "SELECT * FROM artist WHERE name like '";
+    qs.append(sanitize(sng.strVals.value("artist", "unknown")));
+    qs.append("'");
+    qm.setQuery(qs);
+    if(qm.rowCount() > 0) //If artist present, get id
+        arkey = qm.record(0).value("arid").toInt();
+    else //add artist
+    {
+        arkey = addArtist(sng.strVals.value("artist","unknown"));
+    }
 
     //Execute
 	q.bindValue(":album", alkey);
 	q.bindValue(":artist", arkey);
     bool execsuccess = q.exec();
+    int lastinsert = q.lastInsertId().toInt();
 
     //Now check if the old album we may have replaced should be deleted
-    deleteAlbumIfEmpty(prevalid);
+    if(prevalid > -1)
+        deleteAlbumIfEmpty(prevalid);
 
-    return (execsuccess) ? q.lastInsertId().toInt() : -1;
+    return (execsuccess) ? lastinsert : -1;
 }
 
 int DBI::addAlbum(DBItem a)
@@ -449,18 +463,17 @@ int DBI::addArtist(QString a)
 //If the given alid has no child songs remove it
 void DBI::deleteAlbumIfEmpty(int alid)
 {
-    QSqlQuery q;
-    QString qs = "SELECT sid FROM song WHERE album=:alid";
-    q.prepare(qs);
-    q.bindValue(":alid", alid);
-    q.exec();
-    if(q.next() && q.isValid())
+    QSqlQueryModel qm;
+    QString qs = "SELECT sid FROM song WHERE album=" + QString::number(alid);
+    qm.setQuery(qs);
+    if(qm.rowCount() > 0)
         return;
     qDebug() << "Nosongs";
     //No songs. Delete it.
+    QSqlQuery q;
     q.prepare("DELETE FROM album WHERE alid=:alid");
     q.bindValue(":alid", alid);
-    qDebug() << q.exec();
+    q.exec();
 }
 
 
@@ -501,5 +514,4 @@ void DBI::updatePathLastMod(QString path)
 
 DBI::~DBI()
 {
-    delete watcher;
 }

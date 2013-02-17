@@ -11,7 +11,7 @@ INCLUDEPATH += E:/libs/taglib \
         .
 
 LIBS += -L'E:/libs/bass64/c' \
-        -L'E:/libs/taglib/taglib/MinSizeRel' \
+        -L'E:/libs/taglib/taglib/Release' \
         -l'tag' \
         -l'bass'\
 
