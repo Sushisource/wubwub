@@ -1,0 +1,12 @@
+<RCC>
+    <qresource prefix="/imgs">
+        <file alias="prev">arrow_left.svg</file>
+        <file alias="next">arrow_right.svg</file>
+        <file alias="logo">logo.ico</file>
+        <file alias="pause">pause.svg</file>
+        <file alias="play">play.svg</file>
+        <file alias="plus">plus_alt.svg</file>
+        <file alias="eye">eye.svg</file>
+        <file alias="x">x.svg</file>
+    </qresource>
+</RCC>

@@ -1,6 +1,6 @@
 TEMPLATE = app
-TARGET = ssmp
-DESTDIR = ../Output
+TARGET = wubwub
+DESTDIR = ..
 QT += core gui sql opengl svg
 DEFINES += QT_LARGEFILE_SUPPORT QT_SQL_LIB QT_OPENGL_LIB
 INCLUDEPATH += E:/libs/taglib \
@@ -15,7 +15,7 @@ LIBS += -L'E:/libs/bass64/c' \
         -l'tag' \
         -l'bass'\
 
-RC_FILE = ssmp.rc
+RC_FILE = ../res/ssmp.rc
 HEADERS += dbi/TagExtractor.h \
     ssmp.h \
     recentalbumsview.h \
@@ -62,6 +62,6 @@ OTHER_FILES += \
     shaders/basic.frag
 
 RESOURCES += \
-    res.qrc
+    ../res/res.qrc
 
 QMAKE_CXXFLAGS += /DNOMINMAX

@@ -10,7 +10,7 @@ vsproj/
 #No generated files
 *_Debug/*
 *_Release/*
-Output/*
+build/*
 ssmp/tags
 ssmp/GeneratedFiles/*
 #More VS crap
