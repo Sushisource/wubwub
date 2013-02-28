@@ -1,6 +1,6 @@
-#SSMP (Working title)
+#wubwub
 
-Media Player
+Audio Player
 
 ##Requirements
 * [Qt5 framework](http://qt.nokia.com/downloads)
