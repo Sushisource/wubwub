@@ -11,7 +11,7 @@ endif()
 
 IF(WIN32)
     # Fix stupid macro problem
-    SET(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /DNOMINMAX")
+    add_definitions(-DNOMINMAX)
     set(w_GUI WIN32)
     set(w_LIBS Qt5::WinMain)
     set(w_INPUT "../res/ssmp.rc")

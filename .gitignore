@@ -11,6 +11,7 @@ vsproj/
 *_Debug/*
 *_Release/*
 build/*
+ninjabuild/*
 ssmp/tags
 ssmp/GeneratedFiles/*
 #More VS crap
