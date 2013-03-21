@@ -36,7 +36,7 @@ add_definitions(${Qt5Widgets_DEFINITIONS})
 ###### TAGLIB
 find_library(TAGLIB_LIB tag tag_dll
    PATHS ${w_TAGLIB_DIR}/taglib
-       PATH_SUFFIXES ${CMAKE_BUILD_TYPE})
+   PATH_SUFFIXES ${CMAKE_BUILD_TYPE} Release)
 include_directories(${w_TAGLIB_DIR})
 include_directories(${w_TAGLIB_DIR}/taglib)
 include_directories(${w_TAGLIB_DIR}/taglib/ogg)

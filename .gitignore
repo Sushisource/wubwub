@@ -12,6 +12,7 @@ vsproj/
 *_Release/*
 build/*
 ninjabuild/*
+vsbuild/*
 ssmp/tags
 ssmp/GeneratedFiles/*
 #More VS crap
