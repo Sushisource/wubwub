@@ -7,6 +7,7 @@
 #include <QVariant>
 #include <QKeyEvent>
 #include <QApplication>
+#include <QUuid>
 
 class ssmpTabWidget : public QTabWidget
 {
@@ -25,9 +26,9 @@ protected:
 
 private:
     const static short btnw = 12;
-    QList<int> closeableTabs;
 
-    void closeTab(int index);
+    void closeTab(QWidget* tab);
+    void closeCurTab();
 };
 
 #endif // SSMPTABWIDGET_H
