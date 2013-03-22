@@ -3,14 +3,13 @@
 //Setup some constants
 AlbumView::AlbumView(QWidget* parent, float minThumbSiz) : QGraphicsView(parent)
 {
-    rnum = 0;
+    albumcount = 0;
     znum = 0;
     minThumbSize = minThumbSiz;
     maxAlbs = 5; //Sensible default
     db = &DBI::getInstance();
     scene = new QGraphicsScene(this);
     this->setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
-    //this->setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
     this->setScene(scene);
     bottomfade = new QGraphicsRectItem;
     bottomfade->setPen(Qt::NoPen);
@@ -26,16 +25,16 @@ AlbumView::AlbumView(QWidget* parent, float minThumbSiz) : QGraphicsView(parent)
 
 void AlbumView::resizeEvent(QResizeEvent* e)
 {
-    if(rnum < 1) //If there's nothing to resize, don't bother.
+    if(albumcount < 1) //If there's nothing to resize, don't bother.
         return;
     int padding = 8;
-    float siz  = (this->geometry().height() - padding*(1+rnum)) / rnum;
+    float siz  = (this->geometry().height() - padding*(1+albumcount)) / albumcount;
     if(minThumbSize >= 0)
         siz = qMax(siz, minThumbSize);
     int buttonsiz = plusbuttons[0]->boundingRect().width();
     float scale = siz / 200.0;
     int albumxpos = this->width()-padding-scale*200;
-    for(int i = 0; i < rnum; i++)
+    for(int i = 0; i < albumcount; i++)
     {
         int ypos = i*(siz + padding) + padding;
         // This + 10 hides long text from an album one above showing up
@@ -115,8 +114,8 @@ void AlbumView::addAlbs(QList<Alb> albs)
         back->setGraphicsEffect(shadow);
         scene->addItem(back);
         scene->addItem(textDesc);
-        backgrounds.push_front(back);
-        descriptions.push_front(textDesc);
+        backgrounds.push_back(back);
+        descriptions.push_back(textDesc);
 
         //add cover
         QGraphicsPixmapItem* cover = NULL;
@@ -135,7 +134,7 @@ void AlbumView::addAlbs(QList<Alb> albs)
             cover->setZValue(znum+1);
         }
         scene->addItem(cover);
-        covers.push_front(cover);
+        covers.push_back(cover);
 
         //add buttons
         QGraphicsSvgItem* plus = new QGraphicsSvgItem(":/imgs/plus");
@@ -150,34 +149,34 @@ void AlbumView::addAlbs(QList<Alb> albs)
         tabb->setData(BTNTYPE,TAB);
         scene->addItem(plus);
         scene->addItem(tabb);
-        plusbuttons.push_front(plus);
-        tabbuttons.push_front(tabb);
+        plusbuttons.push_back(plus);
+        tabbuttons.push_back(tabb);
 
-        alids.push_front(al.alid);
+        alids.push_back(al.alid);
         //Remove bottom item if there are more albums
         //than we allow
         if(alids.count() > maxAlbs)
         {
-            scene->removeItem(descriptions.back());
-            scene->removeItem(covers.back());
-            scene->removeItem(plusbuttons.back());
-            scene->removeItem(tabbuttons.back());
-            scene->removeItem(backgrounds.back());
-            delete descriptions.back();
-            delete covers.back();
-            delete plusbuttons.back();
-            delete tabbuttons.back();
-            delete backgrounds.back();
-            descriptions.pop_back();
-            covers.pop_back();
-            plusbuttons.pop_back();
-            tabbuttons.pop_back();
-            backgrounds.pop_back();
-            alids.pop_back();
+            scene->removeItem(descriptions.front());
+            scene->removeItem(covers.front());
+            scene->removeItem(plusbuttons.front());
+            scene->removeItem(tabbuttons.front());
+            scene->removeItem(backgrounds.front());
+            delete descriptions.front();
+            delete covers.front();
+            delete plusbuttons.front();
+            delete tabbuttons.front();
+            delete backgrounds.front();
+            descriptions.pop_front();
+            covers.pop_front();
+            plusbuttons.pop_front();
+            tabbuttons.pop_front();
+            backgrounds.pop_front();
+            alids.pop_front();
         }
-        znum -= 2;
+        znum += 2;
     }
-    rnum = alids.count();
+    albumcount = alids.count();
     resizeEvent();
 }
 

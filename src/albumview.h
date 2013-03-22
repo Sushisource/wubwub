@@ -36,7 +36,7 @@ private:
     QGraphicsRectItem* bottomfade;
     QList<QGraphicsSvgItem*> plusbuttons;
     QList<QGraphicsSvgItem*> tabbuttons;
-    int rnum;
+    int albumcount;
     int znum; // Most recent Z depth of albums being displayed
     float minThumbSize; // Minimum size of album art thumbnails
     enum DataKeys {ALID, BTNTYPE};

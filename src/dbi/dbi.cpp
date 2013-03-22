@@ -37,15 +37,16 @@ QMap<QString, int> DBI::search(QString query, searchFlag s)
 QList<Alb> DBI::extractAlbums(QSqlQueryModel* qm)
 {
     QList<Alb> retme;
-    for(int i = qm->rowCount()-1; i >= 0; i--)
+    for(int i = 0; i < qm->rowCount(); i++)
     {
         Alb a;
-        a.name = qm->record(i).value("name").toString();
-        a.alid = qm->record(i).value("alid").toString();
-        a.artist = getArtistNameFromId(qm->record(i).value("artist").toInt());
-        a.tracks = getTrackColFromAlbum(qm->record(i).value(0).toInt(), 1);
+        QSqlRecord qr = qm->record(i);
+        a.name = qr.value("name").toString();
+        a.alid = qr.value("alid").toString();
+        a.artist = getArtistNameFromId(qr.value("artist").toInt());
+        a.tracks = getTrackColFromAlbum(qr.value(0).toInt(), 1);
         a.imguri = getOrFindAlbumArt(a);
-        a.year = qm->record(i).value("year").toString();
+        a.year = qr.value("year").toString();
         retme.append(a);
     }
     return retme;
