@@ -15,6 +15,10 @@ ssmp::ssmp(QWidget *parent, Qt::WindowFlags flags) : QMainWindow(parent, flags)
 
     //Connect to database
     dbi = &DBI::getInstance();
+    //Run db thread
+    dbthread = new QThread(this);
+    dbthread->start();
+    dbi->moveToThread(dbthread);
 
     //If db not initialized, initialize it
     if(settings->value("dbinitted").toBool() == false)
@@ -26,11 +30,6 @@ ssmp::ssmp(QWidget *parent, Qt::WindowFlags flags) : QMainWindow(parent, flags)
     //Setup recent initial view
     recentAlbs = new RecentAlbumsView(this);
     ui.recentTab->layout()->addWidget(recentAlbs);
-
-    //Run db thread
-    dbthread = new QThread(this);
-    dbthread->start();
-    dbi->moveToThread(dbthread);
 
     //Hook up search to database
     ui.search->connectToDb(dbi);
