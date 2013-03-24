@@ -20,6 +20,7 @@ signals:
     
 public slots:
     void closeMyTab();
+    void focusSetter(int index);
 
 protected:
     bool event(QEvent *e);

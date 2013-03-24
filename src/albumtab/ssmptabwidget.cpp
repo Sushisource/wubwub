@@ -6,6 +6,8 @@ Q_DECLARE_METATYPE(QWidget *)
 ssmpTabWidget::ssmpTabWidget(QWidget *parent) :
     QTabWidget(parent)
 {
+    connect(this, &ssmpTabWidget::currentChanged,
+            this, &ssmpTabWidget::focusSetter);
 }
 
 void ssmpTabWidget::addCloseableTab(QWidget *container, QString name, bool closeable)
@@ -30,6 +32,11 @@ void ssmpTabWidget::closeMyTab()
 {
     QToolButton* clicked = qobject_cast<QToolButton*>(QObject::sender());
     delete clicked->property("tabpointer").value<QWidget*>();
+}
+
+void ssmpTabWidget::focusSetter(int index)
+{
+    this->setFocus();
 }
 
 bool ssmpTabWidget::event(QEvent* e)
