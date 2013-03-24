@@ -41,14 +41,18 @@ ssmp::ssmp(QWidget *parent, Qt::WindowFlags flags) : QMainWindow(parent, flags)
     //Save button on options window
     connect(optWin, &optionsWindow::startSongParsing, dbi, &DBI::processDirs);
     //Connections for the recent view
-    connect(recentAlbs, &RecentAlbumsView::addAlbsToNowPlaying, ui.nowplayingLst, &Playlist::addAlbums);
-    connect(recentAlbs, &RecentAlbumsView::openAlbumTab, this, &ssmp::openAlbumTab);
+    connect(recentAlbs, &RecentAlbumsView::addAlbsToNowPlaying,
+            ui.nowplayingLst, &Playlist::addAlbums);
+    connect(recentAlbs, &RecentAlbumsView::openAlbumTab, this,
+            &ssmp::openAlbumTab);
     //Now play list
     connect(ui.nowplayingLst, &Playlist::songChange, this, &ssmp::changeSong);
     //Playback manager
-    connect(ui.playbackwidget, &PlaybackWidget::songOver, ui.nowplayingLst, &Playlist::nextSong);
+    connect(ui.playbackwidget, &PlaybackWidget::songOver, ui.nowplayingLst,
+            &Playlist::nextSong);
     //Search bar
-    connect(ui.search, &SsmpSearch::addSongToNowPlaying, this, &ssmp::addSongToNowPlaying);
+    connect(ui.search, &SsmpSearch::addSongToNowPlaying, this,
+            &ssmp::addSongToNowPlaying);
     connect(ui.search, &SsmpSearch::openAlbumTab, this, &ssmp::openAlbumTab);
     connect(ui.search, &SsmpSearch::openArtistTab, this, &ssmp::openArtistTab);
 
@@ -104,7 +108,8 @@ QWidget* ssmp::openAlbumTab(int alid)
     lay->setMargin(0);
     AlbumTab* altab = new AlbumTab(alid, container);
     connect(altab, SIGNAL(clearPlaylist()), ui.nowplayingLst, SLOT(clear()));
-    connect(altab, SIGNAL(playSongFromAlbum(int, int)), ui.nowplayingLst, SLOT(playSongFromAlbum(int,int)));
+    connect(altab, SIGNAL(playSongFromAlbum(int, int)),
+            ui.nowplayingLst, SLOT(playSongFromAlbum(int,int)));
     lay->addWidget(altab,1);
     ui.tabWidget->setCurrentWidget(container);
     return container;
@@ -118,7 +123,8 @@ QWidget *ssmp::openArtistTab(int arid)
     QVBoxLayout* lay = new QVBoxLayout(container);
     lay->setMargin(0);
     ArtistAlbumsView* arview = new ArtistAlbumsView(arid, container, 100);
-    connect(arview, &ArtistAlbumsView::addAlbsToNowPlaying, ui.nowplayingLst, &Playlist::addAlbums);
+    connect(arview, &ArtistAlbumsView::addAlbsToNowPlaying,
+            ui.nowplayingLst, &Playlist::addAlbums);
     connect(arview, &ArtistAlbumsView::openAlbumTab, this, &ssmp::openAlbumTab);
     lay->addWidget(arview,1);
     ui.tabWidget->setCurrentWidget(container);

@@ -28,7 +28,8 @@ void AlbumView::resizeEvent(QResizeEvent* e)
     if(albumcount < 1) //If there's nothing to resize, don't bother.
         return;
     int padding = 8;
-    float siz  = (this->geometry().height() - padding*(1+albumcount)) / albumcount;
+    float siz  = (this->geometry().height() - padding*(1+albumcount))
+                  / albumcount;
     if(minThumbSize >= 0)
         siz = qMax(siz, minThumbSize);
     int buttonsiz = plusbuttons[0]->boundingRect().width();
@@ -87,7 +88,8 @@ void AlbumView::addAlbs(QList<Alb> albs)
             continue;
         //add description
         QGraphicsTextItem* textDesc = new QGraphicsTextItem();
-        QString desc = "<b>" + al.name.toHtmlEscaped() + " - " + al.artist.toHtmlEscaped();
+        QString desc = "<b>" + al.name.toHtmlEscaped() + " - "
+                       + al.artist.toHtmlEscaped();
         desc += (al.year != "0") ? " [" + al.year + "]" : "";
         desc += "</b><br/>";
         QString trackz = "";
@@ -126,8 +128,8 @@ void AlbumView::addAlbs(QList<Alb> albs)
             shadow->setColor(Qt::black);
             shadow->setOffset(0,0);
             cover = new QGraphicsPixmapItem(QPixmap(al.imguri).scaled(200,200,
-                                                                      Qt::KeepAspectRatio,
-                                                                      Qt::SmoothTransformation));
+                                                  Qt::KeepAspectRatio,
+                                                  Qt::SmoothTransformation));
 
             cover->setTransformationMode(Qt::SmoothTransformation);
             cover->setGraphicsEffect(shadow);
