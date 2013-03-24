@@ -1,6 +1,6 @@
-#include "ssmp.h"
+#include "wubwub.h"
 
-optionsWindow::optionsWindow(ssmp * parent, Qt::WindowFlags flags)
+optionsWindow::optionsWindow(wubwub * parent, Qt::WindowFlags flags)
 	: QMainWindow(parent, flags)
 {
 	myparent = parent;

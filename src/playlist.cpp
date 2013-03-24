@@ -1,4 +1,4 @@
-#include "ssmp.h"
+#include "wubwub.h"
 
 Playlist::Playlist(QObject *par)
 {

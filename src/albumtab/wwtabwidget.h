@@ -1,5 +1,5 @@
-#ifndef SSMPTABWIDGET_H
-#define SSMPTABWIDGET_H
+#ifndef WWTABWIDGET_H
+#define WWTABWIDGET_H
 
 #include <QTabWidget>
 #include <QTabBar>
@@ -9,11 +9,11 @@
 #include <QApplication>
 #include <QUuid>
 
-class ssmpTabWidget : public QTabWidget
+class WWTabWidget : public QTabWidget
 {
     Q_OBJECT
 public:
-    explicit ssmpTabWidget(QWidget *parent = 0);
+    explicit WWTabWidget(QWidget *parent = 0);
     void addCloseableTab(QWidget* container, QString name, bool closeable = true);
     
 signals:
@@ -32,4 +32,4 @@ private:
     void closeCurTab();
 };
 
-#endif // SSMPTABWIDGET_H
+#endif // WWTABWIDGET_H

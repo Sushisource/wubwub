@@ -1,4 +1,4 @@
-#include "ssmp.h"
+#include "wubwub.h"
 
 //Setup some constants
 AlbumView::AlbumView(QWidget* parent, float minThumbSiz) : QGraphicsView(parent)

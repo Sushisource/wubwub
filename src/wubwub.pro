@@ -15,9 +15,8 @@ LIBS += -L'E:/libs/bass64/c' \
         -l'tag' \
         -l'bass'\
 
-RC_FILE = ../res/ssmp.rc
+RC_FILE = ../res/wubwub.rc
 HEADERS += dbi/TagExtractor.h \
-    ssmp.h \
     recentalbumsview.h \
     dbi/dbi.h \
     options/optionswindow.h \
@@ -26,34 +25,35 @@ HEADERS += dbi/TagExtractor.h \
     albumtab/albumtab.h \
     albumtab/prettytext.h \
     playback/playbackwidget.h \
-    albumtab/ssmptabwidget.h \
     albumview.h \
-    search/ssmpsearch.h \
     artistalbumsview.h \
     viz/vizwidget.h \
     viz/firstviz.h \
     viz/vizrenderthread.h \
-    viz/glhelp/uniformbufferobject.h
+    viz/glhelp/uniformbufferobject.h \
+    wubwub.h \
+    search/wwsearch.h \
+    albumtab/wwtabwidget.h
 SOURCES += dbi/dbi.cpp \
     options/optionswindow.cpp \
     main.cpp \
     recentalbumsview.cpp \
-    ssmp.cpp \
     dbi/TagExtractor.cpp \
     playlist.cpp \
     playback/musicslider.cpp \
     albumtab/albumtab.cpp \
     albumtab/prettytext.cpp \
     playback/playbackwidget.cpp \
-    albumtab/ssmptabwidget.cpp \
     albumview.cpp \
-    search/ssmpsearch.cpp \
     artistalbumsview.cpp \
     viz/vizwidget.cpp \
     viz/firstviz.cpp \
     viz/vizrenderthread.cpp \
-    viz/glhelp/uniformbufferobject.cpp
-FORMS += ssmp.ui \
+    viz/glhelp/uniformbufferobject.cpp \
+    wubwub.cpp \
+    search/wwsearch.cpp \
+    albumtab/wwtabwidget.cpp
+FORMS += wubwub.ui \
     options/options.ui \
     playback/playbackwidget.ui
 

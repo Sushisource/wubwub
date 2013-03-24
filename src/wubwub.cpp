@@ -1,6 +1,6 @@
-#include "ssmp.h"
+#include "wubwub.h"
 
-ssmp::ssmp(QWidget *parent, Qt::WindowFlags flags) : QMainWindow(parent, flags)
+wubwub::wubwub(QWidget *parent, Qt::WindowFlags flags) : QMainWindow(parent, flags)
 {
     //Register metatypes
     qRegisterMetaType<QList<QString>>("QList<QString>");
@@ -9,7 +9,7 @@ ssmp::ssmp(QWidget *parent, Qt::WindowFlags flags) : QMainWindow(parent, flags)
     //Update global palette access
     QApplication::setPalette(this->palette());
     //Initiate settings file
-    settings = new QSettings("ssmp_config.ini",QSettings::IniFormat, this);
+    settings = new QSettings("wubwub_config.ini",QSettings::IniFormat, this);
     //Instantiate options menu
     optWin = new optionsWindow(this);
 
@@ -44,17 +44,17 @@ ssmp::ssmp(QWidget *parent, Qt::WindowFlags flags) : QMainWindow(parent, flags)
     connect(recentAlbs, &RecentAlbumsView::addAlbsToNowPlaying,
             ui.nowplayingLst, &Playlist::addAlbums);
     connect(recentAlbs, &RecentAlbumsView::openAlbumTab, this,
-            &ssmp::openAlbumTab);
+            &wubwub::openAlbumTab);
     //Now play list
-    connect(ui.nowplayingLst, &Playlist::songChange, this, &ssmp::changeSong);
+    connect(ui.nowplayingLst, &Playlist::songChange, this, &wubwub::changeSong);
     //Playback manager
     connect(ui.playbackwidget, &PlaybackWidget::songOver, ui.nowplayingLst,
             &Playlist::nextSong);
     //Search bar
-    connect(ui.search, &SsmpSearch::addSongToNowPlaying, this,
-            &ssmp::addSongToNowPlaying);
-    connect(ui.search, &SsmpSearch::openAlbumTab, this, &ssmp::openAlbumTab);
-    connect(ui.search, &SsmpSearch::openArtistTab, this, &ssmp::openArtistTab);
+    connect(ui.search, &WWSearch::addSongToNowPlaying, this,
+            &wubwub::addSongToNowPlaying);
+    connect(ui.search, &WWSearch::openAlbumTab, this, &wubwub::openAlbumTab);
+    connect(ui.search, &WWSearch::openArtistTab, this, &wubwub::openArtistTab);
 
     //Update the recent view
     dbi->refresh();
@@ -64,14 +64,14 @@ ssmp::ssmp(QWidget *parent, Qt::WindowFlags flags) : QMainWindow(parent, flags)
     ui.viz->setPlayBackPointer(ui.playbackwidget);
 }
 
-void ssmp::addSongToNowPlaying(int sid)
+void wubwub::addSongToNowPlaying(int sid)
 {
     ui.nowplayingLst->addSong(sid);
 }
 
 //Song message multiplexer, notifies all
 //objects that need to know about song changes
-void ssmp::changeSong(int songid)
+void wubwub::changeSong(int songid)
 {
     QString songpath = dbi->getTrackColFromSong(songid, SongCol::path);
     QString sname = dbi->getSongNameFromId(songid);
@@ -81,7 +81,7 @@ void ssmp::changeSong(int songid)
     emit songChange(songid);
 }
 
-bool ssmp::eventFilter(QObject* object, QEvent* e)
+bool wubwub::eventFilter(QObject* object, QEvent* e)
 {
     if (e->type() == QEvent::KeyPress)
     {
@@ -93,13 +93,13 @@ bool ssmp::eventFilter(QObject* object, QEvent* e)
     return false;
 }
 
-void ssmp::openSearchWindow(QString name, QMap<QString,QString> results)
+void wubwub::openSearchWindow(QString name, QMap<QString,QString> results)
 {
     QWidget* searchtab = new QWidget(ui.tabWidget);
     ui.tabWidget->addCloseableTab(searchtab, name);
 }
 
-QWidget* ssmp::openAlbumTab(int alid)
+QWidget* wubwub::openAlbumTab(int alid)
 {
     QWidget* container = new QWidget(ui.tabWidget);
     ui.tabWidget->addCloseableTab(container, dbi->getAlbumNameFromId(alid));
@@ -115,7 +115,7 @@ QWidget* ssmp::openAlbumTab(int alid)
     return container;
 }
 
-QWidget *ssmp::openArtistTab(int arid)
+QWidget *wubwub::openArtistTab(int arid)
 {
     QWidget* container = new QWidget(ui.tabWidget);
     ui.tabWidget->addCloseableTab(container, dbi->getArtistNameFromId(arid));
@@ -125,20 +125,20 @@ QWidget *ssmp::openArtistTab(int arid)
     ArtistAlbumsView* arview = new ArtistAlbumsView(arid, container, 100);
     connect(arview, &ArtistAlbumsView::addAlbsToNowPlaying,
             ui.nowplayingLst, &Playlist::addAlbums);
-    connect(arview, &ArtistAlbumsView::openAlbumTab, this, &ssmp::openAlbumTab);
+    connect(arview, &ArtistAlbumsView::openAlbumTab, this, &wubwub::openAlbumTab);
     lay->addWidget(arview,1);
     ui.tabWidget->setCurrentWidget(container);
     ui.tabWidget->setFocus();
     return container;
 }
 
-bool ssmp::openOptions()
+bool wubwub::openOptions()
 {
     optWin->show();
     return true;
 }
 
-ssmp::~ssmp()
+wubwub::~wubwub()
 {
     ui.viz->stopRenderThread();
     dbthread->terminate();

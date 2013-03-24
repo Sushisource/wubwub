@@ -1,5 +1,5 @@
-#ifndef SSMP_H
-#define SSMP_H
+#ifndef WW_H
+#define WW_H
 
 #include <functional>
 #include <numeric>
@@ -9,7 +9,7 @@
 #include <QSettings>
 #include <QKeyEvent>
 
-#include "ui_ssmp.h"
+#include "ui_wubwub.h"
 #include "recentalbumsview.h"
 #include "artistalbumsview.h"
 #include "playlist.h"
@@ -20,19 +20,19 @@
 
 Q_DECLARE_METATYPE(QList<QString>)
 
-class ssmp : public QMainWindow
+class wubwub : public QMainWindow
 {
 	Q_OBJECT
 
 public:
-    ssmp(QWidget *parent = 0, Qt::WindowFlags flags = 0);
-	~ssmp();
+    wubwub(QWidget *parent = 0, Qt::WindowFlags flags = 0);
+    ~wubwub();
 
     QSettings* settings;
     DBI* dbi;
 
 private:
-	Ui::ssmpClass ui;		
+    Ui::WWClass ui;
 	optionsWindow* optWin;
 	QThread* dbthread;	
     RecentAlbumsView* recentAlbs;
@@ -55,4 +55,4 @@ signals:
     void songChange(int songid);
 };
 
-#endif // SSMP_H
+#endif // WW_H

@@ -4,7 +4,7 @@
 #include <QListWidget>
 #include <QMap>
 #include "dbi/dbi.h"
-class ssmp; //TODO: Fucking circular depends
+class wubwub; //TODO: Fucking circular depends
 
 class Playlist : public QListWidget
 {

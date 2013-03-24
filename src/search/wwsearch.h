@@ -1,5 +1,5 @@
-#ifndef SSMPSEARCH_H
-#define SSMPSEARCH_H
+#ifndef WWSEARCH_H
+#define WWSEARCH_H
 
 #include <QLineEdit>
 #include <QTreeWidget>
@@ -7,11 +7,11 @@
 #include <QKeyEvent>
 #include "dbi/dbi.h"
 
-class SsmpSearch : public QLineEdit
+class WWSearch : public QLineEdit
 {
     Q_OBJECT
 public:
-    explicit SsmpSearch(QWidget *parent = 0);
+    explicit WWSearch(QWidget *parent = 0);
     void connectToDb(DBI* dbi);
 
 private:
@@ -36,4 +36,4 @@ private slots:
 
 };
 
-#endif // SSMPSEARCH_H
+#endif // WWSEARCH_H

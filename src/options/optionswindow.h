@@ -5,14 +5,14 @@
 #include <QDir>
 #include <QDirIterator>
 #include <qfiledialog.h>
-class ssmp; //TODO: Fucking circular depends
+class wubwub; //TODO: Fucking circular depends
 
 class optionsWindow : public QMainWindow
 {
 	Q_OBJECT
 
 public:
-    optionsWindow(ssmp * parent = 0, Qt::WindowFlags flags = 0);
+    optionsWindow(wubwub * parent = 0, Qt::WindowFlags flags = 0);
 	~optionsWindow();
 
 public slots:
@@ -24,7 +24,7 @@ signals:
 private:
 	Ui::optionsWindow ui;
 	QString libdir;
-	ssmp * myparent;
+	wubwub * myparent;
 
 	bool isAudioFile(QFileInfo f);
 	void addDir2Lib(QDir dir);

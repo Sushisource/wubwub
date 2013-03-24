@@ -1,16 +1,16 @@
-#include "ssmptabwidget.h"
+#include "wwtabwidget.h"
 #include <QDebug>
 
 Q_DECLARE_METATYPE(QWidget *)
 
-ssmpTabWidget::ssmpTabWidget(QWidget *parent) :
+WWTabWidget::WWTabWidget(QWidget *parent) :
     QTabWidget(parent)
 {
-    connect(this, &ssmpTabWidget::currentChanged,
-            this, &ssmpTabWidget::focusSetter);
+    connect(this, &WWTabWidget::currentChanged,
+            this, &WWTabWidget::focusSetter);
 }
 
-void ssmpTabWidget::addCloseableTab(QWidget *container, QString name, bool closeable)
+void WWTabWidget::addCloseableTab(QWidget *container, QString name, bool closeable)
 {
     int ix = this->addTab(container, name);
     if(closeable)
@@ -28,18 +28,18 @@ void ssmpTabWidget::addCloseableTab(QWidget *container, QString name, bool close
 }
 
 //Closes tab of signaling button
-void ssmpTabWidget::closeMyTab()
+void WWTabWidget::closeMyTab()
 {
     QToolButton* clicked = qobject_cast<QToolButton*>(QObject::sender());
     delete clicked->property("tabpointer").value<QWidget*>();
 }
 
-void ssmpTabWidget::focusSetter(int index)
+void WWTabWidget::focusSetter(int index)
 {
     this->setFocus();
 }
 
-bool ssmpTabWidget::event(QEvent* e)
+bool WWTabWidget::event(QEvent* e)
 {
     if(e->type() == QEvent::KeyPress)
     {
@@ -53,7 +53,7 @@ bool ssmpTabWidget::event(QEvent* e)
     return false;
 }
 
-void ssmpTabWidget::closeCurTab()
+void WWTabWidget::closeCurTab()
 {
     int curix = this->currentIndex();
     delete widget(curix);

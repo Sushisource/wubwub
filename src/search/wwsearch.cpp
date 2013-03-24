@@ -1,6 +1,6 @@
-#include "ssmpsearch.h"
+#include "wwsearch.h"
 
-SsmpSearch::SsmpSearch(QWidget *parent) : QLineEdit(parent)
+WWSearch::WWSearch(QWidget *parent) : QLineEdit(parent)
 {
     //Setup suggest popup
     initPopup();
@@ -15,12 +15,12 @@ SsmpSearch::SsmpSearch(QWidget *parent) : QLineEdit(parent)
     connect(searchTimer, SIGNAL(timeout()), SLOT(autoSuggest()));
 }
 
-void SsmpSearch::connectToDb(DBI *dbi)
+void WWSearch::connectToDb(DBI *dbi)
 {
     db = dbi;
 }
 
-void SsmpSearch::initPopup()
+void WWSearch::initPopup()
 {
     popup = new QTreeWidget(this);
     popup->setWindowFlags(Qt::Popup);
@@ -38,7 +38,7 @@ void SsmpSearch::initPopup()
     popup->installEventFilter(this);
 }
 
-void SsmpSearch::autoSuggest()
+void WWSearch::autoSuggest()
 {
     if(db == NULL)
         return;
@@ -90,7 +90,7 @@ void SsmpSearch::autoSuggest()
     popup->show();
 }
 
-bool SsmpSearch::eventFilter(QObject* object, QEvent* e)
+bool WWSearch::eventFilter(QObject* object, QEvent* e)
 {
     if (object == this)
     {

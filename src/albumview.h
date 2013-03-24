@@ -6,7 +6,7 @@
 #include <QGraphicsPixmapItem>
 #include <QGraphicsSvgItem>
 #include "dbi/dbi.h"
-class ssmp; //TODO: Fucking circular depends
+class wubwub; //TODO: Fucking circular depends
 struct Alb;
 
 class AlbumView : public QGraphicsView

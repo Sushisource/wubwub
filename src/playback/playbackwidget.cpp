@@ -1,4 +1,4 @@
-#include "ssmp.h"
+#include "wubwub.h"
 
 //Bass error messages
 void Error(const char *text)

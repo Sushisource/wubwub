@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ui version="4.0">
- <class>ssmpClass</class>
- <widget class="QMainWindow" name="ssmpClass">
+ <class>WWClass</class>
+ <widget class="QMainWindow" name="WWClass">
   <property name="geometry">
    <rect>
     <x>0</x>
@@ -135,7 +135,7 @@
    </palette>
   </property>
   <property name="windowTitle">
-   <string>ssmp</string>
+   <string>wubwub</string>
   </property>
   <property name="styleSheet">
    <string notr="true">QObject {
@@ -336,14 +336,14 @@ QLabel#playlistLbl {
          <number>0</number>
         </property>
         <item>
-         <widget class="SsmpSearch" name="search">
+         <widget class="WWSearch" name="search">
           <property name="text">
            <string>Search</string>
           </property>
          </widget>
         </item>
         <item>
-         <widget class="ssmpTabWidget" name="tabWidget">
+         <widget class="WWTabWidget" name="tabWidget">
           <property name="currentIndex">
            <number>1</number>
           </property>
@@ -427,20 +427,20 @@ QLabel#playlistLbl {
    <container>1</container>
   </customwidget>
   <customwidget>
-   <class>ssmpTabWidget</class>
-   <extends>QTabWidget</extends>
-   <header>albumtab/ssmptabwidget.h</header>
-   <container>1</container>
-  </customwidget>
-  <customwidget>
-   <class>SsmpSearch</class>
+   <class>WWSearch</class>
    <extends>QLineEdit</extends>
-   <header>search/ssmpsearch.h</header>
+   <header>search/wwsearch.h</header>
   </customwidget>
   <customwidget>
    <class>FirstViz</class>
    <extends>QWidget</extends>
    <header>viz/firstviz.h</header>
+   <container>1</container>
+  </customwidget>
+  <customwidget>
+   <class>WWTabWidget</class>
+   <extends>QTabWidget</extends>
+   <header>albumtab/wwtabwidget.h</header>
    <container>1</container>
   </customwidget>
  </customwidgets>
@@ -449,7 +449,7 @@ QLabel#playlistLbl {
   <connection>
    <sender>optionsAction</sender>
    <signal>triggered()</signal>
-   <receiver>ssmpClass</receiver>
+   <receiver>WWClass</receiver>
    <slot>openOptions()</slot>
    <hints>
     <hint type="sourcelabel">
