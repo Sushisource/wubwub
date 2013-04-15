@@ -27,6 +27,12 @@ void WWTabWidget::addCloseableTab(QWidget *container, QString name, bool closeab
     }
 }
 
+void WWTabWidget::setSongTabText(QString songname, QString arname)
+{
+    this->setTabText(0, songname);
+    this->setTabToolTip(0, arname + " - " + songname);
+}
+
 //Closes tab of signaling button
 void WWTabWidget::closeMyTab()
 {

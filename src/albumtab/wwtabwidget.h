@@ -15,6 +15,7 @@ class WWTabWidget : public QTabWidget
 public:
     explicit WWTabWidget(QWidget *parent = 0);
     void addCloseableTab(QWidget* container, QString name, bool closeable = true);
+    void setSongTabText(QString songname, QString arname);
     
 signals:
     

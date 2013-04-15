@@ -79,8 +79,11 @@ void wubwub::changeSong(int songid)
     QString songpath = dbi->getTrackColFromSong(songid, SongCol::path);
     QString sname = dbi->getSongNameFromId(songid);
     QString arname = dbi->getArtistNameFromSongId(songid);
-    ui.tabWidget->setTabText(0,arname + " - " + sname);
+    ui.tabWidget->setSongTabText(sname, arname);
     ui.playbackwidget->changeSong(songpath);
+    this->setWindowTitle(arname
+                         + QString::fromUtf8(" \xf0\x9f\x8e\xb5 ") //Music note
+                         + sname);
     emit songChange(songid);
 }
 
