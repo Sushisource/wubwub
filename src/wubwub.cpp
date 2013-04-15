@@ -56,9 +56,12 @@ wubwub::wubwub(QWidget *parent, Qt::WindowFlags flags) : QMainWindow(parent, fla
     connect(ui.search, &WWSearch::openAlbumTab, this, &wubwub::openAlbumTab);
     connect(ui.search, &WWSearch::openArtistTab, this, &wubwub::openArtistTab);
 
-    //Update the recent view
-    dbi->refresh();
+    //Update the recent view but use a timer so the window pops up first
+    QTimer::singleShot(1000, dbi, SLOT(refresh()));
+    //We have to immediately update the view itself otherwise it's blank
     recentAlbs->update();
+    //But then update it again after the dbi has refreshed.
+    QTimer::singleShot(1100, recentAlbs, SLOT(update()));
 
     //Setup viz
     ui.viz->setPlayBackPointer(ui.playbackwidget);

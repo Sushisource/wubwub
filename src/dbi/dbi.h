@@ -33,7 +33,6 @@ public:
     //*** KEEP IN SYNC WITH ENUM ABOVE***//
     QList<QString> songCols;
 
-    void refresh();
     static inline QString formatSeconds(int secs);
     enum searchFlag {All, ArtOnly, AlbOnly, SonOnly};
     QMap<QString, int> search(QString query, searchFlag s = DBI::All);
@@ -58,6 +57,7 @@ public:
     }
 
 public slots:
+    void refresh();
     void initDB();
     int addSong(DBItem song);
 	int addAlbum(DBItem album);
