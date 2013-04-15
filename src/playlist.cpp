@@ -7,7 +7,8 @@ Playlist::Playlist(QObject *par)
     playingIcon = QPixmap(":/imgs/play");
     this->setIconSize(QSize(8,8));
 
-    connect(this, SIGNAL(itemDoubleClicked(QListWidgetItem*)), SLOT(dblClkRedirect(QListWidgetItem*)));
+    connect(this, SIGNAL(itemDoubleClicked(QListWidgetItem*)),
+                  SLOT(dblClkRedirect(QListWidgetItem*)));
 }
 
 void Playlist::addSongs(QList<int> songIds)
@@ -41,10 +42,21 @@ void Playlist::nextSong()
     int i = this->currentRow();
     if(i + 1 >= this->count()) //End of list
     {
-        cursong->setIcon(QIcon());
         return;
     }
     this->setCurrentRow(i+1);
+    dblClkRedirect(this->currentItem());
+}
+
+void Playlist::prevSong()
+{
+    this->setCurrentItem(cursong);
+    int i = this->currentRow();
+    if(i - 1 < 0) //start of list
+    {
+        return;
+    }
+    this->setCurrentRow(i-1);
     dblClkRedirect(this->currentItem());
 }
 
