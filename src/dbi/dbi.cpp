@@ -414,6 +414,11 @@ int DBI::addSong(DBItem sng)
     //Now check if the old album we may have replaced should be deleted
     if(prevalid > -1)
         deleteAlbumIfEmpty(prevalid);
+    //It's also possible to add an album with no songs in it if the
+    //album has songs by different arists but hasn't specified an albumartist
+    //TODO: Fix this by grouping songs which have the same album name and were
+    //loaded at the same time?
+    deleteAlbumIfEmpty(lastinsert);
 
     return (execsuccess) ? lastinsert : -1;
 }
@@ -477,7 +482,6 @@ void DBI::deleteAlbumIfEmpty(int alid)
     q.bindValue(":alid", alid);
     q.exec();
 }
-
 
 //TODO: This probably needs to fix more than just single quotes
 QString DBI::sanitize(QString s)
