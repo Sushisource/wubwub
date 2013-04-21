@@ -19,6 +19,10 @@ ENDIF(WIN32)
 IF(APPLE)
     SET(w_GUI MACOSX_BUNDLE)
 ENDIF(APPLE)
+
+IF(CMAKE_CXX_COMPILER MATCHES ".*clang.*")
+    set(CMAKE_CXX_FLAGS "-std=c++11 -stdlib=libstdc++")
+ENDIF()
 ###### QT
 # Find includes in corresponding build directories
 set(CMAKE_INCLUDE_CURRENT_DIR ON)
