@@ -10,8 +10,9 @@ DBI::DBI() : QObject(NULL)
     //This has to match the DB. ORMs are for bitches.
     songCols << "sid" << "name" << "tracknum" << "album" << "artist" << "length" << "path" << "numplays" << "genre" << "year";
     //Setup watcher on root dirs
-    watcher = new QFileSystemWatcher(this);
-    connect(watcher, SIGNAL(directoryChanged(QString)), SLOT(processDir(QString)));
+    watcher = std::unique_ptr<QFileSystemWatcher>(new QFileSystemWatcher(this));
+    connect(watcher.get(),
+            SIGNAL(directoryChanged(QString)), SLOT(processDir(QString)));
 }
 
 QMap<QString, int> DBI::search(QString query, searchFlag s)

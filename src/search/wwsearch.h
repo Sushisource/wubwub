@@ -17,8 +17,8 @@ public:
 private:
     void initPopup();
 
-    QTreeWidget* popup;
-    QTimer* searchTimer;
+    std::unique_ptr<QTreeWidget> popup;
+    std::unique_ptr<QTimer> searchTimer;
     QList<QString> searchtypes;
     QColor disabledColor;
     DBI* db;

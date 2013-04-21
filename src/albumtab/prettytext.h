@@ -13,12 +13,11 @@ private:
     void hoverEnterEvent(QGraphicsSceneHoverEvent *event);
     void hoverLeaveEvent(QGraphicsSceneHoverEvent *event);
     static const short shade = 90;
-    ~PrettyText();
 
 public:
-//    QTimeLine* tl;
     explicit PrettyText(QGraphicsItem *parent = 0);
-    
+    ~PrettyText();
+
 };
 
 #endif // PRETTYTEXT_H

@@ -27,8 +27,8 @@ PlaybackWidget::PlaybackWidget(QWidget *parent) : QWidget(parent)
         Error("Can't initialize device");
     curchan = NULL;
     state = STOPPED;
-    updateTimer = new QTimer(this);
-    connect(updateTimer, SIGNAL(timeout()), SLOT(update()));
+    updateTimer = std::unique_ptr<QTimer>(new QTimer(this));
+    connect(updateTimer.get(), SIGNAL(timeout()), SLOT(update()));
     connect(ui.playSlider, SIGNAL(seekTo(float)), SLOT(seek(float)));
     updateTimer->setInterval(50);
 }

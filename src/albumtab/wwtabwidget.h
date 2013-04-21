@@ -8,6 +8,7 @@
 #include <QKeyEvent>
 #include <QApplication>
 #include <QUuid>
+#include <memory>
 
 class WWTabWidget : public QTabWidget
 {
@@ -21,7 +22,7 @@ signals:
     
 public slots:
     void closeMyTab();
-    void focusSetter(int index);
+    void focusSetter();
 
 protected:
     bool event(QEvent *e);

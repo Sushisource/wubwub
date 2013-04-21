@@ -3,6 +3,7 @@
 
 #include <functional>
 #include <numeric>
+#include <memory>
 
 #include <Qt>
 #include <QMainWindow>
@@ -28,14 +29,13 @@ public:
     wubwub(QWidget *parent = 0, Qt::WindowFlags flags = 0);
     ~wubwub();
 
-    QSettings* settings;
+    std::unique_ptr<QSettings> settings;
     DBI* dbi;
 
 private:
     Ui::WWClass ui;
-	optionsWindow* optWin;
-	QThread* dbthread;	
-    RecentAlbumsView* recentAlbs;
+    std::unique_ptr<optionsWindow> optWin;
+    std::unique_ptr<QThread> dbthread;	
 
 	inline void addPopupItem(QString name, QString type);
     void initPopup();
@@ -48,8 +48,8 @@ private slots:
     bool eventFilter(QObject* object, QEvent* e);
     bool openOptions();
     void addSongToNowPlaying(int sid);
-    QWidget *openAlbumTab(int alid);
-    QWidget *openArtistTab(int arid);
+    void openAlbumTab(int alid);
+    void openArtistTab(int arid);
 
 signals:
     void songChange(int songid);

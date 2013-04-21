@@ -11,7 +11,7 @@ class Playlist : public QListWidget
     Q_OBJECT
 
 public:
-    Playlist(QObject* parent);
+    Playlist(QObject*);
     ~Playlist();
 
 public slots:

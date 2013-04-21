@@ -15,16 +15,16 @@ void WWTabWidget::addCloseableTab(QWidget *container, QString name, bool closeab
     int ix = this->addTab(container, name);
     if(closeable)
     {
-        QToolButton* close = new QToolButton(container);
-        qDebug() << container;
+        auto close = std::unique_ptr<QToolButton>(new QToolButton(container));
         close->setStyleSheet("background-color: rgba( 255, 255, 255, 0% );");
         close->setGeometry(QRect(0,0,btnw,btnw));
         close->setProperty("tabpointer", qVariantFromValue(container));
-        connect(close, SIGNAL(clicked()), SLOT(closeMyTab()));
+        connect(close.get(), SIGNAL(clicked()), SLOT(closeMyTab()));
         QIcon closeicon(QPixmap(":/imgs/x").scaledToWidth(btnw,Qt::SmoothTransformation));
         close->setIcon(closeicon);
-        tabBar()->setTabButton(ix, QTabBar::RightSide, close);
+        tabBar()->setTabButton(ix, QTabBar::RightSide, close.release());
     }
+    this->setCurrentWidget(container);
 }
 
 void WWTabWidget::setSongTabText(QString songname, QString arname)
@@ -40,7 +40,7 @@ void WWTabWidget::closeMyTab()
     delete clicked->property("tabpointer").value<QWidget*>();
 }
 
-void WWTabWidget::focusSetter(int index)
+void WWTabWidget::focusSetter()
 {
     this->setFocus();
 }

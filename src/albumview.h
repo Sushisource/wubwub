@@ -28,12 +28,12 @@ protected:
     int maxAlbs;
 
 private:
-    QGraphicsScene* scene;
+    std::unique_ptr<QGraphicsScene> scene;
+    std::unique_ptr<QGraphicsRectItem> bottomfade;
     QList<QString> alids;
     QList<QGraphicsTextItem*> descriptions;
     QList<QGraphicsPixmapItem*> covers;
     QList<QGraphicsRectItem*> backgrounds;
-    QGraphicsRectItem* bottomfade;
     QList<QGraphicsSvgItem*> plusbuttons;
     QList<QGraphicsSvgItem*> tabbuttons;
     int albumcount;

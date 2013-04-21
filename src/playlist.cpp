@@ -1,6 +1,6 @@
 #include "wubwub.h"
 
-Playlist::Playlist(QObject *par)
+Playlist::Playlist(QObject *)
 {
     db = &DBI::getInstance();
     cursong = NULL;
@@ -23,9 +23,9 @@ void Playlist::addSong(int songid)
 {
     QString name = db->getSongNameFromId(songid);
     //Insert pathname , user name
-    QListWidgetItem* lwi = new QListWidgetItem(name);
+    auto lwi = std::unique_ptr<QListWidgetItem>(new QListWidgetItem(name));
     lwi->setData(Qt::WhatsThisRole, songid);
-    this->addItem(lwi);
+    this->addItem(lwi.release());
 }
 
 void Playlist::addAlbums(QList<int> alids)

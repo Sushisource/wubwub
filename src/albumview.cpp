@@ -8,19 +8,20 @@ AlbumView::AlbumView(QWidget* parent, float minThumbSiz) : QGraphicsView(parent)
     minThumbSize = minThumbSiz;
     maxAlbs = 5; //Sensible default
     db = &DBI::getInstance();
-    scene = new QGraphicsScene(this);
+    scene = std::unique_ptr<QGraphicsScene>(new QGraphicsScene(this));
     this->setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
-    this->setScene(scene);
-    bottomfade = new QGraphicsRectItem;
+    this->setScene(scene.get());
+    bottomfade = std::unique_ptr<QGraphicsRectItem>(new QGraphicsRectItem);
     bottomfade->setPen(Qt::NoPen);
     bottomfade->setZValue(1000);
     bottomfade->setBrush(QApplication::palette().window());
-    QGraphicsDropShadowEffect* shadow = new QGraphicsDropShadowEffect();
+    auto shadow = std::unique_ptr<QGraphicsDropShadowEffect>(
+            new QGraphicsDropShadowEffect());
     shadow->setBlurRadius(7);
     shadow->setColor(QApplication::palette().window().color());
     shadow->setOffset(0,-7);
-    bottomfade->setGraphicsEffect(shadow);
-    scene->addItem(bottomfade);
+    bottomfade->setGraphicsEffect(shadow.release());
+    scene->addItem(bottomfade.get());
 }
 
 void AlbumView::resizeEvent(QResizeEvent* e)
@@ -29,7 +30,7 @@ void AlbumView::resizeEvent(QResizeEvent* e)
         return;
     int padding = 8;
     float siz  = (this->geometry().height() - padding*(1+albumcount))
-                  / albumcount;
+        / albumcount;
     if(minThumbSize >= 0)
         siz = qMax(siz, minThumbSize);
     int buttonsiz = plusbuttons[0]->boundingRect().width();
@@ -87,9 +88,10 @@ void AlbumView::addAlbs(QList<Alb> albs)
         if(alids.count() > 0 && alids.contains(al.alid))
             continue;
         //add description
-        QGraphicsTextItem* textDesc = new QGraphicsTextItem();
+        auto textDesc = std::unique_ptr<QGraphicsTextItem>(
+                new QGraphicsTextItem());
         QString desc = "<b>" + al.name.toHtmlEscaped() + " - "
-                       + al.artist.toHtmlEscaped();
+            + al.artist.toHtmlEscaped();
         desc += (al.year != "0") ? " [" + al.year + "]" : "";
         desc += "</b><br/>";
         QString trackz = "";
@@ -105,42 +107,47 @@ void AlbumView::addAlbs(QList<Alb> albs)
         textDesc->setFont(QFont("Arial", 11));
         textDesc->setZValue(znum+1);
         //First add a backing rectangle
-        QGraphicsRectItem* back = new QGraphicsRectItem();
+        auto back = std::unique_ptr<QGraphicsRectItem>(new QGraphicsRectItem());
         back->setPen(Qt::NoPen);
         back->setZValue(znum);
         back->setBrush(QApplication::palette().window());
-        QGraphicsDropShadowEffect* shadow = new QGraphicsDropShadowEffect();
+        auto shadow = std::unique_ptr<QGraphicsDropShadowEffect>(
+                new QGraphicsDropShadowEffect());
         shadow->setBlurRadius(7);
         shadow->setColor(QApplication::palette().window().color());
         shadow->setOffset(0,-7);
-        back->setGraphicsEffect(shadow);
-        scene->addItem(back);
-        scene->addItem(textDesc);
-        backgrounds.push_back(back);
-        descriptions.push_back(textDesc);
+        back->setGraphicsEffect(shadow.release());
+        backgrounds.push_back(back.get());
+        descriptions.push_back(textDesc.get());
+        scene->addItem(back.release());
+        scene->addItem(textDesc.release());
 
         //add cover
-        QGraphicsPixmapItem* cover = NULL;
+        auto cover = std::unique_ptr<QGraphicsPixmapItem>();
         if(al.imguri != "")
         {
-            shadow = new QGraphicsDropShadowEffect();
+            shadow = std::unique_ptr<QGraphicsDropShadowEffect>(
+                    new QGraphicsDropShadowEffect());
             shadow->setBlurRadius(7);
             shadow->setColor(Qt::black);
             shadow->setOffset(0,0);
-            cover = new QGraphicsPixmapItem(QPixmap(al.imguri).scaled(200,200,
-                                                  Qt::KeepAspectRatio,
-                                                  Qt::SmoothTransformation));
+            cover = std::unique_ptr<QGraphicsPixmapItem>(
+                    new QGraphicsPixmapItem(QPixmap(al.imguri).scaled(200,200,
+                            Qt::KeepAspectRatio,
+                            Qt::SmoothTransformation)));
 
             cover->setTransformationMode(Qt::SmoothTransformation);
-            cover->setGraphicsEffect(shadow);
+            cover->setGraphicsEffect(shadow.release());
             cover->setZValue(znum+1);
         }
-        scene->addItem(cover);
-        covers.push_back(cover);
+        covers.push_back(cover.get());
+        scene->addItem(cover.release());
 
         //add buttons
-        QGraphicsSvgItem* plus = new QGraphicsSvgItem(":/imgs/plus");
-        QGraphicsSvgItem* tabb = new QGraphicsSvgItem(":/imgs/eye");
+        auto plus = std::unique_ptr<QGraphicsSvgItem>(
+                new QGraphicsSvgItem(":/imgs/plus"));
+        auto tabb = std::unique_ptr<QGraphicsSvgItem>(
+                new QGraphicsSvgItem(":/imgs/eye"));
         plus->setZValue(znum+1);
         plus->setOpacity(0.8);
         tabb->setZValue(znum+1);
@@ -149,10 +156,10 @@ void AlbumView::addAlbs(QList<Alb> albs)
         plus->setData(BTNTYPE,PLUS);
         tabb->setData(ALID,al.alid);
         tabb->setData(BTNTYPE,TAB);
-        scene->addItem(plus);
-        scene->addItem(tabb);
-        plusbuttons.push_back(plus);
-        tabbuttons.push_back(tabb);
+        plusbuttons.push_back(plus.get());
+        tabbuttons.push_back(tabb.get());
+        scene->addItem(plus.release());
+        scene->addItem(tabb.release());
 
         alids.push_back(al.alid);
         //Remove bottom item if there are more albums
@@ -184,5 +191,4 @@ void AlbumView::addAlbs(QList<Alb> albs)
 
 AlbumView::~AlbumView()
 {
-    delete bottomfade;
 }

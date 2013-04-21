@@ -35,7 +35,7 @@ private:
     int cursongblength; //Byte length
     DWORD curchan;
     Playstate state;
-    QTimer* updateTimer;
+    std::unique_ptr<QTimer> updateTimer;
     QPixmap play;
     QPixmap pause;
     void stopSong();

@@ -10,6 +10,7 @@
 #include <QMouseEvent>
 #include "dbi/dbi.h"
 #include "prettytext.h"
+#include <memory>
 
 class AlbumTab : public QGraphicsView
 {
@@ -30,13 +31,13 @@ public slots:
 private:
     int album_id;
 
-    QGraphicsScene* scene;
-    QGraphicsSimpleTextItem* title;
+    std::unique_ptr<QGraphicsScene> scene;
+    std::unique_ptr<QGraphicsSimpleTextItem> title;
     //Fonts
     QFont titlefont;
     QFont trackfont;
-    QGraphicsPixmapItem* cover;
-    QGraphicsRectItem* bgrect;
+    std::unique_ptr<QGraphicsPixmapItem> cover;
+    std::unique_ptr<QGraphicsRectItem> bgrect;
     enum DataKeys {TRACKID};
     void resizeEvent(QResizeEvent *event);
     void wheelEvent(QWheelEvent *event);

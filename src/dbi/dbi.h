@@ -4,6 +4,7 @@
 #include <QObject>
 #include <QtSql>
 #include <QPair>
+#include <memory>
 #include "TagExtractor.h"
 
 struct DBItem 
@@ -71,7 +72,7 @@ signals:
 
 private:
     QSqlDatabase db;
-    QFileSystemWatcher* watcher;
+    std::unique_ptr<QFileSystemWatcher> watcher;
 	QString getOrFindAlbumArt(Alb a);
     QString sanitize(QString);
     QDateTime getPathLastMod(QString path);

@@ -3,11 +3,11 @@
 AlbumTab::AlbumTab(int alid, QWidget *parent) : QGraphicsView(parent)
 {
     album_id = alid;
-    scene = new QGraphicsScene(this);
+    scene = std::unique_ptr<QGraphicsScene>(new QGraphicsScene(this));
     this->setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
     this->setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
     this->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
-    this->setScene(scene);
+    this->setScene(scene.get());
     this->setMouseTracking(true);
 
     DBI* db = &DBI::getInstance();
@@ -18,28 +18,33 @@ AlbumTab::AlbumTab(int alid, QWidget *parent) : QGraphicsView(parent)
     trackfont = QFont("Arial",15,QFont::Bold);
 
     //Album title
-    title = new QGraphicsSimpleTextItem();
-    QString tstr = db->getAlbumNameFromId(alid) + " - " + db->getArtistNameFromAlbumId(alid);
+    title = std::unique_ptr<QGraphicsSimpleTextItem>(
+                new QGraphicsSimpleTextItem());
+    QString tstr = db->getAlbumNameFromId(alid) + " - "
+                 + db->getArtistNameFromAlbumId(alid);
     title->setText(tstr);
     title->setFont(titlefont);
     title->setPos(0,0);
     title->setZValue(1);
-    scene->addItem(title);
+    scene->addItem(title.get());
 
     //Individual Tracks
     addTracks(alid, db);
 
     //Album art
     QPixmap aart = QPixmap(db->getImgUriFromAlbumId(alid));
-    cover = new QGraphicsPixmapItem(aart.scaledToWidth(300, Qt::SmoothTransformation));
-    QGraphicsDropShadowEffect* shad = new QGraphicsDropShadowEffect(this);
+    cover = std::unique_ptr<QGraphicsPixmapItem>(
+                new QGraphicsPixmapItem(
+                    aart.scaledToWidth(300, Qt::SmoothTransformation)));
+    auto shad = std::unique_ptr<QGraphicsDropShadowEffect>(
+                new QGraphicsDropShadowEffect(this));
     shad->setBlurRadius(6);
     shad->setColor(Qt::black);
     shad->setOffset(0,0);
     cover->setTransformationMode(Qt::SmoothTransformation);
     cover->setZValue(-1);
-    cover->setGraphicsEffect(shad);
-    scene->addItem(cover);
+    cover->setGraphicsEffect(shad.release());
+    scene->addItem(cover.get());
 }
 
 void AlbumTab::addTracks(int alid, DBI* db)
@@ -51,7 +56,7 @@ void AlbumTab::addTracks(int alid, DBI* db)
     int widest = 0;
     for(int i = 0; i < tracknames.count(); ++i)
     {
-        PrettyText* track = new PrettyText(title);
+        auto track = new PrettyText(title.get());
         track->setAcceptHoverEvents(true);
         track->setText(tracknums[i] + ".  " + tracknames[i]);
         track->setFont(trackfont);
@@ -92,7 +97,4 @@ void AlbumTab::mouseDoubleClickEvent(QMouseEvent *event)
 
 AlbumTab::~AlbumTab()
 {
-    delete title;
-    delete cover;
-    delete scene;
 }

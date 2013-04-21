@@ -8,11 +8,12 @@ WWSearch::WWSearch(QWidget *parent) : QLineEdit(parent)
     disabledColor = this->palette().color(QPalette::Disabled, QPalette::WindowText);
     //Connections
     this->installEventFilter(this);
-    searchTimer = new QTimer(this);
+    searchTimer = std::unique_ptr<QTimer>(new QTimer(this));
     searchTimer->setSingleShot(true);
     searchTimer->setInterval(300);
-    connect(this, SIGNAL(textEdited(QString)), searchTimer, SLOT(start()));
-    connect(searchTimer, SIGNAL(timeout()), SLOT(autoSuggest()));
+    connect(this, SIGNAL(textEdited(QString)),
+            searchTimer.get(), SLOT(start()));
+    connect(searchTimer.get(), SIGNAL(timeout()), SLOT(autoSuggest()));
 }
 
 void WWSearch::connectToDb(DBI *dbi)
@@ -22,7 +23,7 @@ void WWSearch::connectToDb(DBI *dbi)
 
 void WWSearch::initPopup()
 {
-    popup = new QTreeWidget(this);
+    popup = std::unique_ptr<QTreeWidget>(new QTreeWidget(this));
     popup->setWindowFlags(Qt::Popup);
     popup->setFocusPolicy(Qt::NoFocus);
     popup->setMouseTracking(true);
@@ -68,8 +69,7 @@ void WWSearch::autoSuggest()
         });
         for(int i = 0; i < pairs.count(); ++i)
         {
-            QTreeWidgetItem * item;
-            item = new QTreeWidgetItem(popup);
+            auto item = new QTreeWidgetItem(popup.get());
             item->setText(0, pairs[i].first);
             item->setText(1, t);
             item->setData(0,Qt::WhatsThisRole, pairs[i].second);
@@ -98,7 +98,7 @@ bool WWSearch::eventFilter(QObject* object, QEvent* e)
             QTimer::singleShot(0, object, SLOT(selectAll()));
         return false;
     }
-    else if(object == popup)
+    else if(object == popup.get())
     {
         if (e->type() == QEvent::MouseButtonPress)
         {

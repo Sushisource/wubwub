@@ -1,6 +1,7 @@
 #include "wubwub.h"
 
-wubwub::wubwub(QWidget *parent, Qt::WindowFlags flags) : QMainWindow(parent, flags)
+wubwub::wubwub(QWidget *parent, Qt::WindowFlags flags) :
+    QMainWindow(parent, flags)
 {
     //Register metatypes
     qRegisterMetaType<QList<QString>>("QList<QString>");
@@ -11,16 +12,17 @@ wubwub::wubwub(QWidget *parent, Qt::WindowFlags flags) : QMainWindow(parent, fla
     //Update global palette access
     QApplication::setPalette(this->palette());
     //Initiate settings file
-    settings = new QSettings("wubwub_config.ini",QSettings::IniFormat, this);
+    settings = std::unique_ptr<QSettings>(
+            new QSettings("wubwub_config.ini",QSettings::IniFormat, this));
     //Instantiate options menu
-    optWin = new optionsWindow(this);
+    optWin = std::unique_ptr<optionsWindow>(new optionsWindow(this));
 
     //Connect to database
     dbi = &DBI::getInstance();
     //Run db thread
-    dbthread = new QThread(this);
+    dbthread = std::unique_ptr<QThread>(new QThread(this));
     dbthread->start();
-    dbi->moveToThread(dbthread);
+    dbi->moveToThread(dbthread.get());
 
     //If db not initialized, initialize it
     if(settings->value("dbinitted").toBool() == false)
@@ -30,22 +32,24 @@ wubwub::wubwub(QWidget *parent, Qt::WindowFlags flags) : QMainWindow(parent, fla
     }
 
     //Setup recent initial view
-    recentAlbs = new RecentAlbumsView(this);
-    ui.recentTab->layout()->addWidget(recentAlbs);
+    auto recentAlbs = std::unique_ptr<RecentAlbumsView>(
+                new RecentAlbumsView(this));
 
     //Hook up search to database
     ui.search->connectToDb(dbi);
 
     //Link up stuff
     //Dbi updates
-    connect(dbi, &DBI::atDir, optWin, &optionsWindow::changeStatus);
-    connect(dbi, &DBI::recentChange, recentAlbs, &RecentAlbumsView::newAlbs);
+    connect(dbi, &DBI::atDir,
+            optWin.get(), &optionsWindow::changeStatus);
+    connect(dbi, &DBI::recentChange, recentAlbs.get(), &RecentAlbumsView::newAlbs);
     //Save button on options window
-    connect(optWin, &optionsWindow::startSongParsing, dbi, &DBI::processDirs);
+    connect(optWin.get(),
+            &optionsWindow::startSongParsing, dbi, &DBI::processDirs);
     //Connections for the recent view
-    connect(recentAlbs, &RecentAlbumsView::addAlbsToNowPlaying,
+    connect(recentAlbs.get(), &RecentAlbumsView::addAlbsToNowPlaying,
             ui.nowplayingLst, &Playlist::addAlbums);
-    connect(recentAlbs, &RecentAlbumsView::openAlbumTab, this,
+    connect(recentAlbs.get(), &RecentAlbumsView::openAlbumTab, this,
             &wubwub::openAlbumTab);
     //Now play list
     connect(ui.nowplayingLst, &Playlist::songChange, this, &wubwub::changeSong);
@@ -63,10 +67,12 @@ wubwub::wubwub(QWidget *parent, Qt::WindowFlags flags) : QMainWindow(parent, fla
     //We have to immediately update the view itself otherwise it's blank
     recentAlbs->update();
     //But then update it again after the dbi has refreshed.
-    QTimer::singleShot(1100, recentAlbs, SLOT(update()));
+    QTimer::singleShot(1100, recentAlbs.get(), SLOT(update()));
 
+    //Finish UI
     //Setup viz
     ui.viz->setPlayBackPointer(ui.playbackwidget);
+    ui.recentTab->layout()->addWidget(recentAlbs.release());
 }
 
 void wubwub::addSongToNowPlaying(int sid)
@@ -89,7 +95,7 @@ void wubwub::changeSong(int songid)
     emit songChange(songid);
 }
 
-bool wubwub::eventFilter(QObject* object, QEvent* e)
+bool wubwub::eventFilter(QObject*, QEvent* e)
 {
     if (e->type() == QEvent::KeyPress)
     {
@@ -119,41 +125,43 @@ bool wubwub::eventFilter(QObject* object, QEvent* e)
 
 void wubwub::openSearchWindow(QString name, QMap<QString,QString> results)
 {
-    QWidget* searchtab = new QWidget(ui.tabWidget);
-    ui.tabWidget->addCloseableTab(searchtab, name);
+    auto searchtab = std::unique_ptr<QWidget>(new QWidget(ui.tabWidget));
+    ui.tabWidget->addCloseableTab(searchtab.release(), name);
 }
 
-QWidget* wubwub::openAlbumTab(int alid)
+void wubwub::openAlbumTab(int alid)
 {
-    QWidget* container = new QWidget(ui.tabWidget);
-    ui.tabWidget->addCloseableTab(container, dbi->getAlbumNameFromId(alid));
+    auto container = std::unique_ptr<QWidget>(new QWidget(ui.tabWidget));
     container->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
-    QVBoxLayout* lay = new QVBoxLayout(container);
+    auto lay = std::unique_ptr<QVBoxLayout>(new QVBoxLayout(container.get()));
     lay->setMargin(0);
-    AlbumTab* altab = new AlbumTab(alid, container);
-    connect(altab, SIGNAL(clearPlaylist()), ui.nowplayingLst, SLOT(clear()));
-    connect(altab, SIGNAL(playSongFromAlbum(int, int)),
-            ui.nowplayingLst, SLOT(playSongFromAlbum(int,int)));
-    lay->addWidget(altab,1);
-    ui.tabWidget->setCurrentWidget(container);
-    return container;
+    auto altab = std::unique_ptr<AlbumTab>(new AlbumTab(alid, container.get()));
+    connect(altab.get(), &AlbumTab::clearPlaylist,
+            ui.nowplayingLst, &Playlist::clear);
+    connect(altab.get(), &AlbumTab::playSongFromAlbum,
+            ui.nowplayingLst, &Playlist::playSongFromAlbum);
+    lay->addWidget(altab.release(),1);
+    container->setLayout(lay.release());
+    ui.tabWidget->addCloseableTab(container.release(),
+                                  dbi->getAlbumNameFromId(alid));
 }
 
-QWidget *wubwub::openArtistTab(int arid)
+void wubwub::openArtistTab(int arid)
 {
-    QWidget* container = new QWidget(ui.tabWidget);
-    ui.tabWidget->addCloseableTab(container, dbi->getArtistNameFromId(arid));
+    auto container = std::unique_ptr<QWidget>(new QWidget(ui.tabWidget));
     container->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
-    QVBoxLayout* lay = new QVBoxLayout(container);
+    auto lay = std::unique_ptr<QVBoxLayout>(new QVBoxLayout(container.get()));
     lay->setMargin(0);
-    ArtistAlbumsView* arview = new ArtistAlbumsView(arid, container, 100);
-    connect(arview, &ArtistAlbumsView::addAlbsToNowPlaying,
+    auto arview = std::unique_ptr<ArtistAlbumsView>(
+                new ArtistAlbumsView(arid, container.get(), 100));
+    connect(arview.get(), &ArtistAlbumsView::addAlbsToNowPlaying,
             ui.nowplayingLst, &Playlist::addAlbums);
-    connect(arview, &ArtistAlbumsView::openAlbumTab, this, &wubwub::openAlbumTab);
-    lay->addWidget(arview,1);
-    ui.tabWidget->setCurrentWidget(container);
-    ui.tabWidget->setFocus();
-    return container;
+    connect(arview.get(), &ArtistAlbumsView::openAlbumTab,
+            this, &wubwub::openAlbumTab);
+    lay->addWidget(arview.release(),1);
+    container->setLayout(lay.release());
+    ui.tabWidget->addCloseableTab(container.release(),
+                                  dbi->getArtistNameFromId(arid));
 }
 
 bool wubwub::openOptions()
