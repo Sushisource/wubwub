@@ -13,8 +13,6 @@ vsproj/
 build/*
 ninjabuild/*
 vsbuild/*
-ssmp/tags
-ssmp/GeneratedFiles/*
 #More VS crap
 vc10/ipch/*
 vc10/*05424
@@ -55,3 +53,5 @@ obj/
 _ReSharper*/
 [Tt]est[Rr]esult*
 clangbuild/
+build-wubwub-qt_5_1/
+src/shaders/examples

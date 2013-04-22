@@ -1,7 +1,7 @@
 TEMPLATE = app
 TARGET = wubwub
 DESTDIR = ..
-QT += core gui sql opengl svg
+QT += core gui sql opengl svg quick
 DEFINES += QT_LARGEFILE_SUPPORT QT_SQL_LIB QT_OPENGL_LIB
 INCLUDEPATH += E:/libs/taglib \
         E:/libs/taglib/taglib \
@@ -31,9 +31,11 @@ HEADERS += dbi/TagExtractor.h \
     viz/firstviz.h \
     viz/vizrenderthread.h \
     viz/glhelp/uniformbufferobject.h \
+    qmltab.h \
     wubwub.h \
     search/wwsearch.h \
-    albumtab/wwtabwidget.h
+    albumtab/wwtabwidget.h \
+    qmltab.h
 SOURCES += dbi/dbi.cpp \
     options/optionswindow.cpp \
     main.cpp \
@@ -50,6 +52,7 @@ SOURCES += dbi/dbi.cpp \
     viz/firstviz.cpp \
     viz/vizrenderthread.cpp \
     viz/glhelp/uniformbufferobject.cpp \
+    qmltab.cpp \
     wubwub.cpp \
     search/wwsearch.cpp \
     albumtab/wwtabwidget.cpp
@@ -59,7 +62,8 @@ FORMS += wubwub.ui \
 
 OTHER_FILES += \
     shaders/basic.vert \
-    shaders/basic.frag
+    shaders/basic.frag \
+    albumview.qml
 
 RESOURCES += \
     ../res/res.qrc

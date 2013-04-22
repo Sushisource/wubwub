@@ -9,6 +9,7 @@
 #include <QMainWindow>
 #include <QSettings>
 #include <QKeyEvent>
+#include <QQuickView>
 
 #include "ui_wubwub.h"
 #include "recentalbumsview.h"
@@ -18,6 +19,7 @@
 #include "options/optionswindow.h"
 #include "playback/playbackwidget.h"
 #include "albumtab/albumtab.h"
+#include "qmltab.h"
 
 Q_DECLARE_METATYPE(QList<QString>)
 
@@ -36,6 +38,7 @@ private:
     Ui::WWClass ui;
     std::unique_ptr<optionsWindow> optWin;
     std::unique_ptr<QThread> dbthread;	
+    std::unique_ptr<QmlTab> recentAlbs;
 
 	inline void addPopupItem(QString name, QString type);
     void initPopup();

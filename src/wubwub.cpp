@@ -32,8 +32,7 @@ wubwub::wubwub(QWidget *parent, Qt::WindowFlags flags) :
     }
 
     //Setup recent initial view
-    auto recentAlbs = std::unique_ptr<RecentAlbumsView>(
-                new RecentAlbumsView(this));
+    recentAlbs = std::unique_ptr<QmlTab>(new QmlTab(this));
 
     //Hook up search to database
     ui.search->connectToDb(dbi);
@@ -42,15 +41,15 @@ wubwub::wubwub(QWidget *parent, Qt::WindowFlags flags) :
     //Dbi updates
     connect(dbi, &DBI::atDir,
             optWin.get(), &optionsWindow::changeStatus);
-    connect(dbi, &DBI::recentChange, recentAlbs.get(), &RecentAlbumsView::newAlbs);
+    //connect(dbi, &DBI::recentChange, recentAlbs.get(), &RecentAlbumsView::newAlbs);
     //Save button on options window
     connect(optWin.get(),
             &optionsWindow::startSongParsing, dbi, &DBI::processDirs);
     //Connections for the recent view
-    connect(recentAlbs.get(), &RecentAlbumsView::addAlbsToNowPlaying,
-            ui.nowplayingLst, &Playlist::addAlbums);
-    connect(recentAlbs.get(), &RecentAlbumsView::openAlbumTab, this,
-            &wubwub::openAlbumTab);
+    //connect(recentAlbs.get(), &RecentAlbumsView::addAlbsToNowPlaying,
+    //        ui.nowplayingLst, &Playlist::addAlbums);
+    //connect(recentAlbs.get(), &RecentAlbumsView::openAlbumTab, this,
+    //        &wubwub::openAlbumTab);
     //Now play list
     connect(ui.nowplayingLst, &Playlist::songChange, this, &wubwub::changeSong);
     //Playback manager
@@ -65,9 +64,9 @@ wubwub::wubwub(QWidget *parent, Qt::WindowFlags flags) :
     //Update the recent view but use a timer so the window pops up first
     QTimer::singleShot(1000, dbi, SLOT(refresh()));
     //We have to immediately update the view itself otherwise it's blank
-    recentAlbs->update();
+    //recentAlbs->update();
     //But then update it again after the dbi has refreshed.
-    QTimer::singleShot(1100, recentAlbs.get(), SLOT(update()));
+    //QTimer::singleShot(1100, recentAlbs.get(), SLOT(update()));
 
     //Finish UI
     //Setup viz
