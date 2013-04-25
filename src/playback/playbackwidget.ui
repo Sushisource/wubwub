@@ -65,8 +65,8 @@ border: 1px solid #444;
       <string/>
      </property>
      <property name="icon">
-      <iconset>
-       <normaloff>../Resources/arrow_left.svg</normaloff>../Resources/arrow_left.svg</iconset>
+      <iconset resource="../../res/res.qrc">
+       <normaloff>:/imgs/prev</normaloff>:/imgs/prev</iconset>
      </property>
     </widget>
    </item>
@@ -89,8 +89,8 @@ border: 1px solid #444;
       <string/>
      </property>
      <property name="icon">
-      <iconset>
-       <normaloff>../Resources/arrow_right.svg</normaloff>../Resources/arrow_right.svg</iconset>
+      <iconset resource="../../res/res.qrc">
+       <normaloff>:/imgs/next</normaloff>:/imgs/next</iconset>
      </property>
     </widget>
    </item>
@@ -142,6 +142,8 @@ border: 1px solid #444;
    <header>playback/musicslider.h</header>
   </customwidget>
  </customwidgets>
- <resources/>
+ <resources>
+  <include location="../../res/res.qrc"/>
+ </resources>
  <connections/>
 </ui>

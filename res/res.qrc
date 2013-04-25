@@ -9,4 +9,9 @@
         <file alias="eye">eye.svg</file>
         <file alias="x">x.svg</file>
     </qresource>
+    <qresource prefix="/qml">
+        <file>qml/albumview.qml</file>
+        <file>qml/albumrecord.qml</file>
+        <file>qml/qmldir</file>
+    </qresource>
 </RCC>

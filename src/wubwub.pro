@@ -31,11 +31,10 @@ HEADERS += dbi/TagExtractor.h \
     viz/firstviz.h \
     viz/vizrenderthread.h \
     viz/glhelp/uniformbufferobject.h \
-    qmltab.h \
+    qmltab/qmltab.h \
     wubwub.h \
     search/wwsearch.h \
-    albumtab/wwtabwidget.h \
-    qmltab.h
+    albumtab/wwtabwidget.h
 SOURCES += dbi/dbi.cpp \
     options/optionswindow.cpp \
     main.cpp \
@@ -52,7 +51,7 @@ SOURCES += dbi/dbi.cpp \
     viz/firstviz.cpp \
     viz/vizrenderthread.cpp \
     viz/glhelp/uniformbufferobject.cpp \
-    qmltab.cpp \
+    qmltab/qmltab.cpp \
     wubwub.cpp \
     search/wwsearch.cpp \
     albumtab/wwtabwidget.cpp
@@ -63,7 +62,9 @@ FORMS += wubwub.ui \
 OTHER_FILES += \
     shaders/basic.vert \
     shaders/basic.frag \
-    albumview.qml
+    ../res/qml/albumview.qml \
+    ../res/qml/albumrecord.qml \
+    ../res/qml/qmldir
 
 RESOURCES += \
     ../res/res.qrc

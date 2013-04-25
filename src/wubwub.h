@@ -19,7 +19,7 @@
 #include "options/optionswindow.h"
 #include "playback/playbackwidget.h"
 #include "albumtab/albumtab.h"
-#include "qmltab.h"
+#include "qmltab/qmltab.h"
 
 Q_DECLARE_METATYPE(QList<QString>)
 
