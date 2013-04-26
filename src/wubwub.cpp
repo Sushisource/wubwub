@@ -72,6 +72,7 @@ wubwub::wubwub(QWidget *parent, Qt::WindowFlags flags) :
     //Finish UI
     //Setup viz
     ui.viz->setPlayBackPointer(ui.playbackwidget);
+    recentAlbs->addComponent();
     ui.recentTab->layout()->addWidget(recentAlbs.release());
 }
 

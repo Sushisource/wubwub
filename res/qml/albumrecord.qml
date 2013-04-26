@@ -1,13 +1,14 @@
 import QtQuick 2.0
 import QtGraphicalEffects 1.0
 
-Rectangle {
-    width: 600; height: 150
+Item {
+    height: 120
+
     Image {
         id: alimg
-        source: "file:../../res/album_example.jpg"
-        anchors.right: parent.right
+        source: alcover
         anchors.top: parent.top
+        anchors.right: parent.right
         anchors.margins: 5
         fillMode: Image.PreserveAspectFit
         height: parent.height - anchors.margins*2
@@ -25,7 +26,7 @@ Rectangle {
     }
     Text {
         id: title
-        text: "The North Borders - Bonobo [2013]";
+        text: alname;
         font.bold: true;
         font.pointSize: 11
         anchors.left: parent.left
@@ -49,33 +50,10 @@ Rectangle {
         anchors.rightMargin: 5
     }
 
-    ListModel {
-        id: songModel
-        ListElement {
-            song: "First Fires"
-            track: "1"
-        }
-        ListElement {
-            song: "Emkay"
-            track: "2"
-        }
-        ListElement {
-            song: "Cirrus"
-            track: "3"
-        }
-        ListElement {
-            song: "Heaven For the Sinner"
-            track: "4"
-        }
-        ListElement {
-            song: "Sapphire"
-            track: "5"
-        }
-    }
     Component {
         id: songDel
         Item {
-            width: 180; height: 20
+            width: 180; height: 15
             Text { text: track + '. ' + song }
         }
     }
@@ -85,7 +63,7 @@ Rectangle {
         anchors.left: title.left
         anchors.bottom: parent.bottom
         anchors.topMargin: 5
-        model: songModel
+        model: tracks
         delegate: songDel
     }
 }
