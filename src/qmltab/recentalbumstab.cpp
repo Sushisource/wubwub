@@ -3,20 +3,48 @@
 RecentAlbumsTab::RecentAlbumsTab(QWidget* parent, QString qmlfile) :
     QmlTab(qmlfile, parent)
 {
-    //TODO: This should probably have a scrollbar of it's own at some point.
-    //Ideally, one that loads more recent albums the more you scroll
+    db = &DBI::getInstance();
 }
 
 RecentAlbumsTab::~RecentAlbumsTab()
 {
 }
 
+void RecentAlbumsTab::addAlbum(Alb album)
+{
+    QVariantMap alrecord;
+    alrecord["alname"] = album.name;
+    QVariantList trax;
+    int i = 1;
+    foreach(QString t, album.tracks)
+    {
+        QVariantMap track;
+        track["track"] = QString::number(i);
+        track["song"] = t;
+        trax.append(track);
+        ++i;
+    }
+    alrecord["alcover"] = "file:" + album.imguri;
+    alrecord["tracks"] = trax;
+    QMetaObject::invokeMethod(root.get(), "addAlbum",
+                              Q_ARG(QVariant,
+                                    QVariant::fromValue(alrecord)));
+}
+
+void RecentAlbumsTab::addAlbums(QList<Alb> albums)
+{
+    foreach(Alb a, albums)
+    {
+        addAlbum(a);
+    }
+}
+
 void RecentAlbumsTab::update()
 {
-    //addAlbs(db->getNRecentAlbums(5));
+    addAlbums(db->getNRecentAlbums(5));
 }
 
 void RecentAlbumsTab::newAlbs(QList<Alb> albs)
 {
-    //addAlbs(albs);
+    addAlbums(albs);
 }

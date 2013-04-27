@@ -22,19 +22,3 @@ QmlTab::QmlTab(QString qmlfile, QWidget *parent) :
     this->setLayout(layout.release());
     this->layout()->addWidget(container.release());
 }
-
-void QmlTab::addComponent()
-{
-    QVariantMap alrecord;
-    alrecord["alname"] = "Alname";
-    QVariantList trax;
-    QVariantMap track1;
-    track1["track"] = "1";
-    track1["song"] = "lololollolo";
-    trax.append(track1);
-    alrecord["alcover"] = "file:../res/album_example.jpg";
-    alrecord["tracks"] = trax;
-    QMetaObject::invokeMethod(root.get(), "addAlbum",
-                              Q_ARG(QVariant,
-                                    QVariant::fromValue(alrecord)));
-}

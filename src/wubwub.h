@@ -37,7 +37,7 @@ private:
     Ui::WWClass ui;
     std::unique_ptr<optionsWindow> optWin;
     std::unique_ptr<QThread> dbthread;	
-    std::unique_ptr<QmlTab> recentAlbs;
+    std::unique_ptr<RecentAlbumsTab> recentAlbs;
 
 	inline void addPopupItem(QString name, QString type);
     void initPopup();

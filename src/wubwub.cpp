@@ -41,7 +41,7 @@ wubwub::wubwub(QWidget *parent, Qt::WindowFlags flags) :
     //Dbi updates
     connect(dbi, &DBI::atDir,
             optWin.get(), &optionsWindow::changeStatus);
-    //connect(dbi, &DBI::recentChange, recentAlbs.get(), &RecentAlbumsView::newAlbs);
+    connect(dbi, &DBI::recentChange, recentAlbs.get(), &RecentAlbumsTab::newAlbs);
     //Save button on options window
     connect(optWin.get(),
             &optionsWindow::startSongParsing, dbi, &DBI::processDirs);
@@ -64,14 +64,14 @@ wubwub::wubwub(QWidget *parent, Qt::WindowFlags flags) :
     //Update the recent view but use a timer so the window pops up first
     QTimer::singleShot(1000, dbi, SLOT(refresh()));
     //We have to immediately update the view itself otherwise it's blank
-    //recentAlbs->update();
+    recentAlbs->update();
     //But then update it again after the dbi has refreshed.
+    //TODO: Figure out of this is still necessary in shiny new QML world
     //QTimer::singleShot(1100, recentAlbs.get(), SLOT(update()));
 
     //Finish UI
     //Setup viz
     ui.viz->setPlayBackPointer(ui.playbackwidget);
-    recentAlbs->addComponent();
     ui.recentTab->layout()->addWidget(recentAlbs.release());
 }
 

@@ -17,12 +17,15 @@ public:
     RecentAlbumsTab(QWidget *parent,
                     QString qmlfile = "qrc:/qml/qml/albumview.qml");
     ~RecentAlbumsTab();
+    void addAlbum(Alb album);
+    void addAlbums(QList<Alb> albums);
 
 public slots:
     void update();
     void newAlbs(QList<Alb> albs);
 
 private:
+    DBI* db;
 };
 
 #endif // RECENTALBUMSVIEW_H

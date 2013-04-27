@@ -17,9 +17,8 @@ class QmlTab : public QWidget
     Q_OBJECT
 public:
     explicit QmlTab(QString qmlfile, QWidget *parent = 0);
-    void addComponent();
 
-private:
+protected:
     std::unique_ptr<QQuickItem> root;
     std::unique_ptr<QQmlEngine> engine;
 
