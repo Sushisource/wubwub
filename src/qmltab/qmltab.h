@@ -7,7 +7,10 @@
 #include <QQmlEngine>
 #include <QQuickItem>
 #include <QQmlComponent>
+#include <QVariantList>
+#include <QApplication>
 #include <memory>
+#include "models/roleitemmodel.h"
 
 class QmlTab : public QWidget
 {
@@ -24,6 +27,14 @@ signals:
     
 public slots:
     
+};
+
+struct AlbumItem {
+    enum AlbumRoles {
+        NameRole = Qt::UserRole +1,
+        CoverRole,
+        TracksRole
+    };
 };
 
 #endif // QMLTAB_H

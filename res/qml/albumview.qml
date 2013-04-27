@@ -1,8 +1,7 @@
 import QtQuick 2.0
 import QtGraphicalEffects 1.0
 
-Rectangle {
-    color: "lightgrey";
+Item {
     ListModel {
         id: albummodel
         ListElement {
@@ -32,11 +31,19 @@ Rectangle {
             ]
         }
     }
+    function addAlbum(almodel) {
+        alview.model.append(almodel);
+    }
 
     ListView {
         model: albummodel
         anchors.fill: parent
         id: alview
-        delegate: AlbumRecord {anchors.fill: parent}
+        objectName: "alview"
+        spacing: 15
+        delegate: AlbumRecord {
+            anchors.left: parent.left
+            anchors.right: parent.right
+        }
     }
 }

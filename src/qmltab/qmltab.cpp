@@ -4,6 +4,8 @@ QmlTab::QmlTab(QString qmlfile, QWidget *parent) :
     QWidget(parent)
 {
     auto view = std::unique_ptr<QQuickView>(new QQuickView());
+    view->setColor(QApplication::palette().window().color());
+    view->setClearBeforeRendering(true);
     engine = std::unique_ptr<QQmlEngine>(view->engine());
     engine->addImportPath("qrc:/qml/");
     view->setSource(QUrl(qmlfile));
@@ -23,4 +25,16 @@ QmlTab::QmlTab(QString qmlfile, QWidget *parent) :
 
 void QmlTab::addComponent()
 {
+    QVariantMap alrecord;
+    alrecord["alname"] = "Alname";
+    QVariantList trax;
+    QVariantMap track1;
+    track1["track"] = "1";
+    track1["song"] = "lololollolo";
+    trax.append(track1);
+    alrecord["alcover"] = "file:../res/album_example.jpg";
+    alrecord["tracks"] = trax;
+    QMetaObject::invokeMethod(root.get(), "addAlbum",
+                              Q_ARG(QVariant,
+                                    QVariant::fromValue(alrecord)));
 }

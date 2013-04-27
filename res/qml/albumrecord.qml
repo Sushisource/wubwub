@@ -3,7 +3,6 @@ import QtGraphicalEffects 1.0
 
 Item {
     height: 120
-
     Image {
         id: alimg
         source: alcover
