@@ -6,7 +6,7 @@ Item {
         id: albummodel
     }
     function addAlbum(almodel) {
-        alview.model.append(almodel);
+        alview.model.insert(0, almodel);
     }
 
     ListView {

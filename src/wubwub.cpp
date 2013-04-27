@@ -41,7 +41,8 @@ wubwub::wubwub(QWidget *parent, Qt::WindowFlags flags) :
     //Dbi updates
     connect(dbi, &DBI::atDir,
             optWin.get(), &optionsWindow::changeStatus);
-    connect(dbi, &DBI::recentChange, recentAlbs.get(), &RecentAlbumsTab::newAlbs);
+    connect(dbi, &DBI::recentChange, recentAlbs.get(),
+            &RecentAlbumsTab::newAlbs);
     //Save button on options window
     connect(optWin.get(),
             &optionsWindow::startSongParsing, dbi, &DBI::processDirs);

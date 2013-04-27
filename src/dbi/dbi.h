@@ -77,6 +77,8 @@ private:
     QString sanitize(QString);
     QDateTime getPathLastMod(QString path);
     QList<Alb> extractAlbums(QSqlQueryModel *qm);
+    //FIXME: Kinda sucks but I don't know how else to do this as easily
+    bool album_added_during_proccess;
 
     void updatePathLastMod(QString path);
     void subProcess(QString path, QDateTime rootlastmod);

@@ -38,7 +38,7 @@ QMap<QString, int> DBI::search(QString query, searchFlag s)
 QList<Alb> DBI::extractAlbums(QSqlQueryModel* qm)
 {
     QList<Alb> retme;
-    for(int i = 0; i < qm->rowCount(); i++)
+    for(int i = qm->rowCount()-1; i >= 0; i--)
     {
         Alb a;
         QSqlRecord qr = qm->record(i);
@@ -56,7 +56,7 @@ QList<Alb> DBI::extractAlbums(QSqlQueryModel* qm)
 QList<Alb> DBI::getNRecentAlbums(int n)
 {
     QSqlQueryModel qm;
-	qm.setQuery("SELECT * FROM album ORDER BY alid DESC LIMIT " + QString::number(n));
+    qm.setQuery("SELECT * FROM album ORDER BY alid DESC LIMIT " + QString::number(n));
     return extractAlbums(&qm);
 }
 
@@ -292,6 +292,7 @@ void DBI::subProcess(QString path, QDateTime rootlastmod)
     //any time a song is accesed, delete it if it no longer exists. Unfortunately
     //I need a song object...
 
+    album_added_during_proccess = false;
     while(di.hasNext())
     {
         di.next();
@@ -319,7 +320,9 @@ void DBI::subProcess(QString path, QDateTime rootlastmod)
             subProcess(fpath, rootlastmod);
         }
     }
-    emit recentChange(getNRecentAlbums(1));
+    if(album_added_during_proccess) {
+        emit recentChange(getNRecentAlbums(1));
+    }
 }
 
 int DBI::addSong(DBItem sng)
@@ -457,7 +460,11 @@ int DBI::addAlbum(DBItem a)
 		arkey = addArtist(a.strVals.value("artist","unknown"));
 	}	
 	q.bindValue(":artist",arkey);	
-	return (q.exec()) ? q.lastInsertId().toInt() : -1;
+    if(q.exec()) {
+        album_added_during_proccess = true;
+        return q.lastInsertId().toInt();
+    }
+    return -1;
 }
 
 int DBI::addArtist(QString a)
@@ -476,7 +483,7 @@ void DBI::deleteAlbumIfEmpty(int alid)
     qm.setQuery(qs);
     if(qm.rowCount() > 0)
         return;
-    qDebug() << "Nosongs";
+    qDebug() << alid << " deleted - nosongs";
     //No songs. Delete it.
     QSqlQuery q;
     q.prepare("DELETE FROM album WHERE alid=:alid");
