@@ -17,7 +17,7 @@ LIBS += -L'E:/libs/bass64/c' \
 
 RC_FILE = ../res/wubwub.rc
 HEADERS += dbi/TagExtractor.h \
-    recentalbumsview.h \
+    qmltab/recentalbumstab.h \
     dbi/dbi.h \
     options/optionswindow.h \
     playlist.h \
@@ -39,7 +39,7 @@ HEADERS += dbi/TagExtractor.h \
 SOURCES += dbi/dbi.cpp \
     options/optionswindow.cpp \
     main.cpp \
-    recentalbumsview.cpp \
+    qmltab/recentalbumstab.cpp \
     dbi/TagExtractor.cpp \
     playlist.cpp \
     playback/musicslider.cpp \

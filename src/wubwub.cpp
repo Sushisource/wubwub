@@ -32,8 +32,7 @@ wubwub::wubwub(QWidget *parent, Qt::WindowFlags flags) :
     }
 
     //Setup recent initial view
-    recentAlbs = std::unique_ptr<QmlTab>(new QmlTab("qrc:/qml/qml/albumview.qml",
-                                                    this));
+    recentAlbs = std::unique_ptr<RecentAlbumsTab>(new RecentAlbumsTab(this));
 
     //Hook up search to database
     ui.search->connectToDb(dbi);

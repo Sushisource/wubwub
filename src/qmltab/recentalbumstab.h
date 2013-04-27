@@ -7,21 +7,22 @@
 #include <QGraphicsSvgItem>
 #include "dbi/dbi.h"
 #include "albumview.h"
+#include "qmltab/qmltab.h"
 
-class RecentAlbumsView : public AlbumView
+class RecentAlbumsTab : public QmlTab
 {
 	Q_OBJECT
 
 public:
-    RecentAlbumsView(QWidget *parent);
-	~RecentAlbumsView();
+    RecentAlbumsTab(QWidget *parent,
+                    QString qmlfile = "qrc:/qml/qml/albumview.qml");
+    ~RecentAlbumsTab();
 
 public slots:
     void update();
     void newAlbs(QList<Alb> albs);
 
 private:
-    void wheelEvent(QWheelEvent* event);
 };
 
 #endif // RECENTALBUMSVIEW_H

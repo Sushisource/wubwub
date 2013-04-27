@@ -12,14 +12,13 @@
 #include <QQuickView>
 
 #include "ui_wubwub.h"
-#include "recentalbumsview.h"
 #include "artistalbumsview.h"
 #include "playlist.h"
 #include "dbi/dbi.h"
 #include "options/optionswindow.h"
 #include "playback/playbackwidget.h"
 #include "albumtab/albumtab.h"
-#include "qmltab/qmltab.h"
+#include "qmltab/recentalbumstab.h"
 
 Q_DECLARE_METATYPE(QList<QString>)
 
