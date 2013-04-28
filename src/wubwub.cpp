@@ -41,10 +41,10 @@ wubwub::wubwub(QWidget *parent, Qt::WindowFlags flags) :
     connect(optWin.get(),
             &optionsWindow::startSongParsing, dbi, &DBI::processDirs);
     //Connections for the recent view
-    //connect(recentAlbs.get(), &RecentAlbumsView::addAlbsToNowPlaying,
-    //        ui.nowplayingLst, &Playlist::addAlbums);
-    //connect(recentAlbs.get(), &RecentAlbumsView::openAlbumTab, this,
-    //        &wubwub::openAlbumTab);
+    connect(recentAlbs.get()->root.get(), SIGNAL(albumAdd(int)),
+            ui.nowplayingLst, SLOT(addAlbum(int)));
+    connect(recentAlbs.get()->root.get(), SIGNAL(albumView(int)),
+            this, SLOT(openAlbumTab(int)));
     //Now play list
     connect(ui.nowplayingLst, &Playlist::songChange, this, &wubwub::changeSong);
     //Playback manager

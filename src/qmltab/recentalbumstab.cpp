@@ -35,6 +35,7 @@ void RecentAlbumsTab::addAlbum(Alb album)
     }
     alrecord["alcover"] = "file:" + album.imguri;
     alrecord["tracks"] = trax;
+    alrecord["alid"] = alid;
     QMetaObject::invokeMethod(root.get(), "addAlbum",
                               Q_ARG(QVariant,
                                     QVariant::fromValue(alrecord)));

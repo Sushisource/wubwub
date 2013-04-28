@@ -8,6 +8,7 @@
 #include "dbi/dbi.h"
 #include "albumview.h"
 #include "qmltab/qmltab.h"
+#include "playlist.h"
 
 class RecentAlbumsTab : public QmlTab
 {

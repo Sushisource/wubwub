@@ -28,12 +28,15 @@ void Playlist::addSong(int songid)
     this->addItem(lwi.release());
 }
 
+void Playlist::addAlbum(int alid)
+{
+    addSongs(db->getTrackIdsFromAlbum(alid));
+}
+
 void Playlist::addAlbums(QList<int> alids)
 {
     foreach(int alid, alids)
-    {
-        addSongs(db->getTrackIdsFromAlbum(alid));
-    }
+        addAlbum(alid);
 }
 
 void Playlist::nextSong()
@@ -76,7 +79,7 @@ void Playlist::playSongFromAlbum(int alid, int sid)
 {
     this->clear();
     cursong = NULL;
-    this->addAlbums(QList<int>() << alid);
+    this->addAlbum(alid);
     this->playSongWithSid(sid);
 }
 

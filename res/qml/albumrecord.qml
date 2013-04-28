@@ -2,7 +2,7 @@ import QtQuick 2.0
 import QtGraphicalEffects 1.0
 
 Item {
-    height: 120
+    height: 110
     Image {
         id: alimg
         source: alcover
@@ -19,7 +19,7 @@ Item {
         source: alimg
         radius: 7.0
         color: "black"
-        samples: 14
+        samples: 15.0
         horizontalOffset: 0
         verticalOffset: 0
     }
@@ -39,6 +39,10 @@ Item {
         anchors.topMargin: (alimg.height - alimg.paintedHeight)/2
         anchors.right: alimg.left
         anchors.rightMargin: 5
+        MouseArea {
+            anchors.fill: parent
+            onClicked: root.albumAdd(alid)
+        }
     }
     Image {
         id: view
@@ -47,6 +51,10 @@ Item {
         anchors.topMargin: 5
         anchors.right: alimg.left
         anchors.rightMargin: 5
+        MouseArea {
+            anchors.fill: parent
+            onClicked: root.albumView(alid)
+        }
     }
 
     Component {

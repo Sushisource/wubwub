@@ -17,6 +17,7 @@ public:
 public slots:
     void addSongs(QList<int> songIds);
     void addSong(int songid);
+    void addAlbum(int alid);
     void addAlbums(QList<int> alids);
     void nextSong();
     void prevSong();
