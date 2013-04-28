@@ -60,9 +60,6 @@ wubwub::wubwub(QWidget *parent, Qt::WindowFlags flags) :
     QTimer::singleShot(1000, dbi, SLOT(refresh()));
     //We have to immediately update the view itself otherwise it's blank
     recentAlbs->update();
-    //But then update it again after the dbi has refreshed.
-    //TODO: Figure out of this is still necessary in shiny new QML world
-    //QTimer::singleShot(1100, recentAlbs.get(), SLOT(update()));
 
     //Finish UI
     //Setup viz

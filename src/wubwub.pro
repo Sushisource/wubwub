@@ -34,8 +34,7 @@ HEADERS += dbi/TagExtractor.h \
     qmltab/qmltab.h \
     wubwub.h \
     search/wwsearch.h \
-    albumtab/wwtabwidget.h \
-    models/roleitemmodel.h
+    albumtab/wwtabwidget.h
 SOURCES += dbi/dbi.cpp \
     options/optionswindow.cpp \
     main.cpp \
@@ -55,8 +54,7 @@ SOURCES += dbi/dbi.cpp \
     qmltab/qmltab.cpp \
     wubwub.cpp \
     search/wwsearch.cpp \
-    albumtab/wwtabwidget.cpp \
-    models/roleitemmodel.cpp
+    albumtab/wwtabwidget.cpp
 FORMS += wubwub.ui \
     options/options.ui \
     playback/playbackwidget.ui
