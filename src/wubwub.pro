@@ -25,8 +25,6 @@ HEADERS += dbi/TagExtractor.h \
     albumtab/albumtab.h \
     albumtab/prettytext.h \
     playback/playbackwidget.h \
-    albumview.h \
-    artistalbumsview.h \
     viz/vizwidget.h \
     viz/firstviz.h \
     viz/vizrenderthread.h \
@@ -34,7 +32,9 @@ HEADERS += dbi/TagExtractor.h \
     qmltab/qmltab.h \
     wubwub.h \
     search/wwsearch.h \
-    albumtab/wwtabwidget.h
+    albumtab/wwtabwidget.h \
+    qmltab/qmlalbumtab.h \
+    qmltab/artistview.h
 SOURCES += dbi/dbi.cpp \
     options/optionswindow.cpp \
     main.cpp \
@@ -45,8 +45,6 @@ SOURCES += dbi/dbi.cpp \
     albumtab/albumtab.cpp \
     albumtab/prettytext.cpp \
     playback/playbackwidget.cpp \
-    albumview.cpp \
-    artistalbumsview.cpp \
     viz/vizwidget.cpp \
     viz/firstviz.cpp \
     viz/vizrenderthread.cpp \
@@ -54,7 +52,9 @@ SOURCES += dbi/dbi.cpp \
     qmltab/qmltab.cpp \
     wubwub.cpp \
     search/wwsearch.cpp \
-    albumtab/wwtabwidget.cpp
+    albumtab/wwtabwidget.cpp \
+    qmltab/qmlalbumtab.cpp \
+    qmltab/artistview.cpp
 FORMS += wubwub.ui \
     options/options.ui \
     playback/playbackwidget.ui
@@ -64,7 +64,8 @@ OTHER_FILES += \
     shaders/basic.frag \
     ../res/qml/albumview.qml \
     ../res/qml/albumrecord.qml \
-    ../res/qml/qmldir
+    ../res/qml/qmldir \
+    ../res/qml/artistview.qml
 
 RESOURCES += \
     ../res/res.qrc

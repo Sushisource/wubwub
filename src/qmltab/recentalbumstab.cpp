@@ -1,9 +1,8 @@
 #include "recentalbumstab.h"
 
 RecentAlbumsTab::RecentAlbumsTab(QWidget* parent, QString qmlfile) :
-    QmlTab(qmlfile, parent)
+    QmlAlbumTab(qmlfile, parent)
 {
-    db = &DBI::getInstance();
     mostrecentAlb = -1;
 }
 
@@ -17,36 +16,7 @@ void RecentAlbumsTab::addAlbum(Alb album)
     int alid = album.alid.toInt();
     if(alid > mostrecentAlb)
         mostrecentAlb = alid;
-
-    QVariantMap alrecord;
-    QString displayName = album.name + " - " + album.artist;;
-    if(album.year != "0")
-        displayName += " [" + album.year + "]";
-    alrecord["alname"] = displayName;
-    QVariantList trax;
-    int i = 1;
-    foreach(QString t, album.tracks)
-    {
-        QVariantMap track;
-        track["track"] = QString::number(i);
-        track["song"] = t;
-        trax.append(track);
-        ++i;
-    }
-    alrecord["alcover"] = "file:" + album.imguri;
-    alrecord["tracks"] = trax;
-    alrecord["alid"] = alid;
-    QMetaObject::invokeMethod(root.get(), "addAlbum",
-                              Q_ARG(QVariant,
-                                    QVariant::fromValue(alrecord)));
-}
-
-void RecentAlbumsTab::addAlbums(QList<Alb> albums)
-{
-    foreach(Alb a, albums)
-    {
-        addAlbum(a);
-    }
+    QmlAlbumTab::addAlbum(album);
 }
 
 void RecentAlbumsTab::update()

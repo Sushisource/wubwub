@@ -19,6 +19,7 @@
 #include "playback/playbackwidget.h"
 #include "albumtab/albumtab.h"
 #include "qmltab/recentalbumstab.h"
+#include "qmltab/artistview.h"
 
 Q_DECLARE_METATYPE(QList<QString>)
 

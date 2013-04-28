@@ -10,7 +10,7 @@
 #include <QVariantList>
 #include <QApplication>
 #include <memory>
-#include "models/roleitemmodel.h"
+#include "dbi/dbi.h"
 
 class QmlTab : public QWidget
 {

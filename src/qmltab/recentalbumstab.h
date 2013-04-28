@@ -7,10 +7,10 @@
 #include <QGraphicsSvgItem>
 #include "dbi/dbi.h"
 #include "albumview.h"
-#include "qmltab/qmltab.h"
+#include "qmltab/qmlalbumtab.h"
 #include "playlist.h"
 
-class RecentAlbumsTab : public QmlTab
+class RecentAlbumsTab : public QmlAlbumTab
 {
 	Q_OBJECT
 
@@ -19,13 +19,11 @@ public:
                     QString qmlfile = "qrc:/qml/qml/albumview.qml");
     ~RecentAlbumsTab();
     void addAlbum(Alb album);
-    void addAlbums(QList<Alb> albums);
 
 public slots:
     void update();
 
 private:
-    DBI* db;
     int mostrecentAlb;
 };
 

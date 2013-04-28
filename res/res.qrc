@@ -13,5 +13,6 @@
         <file>qml/albumview.qml</file>
         <file>qml/albumrecord.qml</file>
         <file>qml/qmldir</file>
+        <file>qml/artistview.qml</file>
     </qresource>
 </RCC>

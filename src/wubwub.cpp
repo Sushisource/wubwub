@@ -144,12 +144,12 @@ void wubwub::openArtistTab(int arid)
     container->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
     auto lay = std::unique_ptr<QVBoxLayout>(new QVBoxLayout(container.get()));
     lay->setMargin(0);
-    auto arview = std::unique_ptr<ArtistAlbumsView>(
-                new ArtistAlbumsView(arid, container.get(), 100));
-    connect(arview.get(), &ArtistAlbumsView::addAlbsToNowPlaying,
-            ui.nowplayingLst, &Playlist::addAlbums);
-    connect(arview.get(), &ArtistAlbumsView::openAlbumTab,
-            this, &wubwub::openAlbumTab);
+    auto arview = std::unique_ptr<ArtistView>(
+                new ArtistView(arid, container.get()));
+    connect(arview.get()->root.get(), SIGNAL(albumAdd(int)),
+            ui.nowplayingLst, SLOT(addAlbum(int)));
+    connect(arview.get()->root.get(), SIGNAL(albumView(int)),
+            this, SLOT(openAlbumTab(int)));
     lay->addWidget(arview.release(),1);
     container->setLayout(lay.release());
     ui.tabWidget->addCloseableTab(container.release(),
