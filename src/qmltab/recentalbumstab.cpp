@@ -19,7 +19,10 @@ void RecentAlbumsTab::addAlbum(Alb album)
         mostrecentAlb = alid;
 
     QVariantMap alrecord;
-    alrecord["alname"] = album.name;
+    QString displayName = album.name + " - " + album.artist;;
+    if(album.year != "0")
+        displayName += " [" + album.year + "]";
+    alrecord["alname"] = displayName;
     QVariantList trax;
     int i = 1;
     foreach(QString t, album.tracks)

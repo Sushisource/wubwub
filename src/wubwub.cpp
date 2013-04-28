@@ -23,13 +23,7 @@ wubwub::wubwub(QWidget *parent, Qt::WindowFlags flags) :
     dbthread = std::unique_ptr<QThread>(new QThread(this));
     dbthread->start();
     dbi->moveToThread(dbthread.get());
-
-    //If db not initialized, initialize it
-    if(settings->value("dbinitted").toBool() == false)
-    {
-        dbi->initDB();
-        settings->setValue("dbinitted",true);
-    }
+    dbi->initDB();
 
     //Setup recent initial view
     recentAlbs = std::unique_ptr<RecentAlbumsTab>(new RecentAlbumsTab(this));
