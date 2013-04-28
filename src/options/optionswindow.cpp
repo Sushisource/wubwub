@@ -42,7 +42,7 @@ void optionsWindow::save()
         dlist << d;
     myparent->settings->setValue("libdir", dlist);
 
-    emit startSongParsing(dirs);
+    emit startSongParsing(dirs, true);
 }
 
 optionsWindow::~optionsWindow()

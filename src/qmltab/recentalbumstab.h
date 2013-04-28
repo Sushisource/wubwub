@@ -22,10 +22,10 @@ public:
 
 public slots:
     void update();
-    void newAlbs(QList<Alb> albs);
 
 private:
     DBI* db;
+    int mostrecentAlb;
 };
 
 #endif // RECENTALBUMSVIEW_H

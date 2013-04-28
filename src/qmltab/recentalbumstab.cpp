@@ -4,6 +4,7 @@ RecentAlbumsTab::RecentAlbumsTab(QWidget* parent, QString qmlfile) :
     QmlTab(qmlfile, parent)
 {
     db = &DBI::getInstance();
+    mostrecentAlb = -1;
 }
 
 RecentAlbumsTab::~RecentAlbumsTab()
@@ -12,6 +13,11 @@ RecentAlbumsTab::~RecentAlbumsTab()
 
 void RecentAlbumsTab::addAlbum(Alb album)
 {
+    //Update the most recent album
+    int alid = album.alid.toInt();
+    if(alid > mostrecentAlb)
+        mostrecentAlb = alid;
+
     QVariantMap alrecord;
     alrecord["alname"] = album.name;
     QVariantList trax;
@@ -41,10 +47,10 @@ void RecentAlbumsTab::addAlbums(QList<Alb> albums)
 
 void RecentAlbumsTab::update()
 {
-    addAlbums(db->getNRecentAlbums(5));
-}
-
-void RecentAlbumsTab::newAlbs(QList<Alb> albs)
-{
-    addAlbums(albs);
+    if(mostrecentAlb < 0)
+        addAlbums(db->getNRecentAlbums(5));
+    else
+    {
+        addAlbums(db->getNewAlbumsSince(mostrecentAlb));
+    }
 }

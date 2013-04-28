@@ -56,7 +56,16 @@ QList<Alb> DBI::extractAlbums(QSqlQueryModel* qm)
 QList<Alb> DBI::getNRecentAlbums(int n)
 {
     QSqlQueryModel qm;
-    qm.setQuery("SELECT * FROM album ORDER BY alid DESC LIMIT " + QString::number(n));
+    qm.setQuery("SELECT * FROM album ORDER BY alid DESC LIMIT " +
+                QString::number(n));
+    return extractAlbums(&qm);
+}
+
+QList<Alb> DBI::getNewAlbumsSince(int alid)
+{
+    QSqlQueryModel qm;
+    qm.setQuery("SELECT * FROM album WHERE alid > " +
+                QString::number(alid) + " ORDER BY alid DESC LIMIT 5");
     return extractAlbums(&qm);
 }
 
@@ -269,28 +278,35 @@ void DBI::processDir(QString dir)
     processDirs(l);
 }
 
-void DBI::processDirs(QList<QString> dirlist)
+void DBI::processDirs(QList<QString> dirlist, bool fromOptions)
 {
     foreach(QString dirstr, dirlist)
     {
-        QDateTime rootlastmod = getPathLastMod(dirstr);
-        subProcess(dirstr, rootlastmod);
-        updatePathLastMod(dirstr);
+        subProcess(dirstr, fromOptions);
         watcher->addPath(dirstr);
     }
 }
 
-void DBI::subProcess(QString path, QDateTime rootlastmod)
+void DBI::subProcess(QString path, bool toplevel = false)
 {
     emit atDir(path);
+    QDateTime lastseen = getPathLastSeen(path);
+    //First check if we even need to look in here
+    if(!lastseen.isNull()) {
+        if(QFileInfo(path).lastModified() < lastseen && !toplevel)
+            return;
+    }
     qDebug() << path;
+    updatePathLastMod(path);
+
     QDir dir(path);
-    dir.setFilter(QDir::Files | QDir::Dirs | QDir::NoSymLinks | QDir::NoDotAndDotDot);
+    dir.setFilter(QDir::Files | QDir::Dirs |
+                  QDir::NoSymLinks | QDir::NoDotAndDotDot);
     QDirIterator di(dir);
 
-    //TODO: Remove files from DB which no longer exist best way to do this is maybe
-    //any time a song is accesed, delete it if it no longer exists. Unfortunately
-    //I need a song object...
+    //TODO: Remove files from DB which no longer exist best way to do this is
+    //maybe any time a song is accesed, delete it if it no longer exists.
+    //Unfortunately I need a song object...
 
     album_added_during_proccess = false;
     while(di.hasNext())
@@ -312,16 +328,13 @@ void DBI::subProcess(QString path, QDateTime rootlastmod)
             addSong(s);
         }
         // Recur
-        else if(f.isDir() && f.lastModified() >= rootlastmod)
+        else if(f.isDir())
         {
-            //First check if we even need to look in here
-            if(QFileInfo(fpath).lastModified() <= rootlastmod)
-                return;
-            subProcess(fpath, rootlastmod);
+            subProcess(fpath);
         }
     }
     if(album_added_during_proccess) {
-        emit recentChange(getNRecentAlbums(1));
+        emit recentChange();
     }
 }
 
@@ -422,7 +435,7 @@ int DBI::addSong(DBItem sng)
     //album has songs by different arists but hasn't specified an albumartist
     //TODO: Fix this by grouping songs which have the same album name and were
     //loaded at the same time?
-    deleteAlbumIfEmpty(lastinsert);
+    deleteAlbumIfEmpty(alkey);
 
     return (execsuccess) ? lastinsert : -1;
 }
@@ -497,25 +510,24 @@ QString DBI::sanitize(QString s)
     return s.replace("'","''");
 }
 
-QDateTime DBI::getPathLastMod(QString path)
+QDateTime DBI::getPathLastSeen(QString path)
 {
     QSqlQueryModel qm;
-    QDateTime lastmod;
     QString quer = "SELECT lastmod FROM dirs WHERE path='" + sanitize(path)+"'";
     qm.setQuery(quer);
     if(qm.rowCount() > 0)
     {
         QString res = qm.record(0).value(0).toString();
-        lastmod = QDateTime::fromString(res, Qt::ISODate);
+        return QDateTime::fromString(res, Qt::ISODate);
     }
-    return lastmod;
+    return QDateTime();
 }
 
 void DBI::updatePathLastMod(QString path)
 {
     QSqlQuery q;
     bool insert = false;
-    if(getPathLastMod(path).isNull())
+    if(getPathLastSeen(path).isNull())
         insert = true;
     if(insert)
         q.prepare("INSERT INTO dirs (path, lastmod) VALUES (:path, :lm)");

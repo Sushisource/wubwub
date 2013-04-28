@@ -49,6 +49,7 @@ public:
     QString getArtistNameFromSongId(int sid);
     QString getImgUriFromAlbumId(int alid);
     QList<Alb> getNRecentAlbums(int n);
+    QList<Alb> getNewAlbumsSince(int alid);
     QList<Alb> getArtistAlbums(int arid);
 
     static DBI& getInstance()
@@ -63,25 +64,25 @@ public slots:
     int addSong(DBItem song);
 	int addAlbum(DBItem album);
 	int addArtist(QString artist);	
-    void processDirs(QList<QString> dirlist);
     void processDir(QString dir);
+    void processDirs(QList<QString> dirlist, bool fromOptions=false);
 
 signals:
 	void atDir(const QString &s);
-    void recentChange(QList<Alb>);
+    void recentChange();
 
 private:
     QSqlDatabase db;
     std::unique_ptr<QFileSystemWatcher> watcher;
 	QString getOrFindAlbumArt(Alb a);
     QString sanitize(QString);
-    QDateTime getPathLastMod(QString path);
+    QDateTime getPathLastSeen(QString path);
     QList<Alb> extractAlbums(QSqlQueryModel *qm);
     //FIXME: Kinda sucks but I don't know how else to do this as easily
     bool album_added_during_proccess;
 
     void updatePathLastMod(QString path);
-    void subProcess(QString path, QDateTime rootlastmod);
+    void subProcess(QString path, bool);
     void deleteAlbumIfEmpty(int alid);
 
     DBI();

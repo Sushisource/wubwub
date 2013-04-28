@@ -19,7 +19,7 @@ public slots:
 	void changeStatus(const QString &s);
 
 signals:
-    void startSongParsing(QList<QString>);
+    void startSongParsing(QList<QString>, bool);
 
 private:
 	Ui::optionsWindow ui;
