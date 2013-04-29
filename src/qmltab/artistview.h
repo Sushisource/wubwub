@@ -1,8 +1,8 @@
 #ifndef ARTISTVIEW_H
 #define ARTISTVIEW_H
-#include "qmlalbumtab.h"
+#include "albumview.h"
 
-class ArtistView : public QmlAlbumTab
+class ArtistView : public AlbumView
 {
     Q_OBJECT
 public:

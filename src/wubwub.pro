@@ -33,8 +33,8 @@ HEADERS += dbi/TagExtractor.h \
     wubwub.h \
     search/wwsearch.h \
     albumtab/wwtabwidget.h \
-    qmltab/qmlalbumtab.h \
-    qmltab/artistview.h
+    qmltab/artistview.h \
+    qmltab/albumview.h
 SOURCES += dbi/dbi.cpp \
     options/optionswindow.cpp \
     main.cpp \
@@ -53,8 +53,8 @@ SOURCES += dbi/dbi.cpp \
     wubwub.cpp \
     search/wwsearch.cpp \
     albumtab/wwtabwidget.cpp \
-    qmltab/qmlalbumtab.cpp \
-    qmltab/artistview.cpp
+    qmltab/artistview.cpp \
+    qmltab/albumview.cpp
 FORMS += wubwub.ui \
     options/options.ui \
     playback/playbackwidget.ui

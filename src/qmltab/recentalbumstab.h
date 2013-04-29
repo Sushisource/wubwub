@@ -6,10 +6,10 @@
 #include <QGraphicsPixmapItem>
 #include <QGraphicsSvgItem>
 #include "dbi/dbi.h"
-#include "qmltab/qmlalbumtab.h"
+#include "qmltab/albumview.h"
 #include "playlist.h"
 
-class RecentAlbumsTab : public QmlAlbumTab
+class RecentAlbumsTab : public AlbumView
 {
 	Q_OBJECT
 

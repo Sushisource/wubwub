@@ -1,12 +1,12 @@
-#include "qmlalbumtab.h"
+#include "albumview.h"
 
-QmlAlbumTab::QmlAlbumTab(QString qmlfile, QWidget *parent) :
+AlbumView::AlbumView(QString qmlfile, QWidget *parent) :
     QmlTab(qmlfile, parent)
 {
     db = &DBI::getInstance();
 }
 
-void QmlAlbumTab::addAlbum(Alb album)
+void AlbumView::addAlbum(Alb album)
 {
     QVariantMap alrecord;
     QString displayName = album.name + " - " + album.artist;;
@@ -31,7 +31,7 @@ void QmlAlbumTab::addAlbum(Alb album)
                 Q_ARG(QVariant, QVariant::fromValue(alrecord)));
 }
 
-void QmlAlbumTab::addAlbums(QList<Alb> albums)
+void AlbumView::addAlbums(QList<Alb> albums)
 {
     foreach(Alb a, albums)
     {

@@ -1,7 +1,7 @@
 #include "artistview.h"
 
 ArtistView::ArtistView(int arid, QWidget* parent, QString qmlfile) :
-    QmlAlbumTab(qmlfile, parent)
+    AlbumView(qmlfile, parent)
 {
     addAlbums(db->getArtistAlbums(arid));
 }

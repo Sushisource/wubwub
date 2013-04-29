@@ -1,7 +1,7 @@
 #include "recentalbumstab.h"
 
 RecentAlbumsTab::RecentAlbumsTab(QWidget* parent, QString qmlfile) :
-    QmlAlbumTab(qmlfile, parent)
+    AlbumView(qmlfile, parent)
 {
     mostrecentAlb = -1;
 }
@@ -16,7 +16,7 @@ void RecentAlbumsTab::addAlbum(Alb album)
     int alid = album.alid.toInt();
     if(alid > mostrecentAlb)
         mostrecentAlb = alid;
-    QmlAlbumTab::addAlbum(album);
+    AlbumView::addAlbum(album);
 }
 
 void RecentAlbumsTab::update()

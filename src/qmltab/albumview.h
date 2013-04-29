@@ -2,11 +2,11 @@
 #define QMLALBUMTAB_H
 #include "qmltab.h"
 
-class QmlAlbumTab : public QmlTab
+class AlbumView : public QmlTab
 {
     Q_OBJECT
 public:
-    explicit QmlAlbumTab(QString qmlfile, QWidget *parent = 0);
+    explicit AlbumView(QString qmlfile, QWidget *parent = 0);
     
 protected:
     void addAlbum(Alb album);
