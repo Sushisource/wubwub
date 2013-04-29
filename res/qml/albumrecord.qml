@@ -14,15 +14,16 @@ Item {
         sourceSize.width: 512
         sourceSize.height: 512
     }
-    DropShadow {
-        anchors.fill: alimg
-        source: alimg
-        radius: 7.0
-        color: "black"
-        samples: 15.0
-        horizontalOffset: 0
-        verticalOffset: 0
-    }
+//TODO: Put this back when it doesn't make tab closing crash
+//    DropShadow {
+//        anchors.fill: alimg
+//        source: alimg
+//        radius: 7.0
+//        color: "black"
+//        samples: 15.0
+//        horizontalOffset: 0
+//        verticalOffset: 0
+//    }
     Text {
         id: title
         text: alname;
