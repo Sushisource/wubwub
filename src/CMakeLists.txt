@@ -33,9 +33,13 @@ find_package(Qt5Widgets REQUIRED)
 find_package(Qt5Svg REQUIRED)
 find_package(Qt5Sql REQUIRED)
 find_package(Qt5OpenGL REQUIRED)
+find_package(Qt5Quick REQUIRED)
+find_package(Qt5Qml REQUIRED)
 # The Qt5Widgets_INCLUDES also includes the include directories for
 # dependencies QtCore and QtGui
 add_definitions(${Qt5Widgets_DEFINITIONS})
+add_definitions(${Qt5Quick_DEFINITIONS})
+include_directories(${Qt5Quick_INCLUDE_DIRS})
 ######
 ###### TAGLIB
 find_library(TAGLIB_LIB tag tag_dll
@@ -75,7 +79,7 @@ set(w_INPUT ${w_GUI} ${w_INPUT} ${wubwub_SOURCES} ${wubwub_FORMS} ${wubwub_RESOU
 add_executable(wubwub ${w_INPUT})
 
 set(w_LIBS ${w_LIBS} 
-    Qt5::OpenGL Qt5::Widgets 
+    Qt5::OpenGL Qt5::Widgets Qt5::Quick
     ${TAGLIB_LIB} ${OPENGL_LIB} ${BASS_LIB})
 target_link_libraries(wubwub ${w_LIBS})
 # Setup qt5 modules
