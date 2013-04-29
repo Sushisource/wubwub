@@ -20,9 +20,12 @@ void WWTabWidget::addCloseableTab(QWidget *container, QString name, bool closeab
         close->setGeometry(QRect(0,0,btnw,btnw));
         close->setProperty("tabpointer", qVariantFromValue(container));
         connect(close.get(), SIGNAL(clicked()), SLOT(closeMyTab()));
-        QIcon closeicon(QPixmap(":/imgs/x").scaledToWidth(btnw,Qt::SmoothTransformation));
+        QIcon closeicon(QPixmap(":/imgs/x").scaledToWidth(
+                            btnw,
+                            Qt::SmoothTransformation));
         close->setIcon(closeicon);
         tabBar()->setTabButton(ix, QTabBar::RightSide, close.release());
+        closeableTabs.insert(container);
     }
     this->setCurrentWidget(container);
 }
@@ -50,7 +53,8 @@ bool WWTabWidget::event(QEvent* e)
     if(e->type() == QEvent::KeyPress)
     {
         QKeyEvent* key = static_cast<QKeyEvent*>(e);
-        if(key->key() == Qt::Key_W && QApplication::keyboardModifiers() & Qt::ControlModifier)
+        if(key->key() == Qt::Key_W &&
+                QApplication::keyboardModifiers() & Qt::ControlModifier)
         {
             closeCurTab();
         }
@@ -62,5 +66,7 @@ bool WWTabWidget::event(QEvent* e)
 void WWTabWidget::closeCurTab()
 {
     int curix = this->currentIndex();
-    delete widget(curix);
+    auto tabwig = widget(curix);
+    if(closeableTabs.contains(tabwig))
+        tabwig->deleteLater();
 }

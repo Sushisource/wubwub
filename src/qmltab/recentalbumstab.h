@@ -6,7 +6,6 @@
 #include <QGraphicsPixmapItem>
 #include <QGraphicsSvgItem>
 #include "dbi/dbi.h"
-#include "albumview.h"
 #include "qmltab/qmlalbumtab.h"
 #include "playlist.h"
 

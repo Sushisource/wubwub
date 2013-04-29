@@ -9,6 +9,7 @@
 #include <QApplication>
 #include <QUuid>
 #include <memory>
+#include <QSet>
 
 class WWTabWidget : public QTabWidget
 {
@@ -29,6 +30,7 @@ protected:
 
 private:
     const static short btnw = 12;
+    QSet<QWidget*> closeableTabs;
 
     void closeTab(QWidget* tab);
     void closeCurTab();

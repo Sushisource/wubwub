@@ -12,7 +12,6 @@
 #include <QQuickView>
 
 #include "ui_wubwub.h"
-#include "artistalbumsview.h"
 #include "playlist.h"
 #include "dbi/dbi.h"
 #include "options/optionswindow.h"

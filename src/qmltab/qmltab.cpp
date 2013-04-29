@@ -13,7 +13,6 @@ QmlTab::QmlTab(QString qmlfile, QWidget *parent) :
 
     root = std::unique_ptr<QQuickItem>(view->rootObject());
 
-
     auto container = std::unique_ptr<QWidget>(
                 QWidget::createWindowContainer(view.release(), this));
     container->setFocusPolicy(Qt::TabFocus);
@@ -21,4 +20,8 @@ QmlTab::QmlTab(QString qmlfile, QWidget *parent) :
     auto layout = std::unique_ptr<QHBoxLayout>(new QHBoxLayout(this));
     this->setLayout(layout.release());
     this->layout()->addWidget(container.release());
+}
+
+QmlTab::~QmlTab()
+{
 }
