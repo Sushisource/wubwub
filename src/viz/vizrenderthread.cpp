@@ -3,6 +3,7 @@
 
 VizRenderThread::VizRenderThread(VizWidget *parent) :
     QThread(parent),
+    shaderProgram(this),
     vertexBuffer(QOpenGLBuffer::VertexBuffer),
     fftBuffer()
 {
@@ -10,7 +11,6 @@ VizRenderThread::VizRenderThread(VizWidget *parent) :
     playbackWidget = NULL;
     vertShader = "./shaders/basic.vert";
     fragShader = "./shaders/basic.frag";
-    rendering = true;
     needsResize = false;
     frameCount = 0;
 }
@@ -24,11 +24,11 @@ void VizRenderThread::resize(int w, int h)
 
 void VizRenderThread::run()
 {
-    parent->makeCurrent();
     initialize();
     rendering = true;
     while(rendering)
     {
+        parent->makeCurrent();
         if(needsResize)
             glViewport(0, 0, (GLint)winWidth, (GLint)winHeight);
 
@@ -71,6 +71,7 @@ void VizRenderThread::stop()
 
 void VizRenderThread::initialize()
 {
+    parent->makeCurrent();
     glClearColor(0.0, 0.0, 0.0, 0.0);
     glEnable(GL_DEPTH_TEST);
     frameCount = 0;
