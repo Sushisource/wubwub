@@ -540,4 +540,5 @@ void DBI::updatePathLastMod(QString path)
 
 DBI::~DBI()
 {
+    db.close();
 }
