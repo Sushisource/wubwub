@@ -4,9 +4,9 @@ import QtGraphicalEffects 1.0
 Item {
     id: root
     function addAlbum(almodel) {
-        alview.model.insert(0, almodel);
         if(alview.count > 5)
             alview.model.remove(alview.count - 1);
+        alview.model.insert(0, almodel);
     }
     signal albumAdd(int alid)
     signal albumView(int alid)
