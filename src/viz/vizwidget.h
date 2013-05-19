@@ -16,22 +16,34 @@ public:
     ~VizWidget();
     
     void setPlayBackPointer(PlaybackWidget *p);
-    void stopRenderThread();
-    void startRenderThread();
+
 signals:
     
 public slots:
 
 protected:
-    VizRenderThread renderThread;
-
     void closeEvent(QCloseEvent *evt);
-    void resizeEvent(QResizeEvent *evt);
-    void paintEvent(QPaintEvent *);
+    void paintGL();
+    void resizeGL(int w, int h);
+    void initializeGL();
     void showEvent(QShowEvent *e);
     void hideEvent(QHideEvent *e);
 
-    virtual void vizInitialize() = 0;
+private:
+    bool rendering, needsResize;
+    int winWidth, winHeight, frameCount;
+    VizWidget* parent;
+    PlaybackWidget* playbackWidget;
+    QOpenGLShaderProgram shaderProgram;
+    QOpenGLBuffer vertexBuffer;
+    UniformBufferObject fftBuffer;
+    QString vertShader;
+    QString fragShader;
+    GLfloat fftData[FFT_SIZE];
+
+    bool prepareShaders(const QString &vertShaderPath, const QString &fragShaderPath);
+    void updateShaders();
+    void updateFFT();
 
 };
 

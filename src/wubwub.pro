@@ -27,7 +27,6 @@ HEADERS += dbi/TagExtractor.h \
     playback/playbackwidget.h \
     viz/vizwidget.h \
     viz/firstviz.h \
-    viz/vizrenderthread.h \
     viz/glhelp/uniformbufferobject.h \
     qmltab/qmltab.h \
     wubwub.h \
@@ -47,7 +46,6 @@ SOURCES += dbi/dbi.cpp \
     playback/playbackwidget.cpp \
     viz/vizwidget.cpp \
     viz/firstviz.cpp \
-    viz/vizrenderthread.cpp \
     viz/glhelp/uniformbufferobject.cpp \
     qmltab/qmltab.cpp \
     wubwub.cpp \

@@ -8,10 +8,6 @@ class FirstViz : public VizWidget
 public:
     explicit FirstViz(QWidget *parent = 0);
     
-protected:
-    void vizInitialize();
-    void paintGL();
-
 signals:
     
 public slots:

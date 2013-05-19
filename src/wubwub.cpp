@@ -164,6 +164,5 @@ bool wubwub::openOptions()
 
 wubwub::~wubwub()
 {
-    ui.viz->stopRenderThread();
     dbthread->terminate();
 }
