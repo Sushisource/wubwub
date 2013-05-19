@@ -56,3 +56,4 @@ clangbuild/
 build-wubwub-qt_5_1/
 src/shaders/examples
 qmlsnips/
+build-*/
