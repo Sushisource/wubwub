@@ -25,7 +25,7 @@ void main( void )
         binavg += fft[max(0, curBin + i)];
     }
     binavg = binavg / avgSiz;
-    float amp = clamp(binavg * 10., 0, 1.);
+    float amp = clamp(binavg * 10., 0., 1.);
     //Green!
     color.g = amp;
     //Get height factor

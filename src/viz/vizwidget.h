@@ -6,7 +6,7 @@
 #include <QOpenGLShaderProgram>
 #include <QtOpenGL>
 #include "playback/playbackwidget.h"
-#include "viz/vizrenderthread.h"
+#include "glhelp/uniformbufferobject.h"
 
 class VizWidget : public QGLWidget
 {
@@ -30,7 +30,7 @@ protected:
     void hideEvent(QHideEvent *e);
 
 private:
-    bool rendering, needsResize;
+    bool rendering;
     int winWidth, winHeight, frameCount;
     VizWidget* parent;
     PlaybackWidget* playbackWidget;
@@ -40,6 +40,7 @@ private:
     QString vertShader;
     QString fragShader;
     GLfloat fftData[FFT_SIZE];
+    std::unique_ptr<QTimer> renderClock;
 
     bool prepareShaders(const QString &vertShaderPath, const QString &fragShaderPath);
     void updateShaders();

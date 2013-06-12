@@ -7,11 +7,12 @@ VizWidget::VizWidget(QWidget *parent) :
     fftBuffer()
 {
     playbackWidget = NULL;
-    vertShader = "./shaders/basic.vert";
-    fragShader = "./shaders/basic.frag";
-    needsResize = false;
+    vertShader = ":/shaders/basic.vert";
+    fragShader = ":/shaders/basic.frag";
     frameCount = 0;
-    qDebug() << isValid();
+    renderClock = std::unique_ptr<QTimer>(new QTimer());
+    renderClock->start(16);
+    connect(renderClock.get(), &QTimer::timeout, this, &QGLWidget::updateGL);
 }
 
 VizWidget::~VizWidget()
@@ -32,7 +33,9 @@ void VizWidget::updateShaders()
 
 void VizWidget::resizeGL(int w, int h)
 {
-    glViewport(0, 0, w, h);
+    glViewport(0, 0, (GLint)w, (GLint)h);
+    winWidth = w;
+    winHeight = h;
 }
 
 void VizWidget::initializeGL()
@@ -87,7 +90,6 @@ void VizWidget::closeEvent(QCloseEvent *evt)
 
 void VizWidget::paintGL()
 {
-    qDebug() << isValid();
     // Clear the buffer with the current clearing color
     glClear( GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT );
     //Update the fft buffer
@@ -95,18 +97,18 @@ void VizWidget::paintGL()
     updateShaders();
     // Draw stuff
     glDrawArrays(GL_QUADS, 0, 4);
-
     ++frameCount;
 }
 
 void VizWidget::showEvent(QShowEvent *e)
 {
+    renderClock->start();
     QGLWidget::showEvent(e);
-    qDebug() << isValid();
 }
 
 void VizWidget::hideEvent(QHideEvent *e)
 {
+    renderClock->stop();
     QGLWidget::hideEvent(e);
 }
 

@@ -58,8 +58,8 @@ FORMS += wubwub.ui \
     playback/playbackwidget.ui
 
 OTHER_FILES += \
-    shaders/basic.vert \
-    shaders/basic.frag \
+    ../res/shaders/basic.vert \
+    ../res/shaders/basic.frag \
     ../res/qml/albumview.qml \
     ../res/qml/albumrecord.qml \
     ../res/qml/qmldir \
