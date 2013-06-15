@@ -3,7 +3,6 @@
 QmlTab::QmlTab(QString qmlfile, QWidget *parent) :
     QWidget(parent)
 {
-    tabparent = std::unique_ptr<QWidget>(parent);
     auto view = std::unique_ptr<QQuickView>(new QQuickView());
     view->setColor(QApplication::palette().window().color());
     view->setClearBeforeRendering(true);
@@ -26,5 +25,4 @@ QmlTab::QmlTab(QString qmlfile, QWidget *parent) :
 
 QmlTab::~QmlTab()
 {
-    tabparent.release();
 }
