@@ -8,6 +8,7 @@ WWTabWidget::WWTabWidget(QWidget *parent) :
 {
     connect(this, &WWTabWidget::currentChanged,
             this, &WWTabWidget::focusSetter);
+    this->installEventFilter(this);
 }
 
 void WWTabWidget::addCloseableTab(QWidget *container, QString name, bool closeable)
@@ -48,7 +49,7 @@ void WWTabWidget::focusSetter()
     this->setFocus();
 }
 
-bool WWTabWidget::event(QEvent* e)
+bool WWTabWidget::eventFilter(QObject *, QEvent* e)
 {
     if(e->type() == QEvent::KeyPress)
     {
@@ -59,7 +60,6 @@ bool WWTabWidget::event(QEvent* e)
             closeCurTab();
         }
     }
-    QTabWidget::event(e);
     return false;
 }
 

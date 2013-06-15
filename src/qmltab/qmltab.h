@@ -22,6 +22,7 @@ public:
     std::unique_ptr<QQmlEngine> engine;
 
 protected:
+    std::unique_ptr<QWidget> tabparent;
 
 signals:
     

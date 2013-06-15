@@ -140,19 +140,13 @@ void wubwub::openAlbumTab(int alid)
 
 void wubwub::openArtistTab(int arid)
 {
-    auto container = std::unique_ptr<QWidget>(new QWidget(ui.tabWidget));
-    container->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
-    auto lay = std::unique_ptr<QVBoxLayout>(new QVBoxLayout(container.get()));
-    lay->setMargin(0);
     auto arview = std::unique_ptr<ArtistView>(
-                new ArtistView(arid, container.get()));
+                new ArtistView(arid, ui.tabWidget));
     connect(arview.get()->root.get(), SIGNAL(albumAdd(int)),
             ui.nowplayingLst, SLOT(addAlbum(int)));
     connect(arview.get()->root.get(), SIGNAL(albumView(int)),
             this, SLOT(openAlbumTab(int)));
-    lay->addWidget(arview.release(),1);
-    container->setLayout(lay.release());
-    ui.tabWidget->addCloseableTab(container.release(),
+    ui.tabWidget->addCloseableTab(arview.release(),
                                   dbi->getArtistNameFromId(arid));
 }
 

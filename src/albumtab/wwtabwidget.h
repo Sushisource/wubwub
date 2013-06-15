@@ -25,8 +25,8 @@ public slots:
     void closeMyTab();
     void focusSetter();
 
-protected:
-    bool event(QEvent *e);
+private slots:
+    bool eventFilter(QObject *, QEvent *);
 
 private:
     const static short btnw = 12;

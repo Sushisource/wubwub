@@ -16,7 +16,7 @@ Item {
         model: albummodel
         anchors.fill: parent
         id: alview
-        objectName: "alview"
+        objectName: "arview"
         spacing: 10
         delegate: AlbumRecord {
             anchors.left: parent.left
