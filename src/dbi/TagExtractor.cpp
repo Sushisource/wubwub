@@ -15,9 +15,9 @@ void TagExtractor::extractID3v2Tag(TagLib::ID3v2::Tag* tag, QMap<QString, QStrin
 {
     TagLib::PropertyMap props = tag->properties();
     if(!props.isEmpty() && props.contains("ALBUMARTIST"))
-        tagmap->insert("albumartist", props["ALBUMARTIST"].toString().toCString());
+        tagmap->insert("albumartist", props["ALBUMARTIST"].toString().toCString(true));
     else //Fallback on artist name
-        tagmap->insert("albumartist",tag->artist().toCString());
+        tagmap->insert("albumartist",tag->artist().toCString(true));
 }
 
 bool TagExtractor::extractTag(QString fpath, QMap<QString, QString>* stmap, QMap<QString, int>* itmap)

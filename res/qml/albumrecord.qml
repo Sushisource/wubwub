@@ -27,10 +27,12 @@ Item {
     Text {
         id: title
         text: alname;
+        font.family: "Calibri";
         font.bold: true;
-        font.pointSize: 11
+        font.pointSize: 12
         anchors.left: parent.left
         anchors.top: parent.top
+        height: 13
         anchors.margins: 5
     }
     Image {
