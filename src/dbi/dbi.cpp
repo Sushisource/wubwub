@@ -159,7 +159,7 @@ QList<int> DBI::getTrackIdsFromAlbum(int alid)
 {
     QSqlQueryModel qm;
     QList<int> tracks;
-    QString quer = "SELECT sid, name FROM song WHERE album=" + QString().setNum(alid);
+    QString quer = "SELECT sid FROM song WHERE album=" + QString().setNum(alid);
     qm.setQuery(quer);
     for(int i = 0; i < qm.rowCount(); i++)
     {
