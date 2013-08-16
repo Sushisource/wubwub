@@ -26,8 +26,11 @@ void VizWidget::setPlayBackPointer(PlaybackWidget *p)
 
 void VizWidget::updateShaders()
 {
+    fbo = this->grabFrameBuffer();
+    bindTexture(fbo);
     shaderProgram.setUniformValue("winSize", winWidth, winHeight);
     shaderProgram.setUniformValue("time", frameCount);
+    shaderProgram.setUniformValue("texture", 0);
     fftBuffer.write(0, &fftData, FFT_SIZE);
 }
 

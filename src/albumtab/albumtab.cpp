@@ -69,7 +69,7 @@ void AlbumTab::addTracks(int alid, DBI* db)
     widest = std::max(widest, (int)title->boundingRect().width());
 }
 
-void AlbumTab::resizeEvent(QResizeEvent *event)
+void AlbumTab::resizeEvent(QResizeEvent *)
 {
     int pad = 5;
     int ww = this->geometry().width();
@@ -78,7 +78,7 @@ void AlbumTab::resizeEvent(QResizeEvent *event)
     scene->setSceneRect(0,0,ww,wh);
 }
 
-void AlbumTab::wheelEvent(QWheelEvent *event)
+void AlbumTab::wheelEvent(QWheelEvent *)
 {
     //Get owned
 }

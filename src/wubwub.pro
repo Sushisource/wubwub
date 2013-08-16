@@ -10,8 +10,8 @@ INCLUDEPATH += E:/libs/taglib \
         E:/libs/bass64/c \
         .
 
-LIBS += -L'E:/libs/bass64/c' \
-        -L'E:/libs/taglib/taglib/Release' \
+LIBS += -L'E:/libs/bass64' \
+        -L'E:/libs/taglib/BUILD/taglib/RelWithDebInfo' \
         -l'tag' \
         -l'bass'\
 

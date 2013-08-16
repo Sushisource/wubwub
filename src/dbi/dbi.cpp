@@ -15,7 +15,7 @@ DBI::DBI() : QObject(NULL)
             SIGNAL(directoryChanged(QString)), SLOT(processDir(QString)));
 }
 
-QMap<QString, int> DBI::search(QString query, searchFlag s)
+QMap<QString, int> DBI::search(QString query, searchFlag)
 {
 	QSqlQueryModel qm;
 	query = sanitize(query);
