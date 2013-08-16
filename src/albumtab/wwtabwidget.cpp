@@ -49,7 +49,7 @@ void WWTabWidget::focusSetter()
     this->setFocus();
 }
 
-bool WWTabWidget::eventFilter(QObject *, QEvent* e)
+bool WWTabWidget::eventFilter(QObject * obj, QEvent* e)
 {
     if(e->type() == QEvent::KeyPress)
     {
@@ -58,9 +58,10 @@ bool WWTabWidget::eventFilter(QObject *, QEvent* e)
                 QApplication::keyboardModifiers() & Qt::ControlModifier)
         {
             closeCurTab();
+            return true;
         }
     }
-    return false;
+    return QObject::eventFilter(obj, e);
 }
 
 void WWTabWidget::closeCurTab()

@@ -157,5 +157,5 @@ bool WWSearch::eventFilter(QObject* object, QEvent* e)
             return consumed;
         }
     }
-    return false;
+    return QObject::eventFilter(object, e);
 }

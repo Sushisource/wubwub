@@ -8,7 +8,7 @@ wubwub::wubwub(QWidget *parent, Qt::WindowFlags flags) :
     qRegisterMetaType<QList<QString>>("QList<Alb>");
     ui.setupUi(this);
     //wubwub is the global event filter
-    QApplication::instance()->installEventFilter(this);
+    QCoreApplication::instance()->installEventFilter(this);
     //Update global palette access
     QApplication::setPalette(this->palette());
     //Initiate settings file
@@ -87,32 +87,34 @@ void wubwub::changeSong(int songid)
     emit songChange(songid);
 }
 
-bool wubwub::eventFilter(QObject*, QEvent* e)
+bool wubwub::eventFilter(QObject* obj, QEvent* e)
 {
     if (e->type() == QEvent::KeyPress)
     {
         QKeyEvent* ke = static_cast<QKeyEvent *>(e);
         Qt::KeyboardModifiers mods = ke->modifiers();
         int key = ke->key();
-        if(key == Qt::Key_MediaPlay || key == Qt::Key_Space) //Pause/play
+        bool ctrl = mods == Qt::ControlModifier;
+        //Pause/play
+        if(key == Qt::Key_MediaPlay || (key == Qt::Key_Space && ctrl))
         {
             ui.playbackwidget->togglePlay();
             return true;
         }
         //Next song
-        else if (key == Qt::Key_Right && mods == Qt::ControlModifier)
+        else if (key == Qt::Key_Right && ctrl)
         {
             ui.nowplayingLst->nextSong();
             return true;
         }
         //prev song
-        else if (key == Qt::Key_Left && mods == Qt::ControlModifier)
+        else if (key == Qt::Key_Left && ctrl)
         {
             ui.nowplayingLst->prevSong();
             return true;
         }
     }
-    return false;
+    return QObject::eventFilter(obj, e);
 }
 
 void wubwub::openSearchWindow(QString name, QMap<QString,QString> results)

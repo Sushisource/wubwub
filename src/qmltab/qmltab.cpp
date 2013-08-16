@@ -11,7 +11,6 @@ QmlTab::QmlTab(QString qmlfile, QWidget *parent) :
     view->setSource(QUrl(qmlfile));
     view->setResizeMode(QQuickView::SizeRootObjectToView);
     view->installEventFilter(parent);
-
     root = std::unique_ptr<QQuickItem>(view->rootObject());
 
     auto container = std::unique_ptr<QWidget>(
@@ -20,7 +19,6 @@ QmlTab::QmlTab(QString qmlfile, QWidget *parent) :
     auto layout = std::unique_ptr<QHBoxLayout>(new QHBoxLayout(this));
     this->setLayout(layout.release());
     this->layout()->addWidget(container.release());
-    this->installEventFilter(parent);
 }
 
 QmlTab::~QmlTab()
