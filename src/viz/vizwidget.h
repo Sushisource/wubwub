@@ -37,7 +37,6 @@ private:
     QOpenGLShaderProgram shaderProgram;
     QOpenGLBuffer vertexBuffer;
     UniformBufferObject fftBuffer;
-    QImage fbo;
     QString vertShader;
     QString fragShader;
     GLfloat fftData[FFT_SIZE];
