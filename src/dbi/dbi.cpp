@@ -15,22 +15,25 @@ DBI::DBI() : QObject(NULL)
             SIGNAL(directoryChanged(QString)), SLOT(processDir(QString)));
 }
 
-QMap<QString, int> DBI::search(QString query, searchFlag)
+QMap<QString, QPair<int, QString>> DBI::search(QString query, searchFlag)
 {
 	QSqlQueryModel qm;
 	query = sanitize(query);
-    QString quer = "select alid as id, 'album' as tbn from album where name like '%"+query+"%'";
+    QString quer = "select alid as id, 'album' as tbn, name from album where name like '%"+query+"%'";
 	quer += " UNION";
-    quer += " select arid as id, 'artist' as tbn from artist where name like '%"+query+"%'";
+    quer += " select arid as id, 'artist' as tbn, name from artist where name like '%"+query+"%'";
 	quer += " UNION";
-    quer += " select sid as id, 'song' as tbn from song where name like '%"+query+"%'";
+    quer += " select sid as id, 'song' as tbn, name from song where name like '%"+query+"%'";
     quer += " ORDER BY id COLLATE NOCASE ASC";
 	qm.setQuery(quer);	
-    QMap<QString, int> ret;
+    QMap<QString, QPair<int, QString>> ret;
 	for(int i = 0; i < qm.rowCount(); i++)
 	{
         QString type = qm.record(i).field(1).value().toString();
-        ret.insertMulti(type, qm.record(i).field(0).value().toInt());
+        QPair<int, QString> id_name = QPair<int, QString>(
+                    qm.record(i).field(0).value().toInt(),
+                    qm.record(i).field(2).value().toString());
+        ret.insertMulti(type, id_name);
 	}
     return ret;
 }

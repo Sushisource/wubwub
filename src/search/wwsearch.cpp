@@ -45,7 +45,7 @@ void WWSearch::autoSuggest()
         return;
     QString q = this->text();
     if(q.length() < 3) return;
-    QMap<QString, int> res = db->search(q);
+    QMap<QString, QPair<int, QString>> res = db->search(q);
     if(res.count() < 1) return;
 
     popup->setUpdatesEnabled(false);
@@ -53,26 +53,20 @@ void WWSearch::autoSuggest()
 
     foreach(QString t, searchtypes)
     {
-        QList<int> resp = res.values(t);
-        QList<QString> resp_str = db->getNames(resp, t);
-        QList<QPair<QString, int> > pairs;
-        for(int i = 0; i < resp.count(); ++i)
-        {
-            pairs.append(qMakePair(resp_str[i],resp[i]));
-        }
+        QList<QPair<int, QString>> pairs = res.values(t);
         //Sort by string length and startsWith, shortest first
-        qSort(pairs.begin(),pairs.end(), [&q](const QPair<QString, int> &s1, const QPair<QString, int> &s2)->bool
+        qSort(pairs.begin(),pairs.end(), [&q](const QPair<int, QString> &s1, const QPair<int, QString> &s2)->bool
         {
-            if(!s1.first.toLower().startsWith(q.toLower()))
+            if(!s1.second.toLower().startsWith(q.toLower()))
                 return false;
-            return s1.first.length() < s2.first.length();
+            return s1.second.length() < s2.second.length();
         });
         for(int i = 0; i < pairs.count(); ++i)
         {
             auto item = new QTreeWidgetItem(popup.get());
-            item->setText(0, pairs[i].first);
+            item->setText(0, pairs[i].second);
             item->setText(1, t);
-            item->setData(0,Qt::WhatsThisRole, pairs[i].second);
+            item->setData(0,Qt::WhatsThisRole, pairs[i].first);
             item->setTextAlignment(1, Qt::AlignRight);
             item->setTextColor(1, disabledColor);
         }

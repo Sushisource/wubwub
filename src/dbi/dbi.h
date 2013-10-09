@@ -36,7 +36,7 @@ public:
 
     static inline QString formatSeconds(int secs);
     enum searchFlag {All, ArtOnly, AlbOnly, SonOnly};
-    QMap<QString, int> search(QString query, searchFlag s = DBI::All);
+    QMap<QString, QPair<int, QString>> search(QString query, searchFlag s = DBI::All);
     QList<int> getTrackIdsFromAlbum(int alid);
     QList<QString> getTrackLengthsFromAlbum(int alid);
     QList<QString> getTrackColFromAlbum(int alid, int col);
