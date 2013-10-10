@@ -21,7 +21,12 @@ QMap<QString, QPair<int, QString>> DBI::search(QString query, searchFlag)
 	query = sanitize(query);
     QString quer = "select alid as id, 'album' as tbn, name from album where name like '%"+query+"%'";
 	quer += " UNION";
-    quer += " select arid as id, 'artist' as tbn, name from artist where name like '%"+query+"%'";
+    quer += " select arid as id, 'artist' as tbn, name from artist WHERE arid IN ("
+        "SELECT arid "
+          "FROM artist "
+               "LEFT JOIN album ON artist.arid == album.artist "
+         "WHERE album.alid IS NOT NULL "
+    ") AND name LIKE '%"+query+"%'";
 	quer += " UNION";
     quer += " select sid as id, 'song' as tbn, name from song where name like '%"+query+"%'";
     quer += " ORDER BY id COLLATE NOCASE ASC";
