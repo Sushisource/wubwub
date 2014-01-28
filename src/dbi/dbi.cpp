@@ -51,6 +51,8 @@ QList<Alb> DBI::extractAlbums(QSqlQueryModel* qm)
         Alb a;
         QSqlRecord qr = qm->record(i);
         a.name = qr.value("name").toString();
+        if(a.name == "")  // For blank album fields.
+            a.name = "Unknown Album";
         a.alid = qr.value("alid").toString();
         a.artist = getArtistNameFromId(qr.value("artist").toInt());
         a.tracks = getTrackColFromAlbum(qr.value(0).toInt(), 1);
