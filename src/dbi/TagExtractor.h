@@ -7,14 +7,14 @@
 #include <QDir>
 #include <qdebug.h>
 #include <taglib/tag.h>
-#include <taglib/toolkit/tpropertymap.h>
+#include <taglib/tpropertymap.h>
 #include <taglib/fileref.h>
-#include <taglib/mpeg/id3v2/id3v2tag.h>
-#include <taglib/mpeg/mpegfile.h>
-#include <taglib/mp4/mp4file.h>
-#include <taglib/ogg/vorbis/vorbisfile.h>
-#include <taglib/ogg/oggfile.h>
-#include <taglib/flac/flacfile.h>
+#include <taglib/id3v2tag.h>
+#include <taglib/mpegfile.h>
+#include <taglib/mp4file.h>
+#include <taglib/vorbisfile.h>
+#include <taglib/oggfile.h>
+#include <taglib/flacfile.h>
 #include <functional>
 #include <numeric>
 

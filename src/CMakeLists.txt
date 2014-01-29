@@ -22,6 +22,8 @@ ENDIF(APPLE)
 
 IF(CMAKE_CXX_COMPILER MATCHES ".*clang.*")
     set(CMAKE_CXX_FLAGS "-std=c++11 -stdlib=libstdc++")
+elseif ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "MSVC")
+    set(CMAKE_CXX_FLAGS "/MP")
 ENDIF()
 ###### QT
 # Find includes in corresponding build directories
@@ -45,15 +47,13 @@ include_directories(${Qt5Quick_INCLUDE_DIRS})
 find_library(TAGLIB_LIB tag tag_dll
    PATHS ${w_TAGLIB_DIR}/taglib
    PATH_SUFFIXES ${CMAKE_BUILD_TYPE} Release)
-include_directories(${w_TAGLIB_DIR})
-include_directories(${w_TAGLIB_DIR}/taglib)
-include_directories(${w_TAGLIB_DIR}/taglib/ogg)
-include_directories(${w_TAGLIB_DIR}/taglib/toolkit)
+include_directories(${w_TAGLIB_DIR}/include)
 ######
 ###### BASS
 find_library(BASS_LIB bass bass_dll
     PATHS ${w_BASS_DIR})
 include_directories(${w_BASS_DIR})
+include_directories(${w_BASS_DIR}/c)
 ######
 ###### OPENGL
 find_library(OPENGL_LIB opengl32 opengl32_dll)
@@ -81,6 +81,7 @@ add_executable(wubwub ${w_INPUT})
 set(w_LIBS ${w_LIBS} 
     Qt5::OpenGL Qt5::Widgets Qt5::Quick
     ${TAGLIB_LIB} ${OPENGL_LIB} ${BASS_LIB})
+link_directories (${w_TAGLIB_DIR}/taglib ${w_BASS_DIR})
 target_link_libraries(wubwub ${w_LIBS})
 # Setup qt5 modules
 qt5_use_modules(wubwub Widgets Svg Sql OpenGL)
